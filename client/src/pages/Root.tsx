@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toaster';
-import Dashboard from '@/pages/Dashboard';
+import Dashboard from '@/pages/nurse/Dashboard';
 import {
   ChartBarBig,
   LayoutGrid,
