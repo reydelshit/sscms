@@ -1,28 +1,47 @@
 import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 type ButtonShadowProps = {
-  content: string;
+  className?: string;
   outsideBG: string;
-  insideBG: string;
-  customStyles?: string;
-  onClick?: () => void;
-};
+  children: React.ReactNode;
+} & ({ to: string; onClick?: never } | { to?: never; onClick?: () => void });
 
-const ButtonShadow = ({
-  content,
-
-  outsideBG,
-  insideBG,
-  customStyles,
+const ButtonShadow: React.FC<ButtonShadowProps> = ({
+  children,
   onClick,
-}: ButtonShadowProps) => {
+  className,
+  outsideBG,
+  ...props
+}) => {
+  const isLink = 'to' in props;
+
+  if (isLink) {
+    return (
+      <Link to={props.to!} className={`mb-2 rounded-full ${outsideBG}`}>
+        <Button
+          className={cn(
+            `mb-2 ml-1 rounded-full border-none text-[#FDF3C0]`,
+            className,
+          )}
+        >
+          {children}
+        </Button>
+      </Link>
+    );
+  }
+
   return (
-    <div className={`mb-2 rounded-full ${outsideBG}`}>
+    <div className={`mb-2 w-full rounded-full ${outsideBG}`}>
       <Button
-        className={`mb-2 ml-1 ${customStyles && customStyles?.length > 0 ? customStyles : 'h-[3.5rem]'} rounded-full border-none ${insideBG} placeholder:font-bold placeholder:text-[#FDF3C0]`}
+        className={cn(
+          `mb-2 ml-1 rounded-full border-none text-[#FDF3C0]`,
+          className,
+        )}
         onClick={onClick}
       >
-        {content}
+        {children}
       </Button>
     </div>
   );

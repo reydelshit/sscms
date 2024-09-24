@@ -4,6 +4,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import Login from './pages/Login.tsx';
 import Root from './pages/Root.tsx';
+import Transactions from './pages/nurse/Transactions.tsx';
+import MedicalHistory from './pages/nurse/MedicalHistory.tsx';
+import CaseReport from './pages/nurse/CaseReport.tsx';
+import Inventory from './pages/nurse/Inventory.tsx';
 
 const router = createBrowserRouter([
   {
@@ -11,8 +15,21 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: 'attendance-log',
-        element: <div>dsa</div>,
+        path: 'transactions',
+        element: <Transactions />,
+      },
+
+      {
+        path: 'medical-history',
+        element: <MedicalHistory />,
+      },
+      {
+        path: 'case-report',
+        element: <CaseReport />,
+      },
+      {
+        path: 'inventory',
+        element: <Inventory />,
       },
     ],
   },

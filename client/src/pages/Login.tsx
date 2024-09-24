@@ -35,14 +35,15 @@ const Login = () => {
           type="password"
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        <ButtonShadow
-          content="Login"
-          outsideBG="bg-[#5D7576] w-[10rem]"
-          insideBG="bg-[#193F56]"
-          customStyles="h-[3.5rem] rounded-full w-full text-[2rem] uppercase text-[#FDF3C0] font-bold"
-          onClick={() => console.log('Login')}
-        />
+        <div className="w-[10rem]">
+          <ButtonShadow
+            className="h-[3.5rem] w-full rounded-full bg-[#193F56] text-[2rem] font-bold uppercase text-[#FDF3C0]"
+            outsideBG="bg-[#5D7576]"
+          >
+            {' '}
+            Login{' '}
+          </ButtonShadow>
+        </div>
       </div>
     </div>
   );

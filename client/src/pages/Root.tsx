@@ -1,15 +1,9 @@
+import ButtonShadow from '@/components/ButtonShadow';
+import Header from '@/components/structure/Header';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/nurse/Dashboard';
-import {
-  ChartBarBig,
-  LayoutGrid,
-  MailCheck,
-  QrCode,
-  ScrollText,
-  UserCog,
-} from 'lucide-react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 const Root = () => {
   const params = useLocation();
@@ -26,87 +20,54 @@ const Root = () => {
     window.location.href = '/login';
   };
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="relative mx-auto flex h-full w-full gap-4">
-        <div className="sticky left-0 top-0 flex h-screen w-[250px] flex-col gap-2 border-r-[1px] p-2 pt-[4rem]">
-          <Button
-            variant={'outline'}
-            className={`border-none p-2 ${params.pathname === '/' ? 'bg-black text-white' : ''}`}
-          >
-            <Link
-              className="text-md flex w-full items-center justify-start"
-              to="/"
-            >
-              {' '}
-              <LayoutGrid className="mr-2 w-[1.2rem]" /> Dashboard
-            </Link>
-          </Button>
+    <div className="flex h-full w-full flex-col items-center justify-center">
+      <Header />
 
-          <Button
-            variant={'outline'}
-            className={`border-none p-2 ${params.pathname === '/student-management' ? 'bg-black text-white' : ''}`}
+      <div className="relative mx-auto flex h-full w-full">
+        <div className="sticky left-0 top-0 flex h-screen w-[280px] flex-col gap-2 border-r-[1px] bg-[#FED883] p-2 px-4 pt-[4rem]">
+          <ButtonShadow
+            to="/"
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+            outsideBG="bg-black"
           >
-            <Link
-              className="text-md flex w-full items-center justify-start"
-              to="/student-management"
-            >
-              <UserCog className="mr-2 w-[1.2rem]" /> Students
-            </Link>
-          </Button>
+            {' '}
+            DASHBOARD{' '}
+          </ButtonShadow>
 
-          <Button
-            variant={'outline'}
-            className={`border-none p-2 ${params.pathname === '/message' ? 'bg-black text-white' : ''}`}
+          <ButtonShadow
+            to="/transactions"
+            className={`w-full bg-[#FFA114] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#F2700A] ${params.pathname === '/transactions' ? 'bg-[#FDF3C0] text-[#F2700A]' : ''}`}
+            outsideBG="bg-[#F2700A]"
           >
-            <Link
-              className="text-md flex w-full items-center justify-start"
-              to="/message"
-            >
-              <MailCheck className="mr-2 w-[1.2rem]" /> Message
-            </Link>
-          </Button>
+            {' '}
+            TRANSACTIONS{' '}
+          </ButtonShadow>
 
-          <Button
-            variant={'outline'}
-            className={`border-none p-2 ${params.pathname === '/attendance-log' ? 'bg-black text-white' : ''}`}
+          <ButtonShadow
+            to="/medical-history"
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/medical-history' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+            outsideBG="bg-black"
           >
-            <Link
-              className="text-md flex w-full items-center justify-start"
-              to="/attendance-log"
-            >
-              <ScrollText className="mr-2 w-[1.2rem]" /> Attendance
-            </Link>
-          </Button>
-          <Button
-            variant={'outline'}
-            className={`border-none p-2 ${params.pathname === '/Reports' ? 'bg-black text-white' : ''}`}
-          >
-            <Link
-              className="text-md flex w-full items-center justify-start"
-              to="/Reports"
-            >
-              <ChartBarBig className="mr-2 w-[1.2rem]" /> Reports
-            </Link>
-          </Button>
-          <Button
-            variant={'outline'}
-            className={`border-none p-2 ${params.pathname === '/ScanStation' ? 'bg-black text-white' : ''}`}
-          >
-            <Link
-              className="text-md flex w-full items-center justify-start"
-              to="/ScanStation"
-            >
-              {' '}
-              <QrCode className="mr-2 w-[1.2rem]" /> Scan Station
-            </Link>
-          </Button>
+            {' '}
+            MEDICAL HISTORY{' '}
+          </ButtonShadow>
 
-          {/* <Button
-            onClick={() => setShowSidebar(!showSidebar)}
-            className="absolute right-2 top-[50%] border-2 p-2"
+          <ButtonShadow
+            to="/case-report"
+            className={`w-full bg-[#FFA114] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#F2700A] ${params.pathname === '/case-report' ? 'bg-[#FDF3C0] text-[#F2700A]' : ''}`}
+            outsideBG="bg-[#F2700A]"
           >
-            Toggle Sidebar
-          </Button> */}
+            {' '}
+            CASE REPORT{' '}
+          </ButtonShadow>
+
+          <ButtonShadow
+            to="/inventory"
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/inventory' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+            outsideBG="bg-black"
+          >
+            INVENTORY
+          </ButtonShadow>
 
           <Button
             onClick={handleLogout}
