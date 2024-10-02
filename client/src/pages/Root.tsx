@@ -36,7 +36,7 @@ const Root = () => {
 
           <ButtonShadow
             to="/transactions"
-            className={`w-full bg-[#FFA114] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#F2700A] ${params.pathname === '/transactions' ? 'bg-[#FDF3C0] text-[#F2700A]' : ''}`}
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
             outsideBG="bg-[#F2700A]"
           >
             {' '}
@@ -54,7 +54,7 @@ const Root = () => {
 
           <ButtonShadow
             to="/case-report"
-            className={`w-full bg-[#FFA114] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#F2700A] ${params.pathname === '/case-report' ? 'bg-[#FDF3C0] text-[#F2700A]' : ''}`}
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/case-report' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
             outsideBG="bg-[#F2700A]"
           >
             {' '}

@@ -4,10 +4,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import Login from './pages/Login.tsx';
 import Root from './pages/Root.tsx';
-import Transactions from './pages/nurse/Transactions.tsx';
-import MedicalHistory from './pages/nurse/MedicalHistory.tsx';
 import CaseReport from './pages/nurse/CaseReport.tsx';
 import Inventory from './pages/nurse/Inventory.tsx';
+import MedicalHistory from './pages/nurse/MedicalHistory.tsx';
+import Transactions from './pages/nurse/Transactions.tsx';
+import MedCert from './pages/nurse/transactions/MedCert.tsx';
+import MedicalReport from './pages/nurse/transactions/MedicalReport.tsx';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,17 @@ const router = createBrowserRouter([
       {
         path: 'transactions',
         element: <Transactions />,
+        children: [
+          {
+            path: 'medical-report',
+            element: <MedicalReport />,
+          },
+
+          {
+            path: 'med-cert',
+            element: <MedCert />,
+          },
+        ],
       },
 
       {
