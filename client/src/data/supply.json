@@ -1,0 +1,82 @@
+{
+  "type": "table",
+  "name": "supply",
+  "database": "ssmcs_v2_db",
+  "data": [
+    {
+      "supp_id": "1",
+      "description": "Surgical Tape (1inch x 10yards)",
+      "qty": "3",
+      "unit": "box"
+    },
+    {
+      "supp_id": "2",
+      "description": "White Flower 2.5ml",
+      "qty": "3",
+      "unit": "bot"
+    },
+    {
+      "supp_id": "3",
+      "description": "Rubbing Alchohol",
+      "qty": "5",
+      "unit": "gal"
+    },
+    {
+      "supp_id": "4",
+      "description": "Pulse Oximeter",
+      "qty": "2",
+      "unit": "pcs"
+    },
+    {
+      "supp_id": "5",
+      "description": "Toilet Paper",
+      "qty": "30",
+      "unit": "rolls"
+    },
+    {
+      "supp_id": "6",
+      "description": "Hot Compress Pack",
+      "qty": "6",
+      "unit": "pcs"
+    },
+    { "supp_id": "7", "description": "Face Mask", "qty": "2", "unit": "boxes" },
+    {
+      "supp_id": "8",
+      "description": "Cotton Balls",
+      "qty": "6",
+      "unit": "pcks"
+    },
+    {
+      "supp_id": "9",
+      "description": "Lysol Disinfectant Spray 500ml",
+      "qty": "12",
+      "unit": "bot"
+    },
+    { "supp_id": "10", "description": "Band-Aid", "qty": "4", "unit": "boxes" },
+    {
+      "supp_id": "11",
+      "description": "Betadine 120ml",
+      "qty": "3",
+      "unit": "bot"
+    },
+    {
+      "supp_id": "12",
+      "description": "Vinyl/Nitrite Gloves Disposable (100's)",
+      "qty": "5",
+      "unit": "boxes"
+    },
+    { "supp_id": "13", "description": "Wheelchair", "qty": "1", "unit": "pc" },
+    {
+      "supp_id": "14",
+      "description": "Sphygmomanometer w/ Stethoscpose",
+      "qty": "2",
+      "unit": "pcs"
+    },
+    {
+      "supp_id": "15",
+      "description": "Brown Paper Bag",
+      "qty": "6",
+      "unit": "pcks"
+    }
+  ]
+}

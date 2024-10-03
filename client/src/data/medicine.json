@@ -1,0 +1,224 @@
+{
+  "prescription": [
+    {
+      "med_id": "2",
+      "med_name": "Paracetamol",
+      "description": "500mg/tab, sig: 1 tablet every 4 hours for fever",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "1",
+      "status": "1"
+    },
+    {
+      "med_id": "3",
+      "med_name": "Calcium Carbonate + Sodium Alginate Sachet (GAVISC",
+      "description": "Sig: drink 1 sachet 3x a day after meals for 5 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "2",
+      "status": "1"
+    },
+    {
+      "med_id": "4",
+      "med_name": "Metoclopramide (PLASIL)",
+      "description": "10mg/tab, Sig: 1 tablet every 8 hours for nausea/vomiting",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "13",
+      "status": "1"
+    },
+    {
+      "med_id": "5",
+      "med_name": "Cetirizine ",
+      "description": "10mg/tab, Sig: 2x a day for 5 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "4",
+      "status": "1"
+    },
+    {
+      "med_id": "6",
+      "med_name": "Lagundi",
+      "description": "600mg/tab, Sig: 3x a day for 7 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "3",
+      "status": "1"
+    },
+    {
+      "med_id": "7",
+      "med_name": "Phenylpropanolamine HCI tab (NASATAPP)",
+      "description": "Sig: 3x a day for 5 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "5",
+      "status": "1"
+    },
+    {
+      "med_id": "8",
+      "med_name": "Mefenamic Acid",
+      "description": "500mg/tab, Sig: 1 tab every 8 hours for pain",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "6",
+      "status": "1"
+    },
+    {
+      "med_id": "9",
+      "med_name": "Racecadotril (HIDRASEC)",
+      "description": "100mg/capsule, Sig: 1 capsule 3x a day for LBM",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "88",
+      "ill_id": "14",
+      "status": "1"
+    },
+    {
+      "med_id": "10",
+      "med_name": "Hyosine-N-butylbromide (BUSCOPAN)",
+      "description": "10mg/tab, Sig: 1 tablet every 8 hours for abdominal colic",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "94",
+      "ill_id": "15",
+      "status": "1"
+    },
+    {
+      "med_id": "11",
+      "med_name": "Antibiotic (Ciprofloxacin)",
+      "description": "500mg/tab, Sig: 2x a day for 7 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "50",
+      "ill_id": "16",
+      "status": "1"
+    },
+    {
+      "med_id": "12",
+      "med_name": "Antibiotic (Cefuroxime)",
+      "description": "500mg/capsule, Sig: 2x a day for 7 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "50",
+      "ill_id": "16",
+      "status": "1"
+    },
+    {
+      "med_id": "13",
+      "med_name": "Cloxacillin ",
+      "description": "500mg/capsule, Sig: 1 capsule every 6 hours for 7 days (6 am- 12 noon- 10pm)",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "80",
+      "ill_id": "7",
+      "status": "1"
+    },
+    {
+      "med_id": "14",
+      "med_name": "N-acetycysteine (FLUIMUCIL)",
+      "description": "600mg/tab, Sig: dissolve 1 tablet in 1⁄4 glass of water to be taken. Once  a day for 7 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "90",
+      "ill_id": "3",
+      "status": "1"
+    },
+    {
+      "med_id": "15",
+      "med_name": "Levofloxacin (LEVOCIN)",
+      "description": "500mg/tab, Sig: Once a day for 7 days",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "8",
+      "status": "1"
+    },
+    {
+      "med_id": "16",
+      "med_name": "Ferrous Sulfate Capsule",
+      "description": "Sig: Once a day",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "122",
+      "ill_id": "9",
+      "status": "1"
+    },
+    {
+      "med_id": "17",
+      "med_name": "Betahistine ",
+      "description": "16mg/tab, Sig: 3x a day for dizziness",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "100",
+      "ill_id": "17",
+      "status": "1"
+    },
+    {
+      "med_id": "18",
+      "med_name": "Aluminum MAG OH",
+      "description": "Sig: 3x a day",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "96",
+      "ill_id": "10",
+      "status": "1"
+    },
+    {
+      "med_id": "19",
+      "med_name": "Burnsil Ointment",
+      "description": "Sig: Apply 2x a day",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "20",
+      "ill_id": "11",
+      "status": "1"
+    },
+    {
+      "med_id": "20",
+      "med_name": "Flammazine Ointment",
+      "description": "Sig: Apply 2x a day",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "20",
+      "ill_id": "11",
+      "status": "1"
+    },
+    {
+      "med_id": "21",
+      "med_name": "Tobramycin + Dexamethasone Eye Drops (TOBRADEX)",
+      "description": "Sig: 2 drops 3x a day",
+      "lot_num": "",
+      "manufac_date": "0000-00-00",
+      "expiry_date": "0000-00-00",
+      "qty": "20",
+      "ill_id": "12",
+      "status": "1"
+    }
+  ]
+}
