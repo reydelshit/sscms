@@ -12,6 +12,7 @@ import {
 
 import { IllnessData, PrescriptionData } from '@/data/data';
 import illnessJSON from '@/data/illness.json';
+
 import prescriptionJSON from '@/data/medicine.json';
 
 const Prescription = () => {
@@ -28,6 +29,9 @@ const Prescription = () => {
   });
 
   const [selectedIllness, setSelectedIllness] = useState('');
+  const [selectedPrescription, setSelectedPrescription] = useState<string[]>(
+    [],
+  );
 
   const studentIds = ['S12345', 'S23456', 'S34567', 'S45678'];
 
@@ -50,16 +54,31 @@ const Prescription = () => {
   };
 
   const handleSelectIllness = (value: string) => {
-    console.log('Selected value:', value); // Add this line to check the raw selected value
+    console.log('Selected value:', value);
 
-    const [illnessValue, prescriptionID] = value.split(' ');
+    const { illness, ill_pres } = JSON.parse(value);
 
-    console.log('Illness:', illnessValue);
-    console.log('Prescription ID:', prescriptionID);
+    console.log('Illness:', illness);
+    console.log('Prescription ID:', ill_pres);
 
-    setSelectedIllness(value);
+    if (Array.isArray(ill_pres)) {
+      prescriptions.prescription.forEach((prescription) => {
+        ill_pres.forEach((ill) => {
+          if (ill.toString() === prescription.med_id) {
+            console.log('Prescription:', prescription.med_name);
+            setSelectedPrescription((prevState) => [
+              ...prevState,
+              ' ' + prescription.med_name,
+            ]);
+          }
+        });
+      });
+    } else {
+      console.log('Prescription ID is a single value:', ill_pres);
+    }
+
+    setSelectedIllness(illness);
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
@@ -176,7 +195,10 @@ const Prescription = () => {
                   {illnesses.illness.map((ill, index) => (
                     <SelectItem
                       key={index}
-                      value={`${ill.illness} ${ill.ill_pres}`}
+                      value={JSON.stringify({
+                        illness: ill.illness,
+                        ill_pres: ill.ill_pres,
+                      })}
                     >
                       {ill.illness}
                     </SelectItem>
@@ -188,22 +210,7 @@ const Prescription = () => {
               <Label htmlFor="prescription" className="text-yellow-100">
                 PRESCRIPTION
               </Label>
-              <Select
-                onValueChange={(value) =>
-                  handleSelectChange('prescription', value)
-                }
-              >
-                <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
-                  <SelectValue placeholder="Select prescription" />
-                </SelectTrigger>
-                <SelectContent>
-                  {prescriptions.prescription.map((pres, index) => (
-                    <SelectItem key={index} value={pres.med_name}>
-                      {pres.med_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input defaultValue={selectedPrescription} />
             </div>
             <div>
               <Label htmlFor="sig" className="text-yellow-100">

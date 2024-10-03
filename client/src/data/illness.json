@@ -1,21 +1,21 @@
 {
   "illness": [
     { "ill_id": "1", "illness": "fever", "ill_pres": "1" },
-    { "ill_id": "2", "illness": "sakit sulok sulok", "ill_pres": "1" },
-    { "ill_id": "3", "illness": "cough", "ill_pres": "1" },
-    { "ill_id": "4", "illness": "allergy", "ill_pres": "1" },
-    { "ill_id": "5", "illness": "runny nose", "ill_pres": "1" },
-    { "ill_id": "6", "illness": "headache", "ill_pres": "1" },
-    { "ill_id": "7", "illness": "boil", "ill_pres": "1" },
-    { "ill_id": "8", "illness": "antibiotic", "ill_pres": "1" },
-    { "ill_id": "9", "illness": "anemia", "ill_pres": "1" },
-    { "ill_id": "10", "illness": "epigastric pain ", "ill_pres": "1" },
-    { "ill_id": "11", "illness": "burns", "ill_pres": "1" },
-    { "ill_id": "12", "illness": "conjunctivitis", "ill_pres": "1" },
-    { "ill_id": "13", "illness": "vomit", "ill_pres": "1" },
-    { "ill_id": "14", "illness": "diarrhea", "ill_pres": "1" },
-    { "ill_id": "15", "illness": "naga kulo-kulo ang tyan", "ill_pres": "1" },
-    { "ill_id": "16", "illness": "UTI", "ill_pres": "1" },
-    { "ill_id": "17", "illness": "lipong", "ill_pres": "1" }
+    { "ill_id": "2", "illness": "sakit sulok sulok", "ill_pres": "2" },
+    { "ill_id": "3", "illness": "cough", "ill_pres": ["3", "14"] },
+    { "ill_id": "4", "illness": "allergy", "ill_pres": "5" },
+    { "ill_id": "5", "illness": "runny nose", "ill_pres": "7" },
+    { "ill_id": "6", "illness": "headache", "ill_pres": "8" },
+    { "ill_id": "7", "illness": "boil", "ill_pres": "13" },
+    { "ill_id": "8", "illness": "antibiotic", "ill_pres": "15" },
+    { "ill_id": "9", "illness": "anemia", "ill_pres": "16" },
+    { "ill_id": "10", "illness": "epigastric pain", "ill_pres": "18" },
+    { "ill_id": "11", "illness": "burns", "ill_pres": ["19", "20"] },
+    { "ill_id": "12", "illness": "conjunctivitis", "ill_pres": "21" },
+    { "ill_id": "13", "illness": "vomit", "ill_pres": "4" },
+    { "ill_id": "14", "illness": "diarrhea", "ill_pres": "9" },
+    { "ill_id": "15", "illness": "naga kulo-kulo ang tyan", "ill_pres": "10" },
+    { "ill_id": "16", "illness": "UTI", "ill_pres": ["11", "12"] },
+    { "ill_id": "17", "illness": "lipong", "ill_pres": "17" }
   ]
 }

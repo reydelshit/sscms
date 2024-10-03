@@ -1,7 +1,7 @@
 export type IllnessItem = {
   ill_id: string;
   illness: string;
-  ill_pres: string;
+  ill_pres: string | string[];
 };
 
 export type IllnessData = {
