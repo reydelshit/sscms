@@ -22,22 +22,18 @@ import { IllnessData } from '@/data/data';
 import illnessJSON from '@/data/illness.json';
 import { useState } from 'react';
 
+type SelectedIllness = {
+  illness_id: string;
+  illness: string;
+};
+
 const Inventory = () => {
   const illnesses: IllnessData = illnessJSON;
 
-  const [selectedIllness, setSelectedIllness] = useState<string[]>([]);
-  const [selectedIllnessName, setSelectedIllnessName] = useState<string[]>([]);
+  const [selectedIllness, setSelectedIllness] = useState<SelectedIllness[]>([]);
 
   const handleSelectIllness = (value: string) => {
-    setSelectedIllness((prevState) => [
-      ...prevState,
-      JSON.parse(value).illness_id,
-    ]);
-
-    setSelectedIllnessName((prevState) => [
-      ...prevState,
-      JSON.parse(value).illness,
-    ]);
+    setSelectedIllness((prevState) => [...prevState, JSON.parse(value)]);
 
     console.log('Selected illness:', selectedIllness);
   };
@@ -132,10 +128,23 @@ const Inventory = () => {
                     ))}
                   </SelectContent>
                 </Select>
-
                 <div>
-                  {selectedIllnessName.map((ill, index) => (
-                    <p key={index}>{ill}</p>
+                  {selectedIllness.map((ill, index) => (
+                    <p key={ill.illness_id}>
+                      {' '}
+                      {ill.illness}
+                      <Button
+                        onClick={() => {
+                          setSelectedIllness((prevState) =>
+                            prevState.filter(
+                              (item) => item.illness_id !== ill.illness_id,
+                            ),
+                          );
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </p>
                   ))}
                 </div>
               </div>
