@@ -1,6 +1,8 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
 import './index.css';
 import Login from './pages/Login.tsx';
 import Root from './pages/Root.tsx';
@@ -11,6 +13,7 @@ import Transactions from './pages/nurse/Transactions.tsx';
 import MedCert from './pages/nurse/transactions/MedCert.tsx';
 import MedicalReport from './pages/nurse/transactions/MedicalReport.tsx';
 
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: '/',
@@ -54,6 +57,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>,
 );

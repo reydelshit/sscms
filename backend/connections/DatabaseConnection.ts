@@ -5,7 +5,7 @@ const databaseConnection: mysql.Connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'qr-code-monitoring',
+    database: 'sscms',
   });
   
   
