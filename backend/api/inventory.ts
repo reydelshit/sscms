@@ -54,8 +54,8 @@ const storage = multer.diskStorage({
   //ADD INVENTORY
   router.post("/create", (req, res) => {
     const query = `
-      INSERT INTO inventory (inventory_id, itemName, itemDescription, quantity, manufacturingDate, expiryDate, lotNo, associated_Illnesses, created_at) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO inventory (inventory_id, itemName, itemDescription, quantity, manufacturingDate, expiryDate, lotNo, associated_Illnesses, category, created_at) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
   
     const values = [
@@ -67,6 +67,7 @@ const storage = multer.diskStorage({
       req.body.expiryDate,
       req.body.lotNo,
       req.body.associated_Illnesses,
+      req.body.category,
       req.body.created_at
     ];
   
@@ -84,58 +85,46 @@ const storage = multer.diskStorage({
   });
   
   
-  // UPDATE STUDENT 
-  router.put(`/update/:id`, upload.single('student_image_path'), (req, res) => {
+  // UPDATE INVENTORY 
+  router.put("/update/:id", (req, res) => {
     const query = `
-      UPDATE students 
-      SET 
-        student_id_code = ?,
-        student_image_path = ?,
-        student_name = ?,
-        student_datebirth = ?,
-        student_address = ?,
-        student_gender = ?,
-        student_grade_level = ?,
-        student_program = ?,
-        student_block_section = ?,
-        student_parent_name = ?,
-        student_parent_number = ?,
-        student_parent_email = ?
-      WHERE student_id = ?
+      UPDATE inventory 
+      SET itemName = ?, 
+          itemDescription = ?, 
+          quantity = ?, 
+          manufacturingDate = ?, 
+          expiryDate = ?, 
+          lotNo = ?, 
+          associated_Illnesses = ?, 
+          category = ?
+      WHERE inventory_id = ?
     `;
   
-    const id = req.params.id;
-    const imagePath = req.file ? 
-      path.join('uploads', req.file.filename)
-    : req.body.student_image_path; 
-  
     const values = [
-      req.body.student_id_code,
-      imagePath,
-      req.body.student_name,
-      req.body.student_datebirth,
-      req.body.student_address,
-      req.body.student_gender,
-      req.body.student_grade_level,
-      req.body.student_program,
-      req.body.student_block_section,
-      req.body.student_parent_name,
-      req.body.student_parent_number,
-      req.body.student_parent_email
+      req.body.itemName,
+      req.body.itemDescription,
+      req.body.quantity,
+      req.body.manufacturingDate,
+      req.body.expiryDate,
+      req.body.lotNo,
+      req.body.associated_Illnesses,
+      req.body.category,
+      req.params.id
     ];
   
-    console.log("SQL Query:", query);
-    console.log("Values:", [...values, id]);
-  
-    databaseConnection.query(query, [...values, id], (err, data) => {
+    databaseConnection.query(query, values, (err, data) => {
       if (err) {
         console.error('SQL Error:', err);
-        return res.status(500).json({ error: 'Database query failed' });
+        return res.status(500).json({ error: 'Database update failed' });
       }
+      
+      if (data.affectedRows === 0) {
+        return res.status(404).json({ message: "Inventory item not found" });
+      }
+  
       return res.json({
-        ...data,
-        message: "Successfully updated student",
-        status: "success",
+        message: "Successfully updated inventory item",
+        status: "success"
       });
     });
   });
@@ -144,7 +133,7 @@ const storage = multer.diskStorage({
   // DELETE STUDENT 
 
   router.delete("/delete/:id", (req, res) => {
-    const query = "DELETE FROM students WHERE student_id = ?"
+    const query = "DELETE FROM inventory WHERE inventory_id = ?"
     const id = req.params.id
   
     databaseConnection.query(query, id, (err, data) => {
