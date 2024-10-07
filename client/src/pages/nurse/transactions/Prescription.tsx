@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,11 +8,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useState } from 'react';
 
 import { IllnessData, PrescriptionData } from '@/data/data';
 import illnessJSON from '@/data/illness.json';
 
 import prescriptionJSON from '@/data/medicine.json';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
+interface InventoryItem {
+  inventory_id: string;
+  itemName: string;
+  quantity: number;
+  associated_Illnesses?: string;
+  created_at: string;
+  itemDescription: string;
+  manufacturingDate: string;
+  expiryDate: string;
+  lotNo: string;
+  category: string;
+}
+
+const useFetchInventory = () => {
+  return useQuery<InventoryItem[]>({
+    queryKey: ['inventoryData'],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_LINK}/inventory`,
+      );
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 const Prescription = () => {
   const [formData, setFormData] = useState({
@@ -38,6 +66,8 @@ const Prescription = () => {
   const illnesses: IllnessData = illnessJSON;
   const prescriptions: PrescriptionData = prescriptionJSON;
 
+  const { data: inventoryData } = useFetchInventory();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -56,28 +86,24 @@ const Prescription = () => {
   const handleSelectIllness = (value: string) => {
     console.log('Selected value:', value);
 
-    const { illness, ill_pres } = JSON.parse(value);
+    const { illness_id } = JSON.parse(value);
 
-    console.log('Illness:', illness);
-    console.log('Prescription ID:', ill_pres);
+    const filteredMedicine = inventoryData
+      ?.filter((item) => {
+        const associatedIllnessArray = item.associated_Illnesses
+          ?.split(',')
+          .map((id) => id.trim());
 
-    if (Array.isArray(ill_pres)) {
-      prescriptions.prescription.forEach((prescription) => {
-        ill_pres.forEach((ill) => {
-          if (ill.toString() === prescription.med_id) {
-            console.log('Prescription:', prescription.med_name);
-            setSelectedPrescription((prevState) => [
-              ...prevState,
-              ' ' + prescription.med_name,
-            ]);
-          }
-        });
-      });
-    } else {
-      console.log('Prescription ID is a single value:', ill_pres);
-    }
+        if (associatedIllnessArray?.includes(illness_id)) {
+          console.log('Item:', item);
+          // setSelectedPrescription([...item.itemName, item.itemName]);
+          return true;
+        }
+        return false;
+      })
+      .map((item) => item.itemName);
 
-    setSelectedIllness(illness);
+    setSelectedPrescription(filteredMedicine || []);
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,8 +222,7 @@ const Prescription = () => {
                     <SelectItem
                       key={index}
                       value={JSON.stringify({
-                        illness: ill.illness,
-                        ill_pres: ill.ill_pres,
+                        illness_id: ill.ill_id,
                       })}
                     >
                       {ill.illness}
@@ -208,9 +233,24 @@ const Prescription = () => {
             </div>
             <div>
               <Label htmlFor="prescription" className="text-yellow-100">
-                PRESCRIPTION
+                SUGGESTED PRESCRIPTION
               </Label>
-              <Input defaultValue={selectedPrescription} />
+              <Select
+                onValueChange={(value) =>
+                  handleSelectChange('prescription', value)
+                }
+              >
+                <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
+                  <SelectValue placeholder="Select prescription" />
+                </SelectTrigger>
+                <SelectContent>
+                  {selectedPrescription.map((pres, index) => (
+                    <SelectItem key={index} value={pres}>
+                      {pres}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="sig" className="text-yellow-100">
