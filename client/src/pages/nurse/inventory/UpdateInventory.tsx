@@ -163,8 +163,6 @@ const UpdateInventory = ({ inventoryID }: { inventoryID: string }) => {
 
   const combinedIllnesses = [...selectedIllness, ...associatedIllnessObjects];
 
-  //   console.log('Selected Illness:', selectedIllness);
-
   const handleInputChange = (e: ChangeEvent) => {
     const value = e.target.value;
     const name = e.target.name;

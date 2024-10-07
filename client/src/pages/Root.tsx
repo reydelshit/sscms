@@ -69,6 +69,14 @@ const Root = () => {
             INVENTORY
           </ButtonShadow>
 
+          <ButtonShadow
+            to="/volunteers"
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/volunteers' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+            outsideBG="bg-black"
+          >
+            VOLUNTEERS
+          </ButtonShadow>
+
           <Button
             onClick={handleLogout}
             className="absolute bottom-2 left-2 right-2"

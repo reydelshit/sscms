@@ -12,6 +12,7 @@ import MedicalHistory from './pages/nurse/MedicalHistory.tsx';
 import Transactions from './pages/nurse/Transactions.tsx';
 import MedCert from './pages/nurse/transactions/MedCert.tsx';
 import MedicalReport from './pages/nurse/transactions/MedicalReport.tsx';
+import Volunteers from './pages/nurse/Volunteers.tsx';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: 'inventory',
         element: <Inventory />,
+      },
+      {
+        path: '/volunteers',
+        element: <Volunteers />,
       },
     ],
   },

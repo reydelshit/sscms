@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/table';
 import { IllnessData } from '@/data/data';
 import illnessJSON from '@/data/illness.json';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 import usePagination from '@/hooks/usePagination';
 import Moment from '@/lib/Moment';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -92,6 +92,23 @@ const useCreateInventory = () => {
       );
       return response.data;
     },
+
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        console.log('Item added successfully', data);
+        toast({
+          title: 'Item added successfully',
+          description: new Date().toLocaleTimeString(),
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('Error:', error);
+      toast({
+        title: 'Error adding item',
+        description: error.message || 'Something went wrong.',
+      });
+    },
   });
 };
 
@@ -139,7 +156,9 @@ const Inventory = () => {
   const [selectedIllness, setSelectedIllness] = useState<SelectedIllness[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [search, setSearch] = useState<string>('');
-  const { toast } = useToast();
+  const createMutation = useCreateInventory();
+  const deleteMutation = useDeleteInventory();
+  const { data, isLoading, error, isError } = useFetchInventory();
 
   const handleSelectIllness = (value: string) => {
     setSelectedIllness((prevState) => [...prevState, JSON.parse(value)]);
@@ -161,10 +180,6 @@ const Inventory = () => {
     }));
   };
 
-  const { mutate } = useCreateInventory();
-  const deleteMutation = useDeleteInventory();
-  const { data, isLoading, error, isError } = useFetchInventory();
-
   const filteredAttendance = data?.filter((item) =>
     item.itemName.toLowerCase().includes(search.toLowerCase()),
   );
@@ -178,31 +193,11 @@ const Inventory = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    mutate(
-      {
-        formData,
-        selectedIllness,
-        selectedCategory,
-      },
-      {
-        onSuccess: (data) => {
-          if (data.status === 'success') {
-            console.log('Item added successfully', data);
-            toast({
-              title: 'Item added successfully',
-              description: new Date().toLocaleTimeString(),
-            });
-          }
-        },
-        onError: (error) => {
-          console.error('Error:', error);
-          toast({
-            title: 'Error adding item',
-            description: error.message || 'Something went wrong.',
-          });
-        },
-      },
-    );
+    createMutation.mutate({
+      formData,
+      selectedIllness,
+      selectedCategory,
+    });
   };
 
   const handleDelete = async (id: string) => {
