@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,37 +9,80 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { useState } from 'react';
+
+type ChangeEvent =
+  | React.ChangeEvent<HTMLInputElement>
+  | React.ChangeEvent<HTMLTextAreaElement>;
+
+type FormDataType = {
+  date: string;
+  studentName: string;
+  studentId: string;
+  courseYear: string;
+  remarks: string;
+  recom: string;
+};
+
+const useAddPrescription = () => {
+  return useMutation({
+    mutationFn: async (data: { formData: FormDataType; studentId: string }) => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/transaction/medical-report/create`,
+        {
+          ...data.formData,
+          studentId: data.studentId,
+        },
+      );
+      return response.data;
+    },
+
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        console.log('Success', data);
+        toast({
+          title: 'Success',
+          description: new Date().toLocaleTimeString(),
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('Error:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Something went wrong.',
+      });
+    },
+  });
+};
 
 const MedicalReport = () => {
   const [formData, setFormData] = useState({
-    transNo: '',
     date: '',
     studentName: '',
     studentId: '',
     courseYear: '',
     remarks: '',
-    recommendation: '',
+    recom: '',
   });
 
   const handleClear = () => {
     setFormData({
-      transNo: '',
       date: '',
       studentName: '',
       studentId: '',
       courseYear: '',
       remarks: '',
-      recommendation: '',
+      recom: '',
     });
   };
 
   const [selectedStudentID, setSelectedStudentID] = useState('');
 
-  const handleStudentID = (value: string) => {
-    setSelectedStudentID(value);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -48,10 +90,19 @@ const MedicalReport = () => {
     }));
   };
 
+  const addMedicalReport = useAddPrescription();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would typically send the data to a server
+    addMedicalReport.mutate({
+      formData,
+      studentId: selectedStudentID,
+    });
+
+    console.log('Form submitted:', {
+      ...formData,
+      studentId: selectedStudentID,
+    });
   };
 
   const studentIds = ['S12345', 'S23456', 'S34567', 'S45678'];
@@ -68,8 +119,7 @@ const MedicalReport = () => {
               disabled
               id="transNo"
               name="transNo"
-              value={formData.transNo}
-              onChange={handleInputChange}
+              placeholder="[Auto-Generated]"
               className="border-none bg-[#FDF3C0] text-[#193F56]"
             />
           </div>
@@ -120,7 +170,7 @@ const MedicalReport = () => {
             <Label htmlFor="studentId" className="text-yellow-100">
               STUDENT ID:
             </Label>
-            <Select onValueChange={(value) => handleStudentID(value)}>
+            <Select onValueChange={(value) => setSelectedStudentID(value)}>
               <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
@@ -139,28 +189,36 @@ const MedicalReport = () => {
         <div className="mb-2 flex h-[250px] gap-4">
           <Textarea
             placeholder="FINDINGS/SYMPTOMS/REMARKS:"
+            onChange={handleInputChange}
+            name="remarks"
             className="h-full border-none bg-[#FDF3C0] text-[#193F56]"
           />
           <Textarea
-            placeholder="TREATMENT/RECOMMENDATIONS:"
+            placeholder="TREATMENT/RECOMMENDATION:"
+            onChange={handleInputChange}
+            name="recom"
             className="h-full border-none bg-[#FDF3C0] text-[#193F56]"
           />
         </div>
 
-        <div className="flex justify-between">
-          <Button
-            type="submit"
-            className="rounded-full bg-green-500 text-white hover:bg-green-600"
-          >
-            CONFIRM & PRINT
-          </Button>
-          <Button
-            type="button"
-            onClick={handleClear}
-            className="w-[8rem] rounded-full bg-[#F2700A]"
-          >
-            CLEAR
-          </Button>
+        <div className="flex w-full justify-between">
+          <div className="flex gap-4">
+            <Button
+              type="submit"
+              className="rounded-full bg-green-500 text-white hover:bg-green-600"
+            >
+              CONFIRM
+            </Button>
+            <Button
+              type="button"
+              onClick={handleClear}
+              className="w-[8rem] rounded-full bg-[#F2700A]"
+            >
+              CLEAR
+            </Button>
+          </div>
+
+          <Button className="bg-red-500">NOTIFY EMERGENCY CONTACT</Button>
         </div>
       </form>
     </div>

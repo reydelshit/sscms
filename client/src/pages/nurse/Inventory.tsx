@@ -206,7 +206,7 @@ const Inventory = () => {
 
   return (
     <div
-      className="h-screen w-full bg-cover bg-center p-8"
+      className="min-h-screen w-full bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
       <div className="mt-[2rem] h-fit rounded-3xl bg-[#526C71] p-4 text-[#FDF3C0]">
@@ -319,27 +319,7 @@ const Inventory = () => {
                 type="number"
                 className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black"
               />
-            </div>
 
-            <div>
-              {selectedCategory === 'medicine' && (
-                <>
-                  <Input
-                    name="manufacturingDate"
-                    onChange={handleInputChange}
-                    placeholder="MANUFACTURING DATE"
-                    type="date"
-                    className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black"
-                  />
-                  <Input
-                    name="expiryDate"
-                    onChange={handleInputChange}
-                    placeholder="EXPIRY DATE"
-                    type="date"
-                    className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black"
-                  />
-                </>
-              )}
               <Input
                 name="lotNo"
                 onChange={handleInputChange}
@@ -348,7 +328,7 @@ const Inventory = () => {
               />
             </div>
 
-            <div>
+            <div className="w-[40%]">
               <Select onValueChange={handleChangeCategory}>
                 <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
                   <SelectValue placeholder="Choose category" />
@@ -358,6 +338,31 @@ const Inventory = () => {
                   <SelectItem value="medicine">Medicine</SelectItem>
                 </SelectContent>
               </Select>
+
+              <div className="my-4 w-full">
+                {selectedCategory === 'medicine' && (
+                  <div>
+                    <Label>MANUFACTURING DATE</Label>
+                    <Input
+                      name="manufacturingDate"
+                      onChange={handleInputChange}
+                      placeholder="MANUFACTURING DATE"
+                      type="date"
+                      className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black"
+                    />
+
+                    <Label>EXPIRY DATE</Label>
+
+                    <Input
+                      name="expiryDate"
+                      onChange={handleInputChange}
+                      placeholder="EXPIRY DATE"
+                      type="date"
+                      className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black"
+                    />
+                  </div>
+                )}
+              </div>
 
               {selectedCategory === 'medicine' && (
                 <div>

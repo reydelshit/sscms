@@ -11,10 +11,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from '@/hooks/use-toast';
+
+type ChangeEvent =
+  | React.ChangeEvent<HTMLInputElement>
+  | React.ChangeEvent<HTMLTextAreaElement>;
+
+type FormDataType = {
+  date: string;
+  studentName: string;
+  studentId: string;
+  address: string;
+  age: string;
+  gender: string;
+  diagnosis: string;
+  ref_reason: string;
+  referenceClassification: string;
+  reffered: string;
+};
+
+const useAddMedCert = () => {
+  return useMutation({
+    mutationFn: async (data: { formData: FormDataType; studentId: string }) => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/transaction/medical-certificate/create`,
+        {
+          ...data.formData,
+          studentId: data.studentId,
+        },
+      );
+      return response.data;
+    },
+
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        console.log('Success', data);
+        toast({
+          title: 'Success',
+          description: new Date().toLocaleTimeString(),
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('Error:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Something went wrong.',
+      });
+    },
+  });
+};
 
 const MedCert = () => {
   const [formData, setFormData] = useState({
-    transNo: '',
     date: '',
     studentName: '',
     studentId: '',
@@ -22,10 +73,12 @@ const MedCert = () => {
     age: '',
     gender: '',
     diagnosis: '',
-    referenceReason: '',
+    ref_reason: '',
     referenceClassification: '',
-    refferedTo: '',
+    reffered: '',
   });
+
+  const addMedCert = useAddMedCert();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -53,12 +106,16 @@ const MedCert = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    addMedCert.mutate({
+      formData,
+      studentId: formData.studentId,
+    });
     console.log('Form submitted:', formData);
   };
 
   const handleClear = () => {
     setFormData({
-      transNo: '',
       date: '',
       studentName: '',
       studentId: '',
@@ -66,9 +123,9 @@ const MedCert = () => {
       age: '',
       gender: '',
       diagnosis: '',
-      referenceReason: '',
+      ref_reason: '',
       referenceClassification: '',
-      refferedTo: '',
+      reffered: '',
     });
   };
 
@@ -83,8 +140,8 @@ const MedCert = () => {
             <Input
               id="transNo"
               name="transNo"
-              value={formData.transNo}
-              onChange={handleInputChange}
+              disabled
+              placeholder="[Auto-Generated]"
               className="border-none bg-yellow-100"
             />
           </div>
@@ -134,7 +191,7 @@ const MedCert = () => {
           </div>
         </div>
         <div className="mb-6 grid grid-cols-3 gap-4">
-          <div className="col-span-2">
+          <div className="col-span-1">
             <Label htmlFor="address" className="text-yellow-100">
               ADDRESS:
             </Label>
@@ -158,32 +215,33 @@ const MedCert = () => {
               className="border-none bg-yellow-100"
             />
           </div>
-        </div>
-        <div className="mb-6">
-          <Label className="text-yellow-100">GENDER:</Label>
-          <div className="flex space-x-4">
-            <div className="flex items-center">
-              <Checkbox
-                id="male"
-                checked={formData.gender === 'M'}
-                onCheckedChange={() => handleCheckboxChange('M')}
-              />
-              <label htmlFor="male" className="ml-2 text-yellow-100">
-                M
-              </label>
-            </div>
-            <div className="flex items-center">
-              <Checkbox
-                id="female"
-                checked={formData.gender === 'F'}
-                onCheckedChange={() => handleCheckboxChange('F')}
-              />
-              <label htmlFor="female" className="ml-2 text-yellow-100">
-                F
-              </label>
+          <div className="mb-6">
+            <Label className="text-yellow-100">GENDER:</Label>
+            <div className="flex space-x-4">
+              <div className="flex items-center">
+                <Checkbox
+                  id="male"
+                  checked={formData.gender === 'M'}
+                  onCheckedChange={() => handleCheckboxChange('M')}
+                />
+                <label htmlFor="male" className="ml-2 text-yellow-100">
+                  M
+                </label>
+              </div>
+              <div className="flex items-center">
+                <Checkbox
+                  id="female"
+                  checked={formData.gender === 'F'}
+                  onCheckedChange={() => handleCheckboxChange('F')}
+                />
+                <label htmlFor="female" className="ml-2 text-yellow-100">
+                  F
+                </label>
+              </div>
             </div>
           </div>
         </div>
+
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="diagnosis" className="text-yellow-100">
@@ -198,13 +256,13 @@ const MedCert = () => {
             />
           </div>
           <div>
-            <Label htmlFor="referenceReason" className="text-yellow-100">
+            <Label htmlFor="	ref_reason" className="text-yellow-100">
               REFERENCE REASON:
             </Label>
             <Textarea
-              id="referenceReason"
-              name="referenceReason"
-              value={formData.referenceReason}
+              id="ref_reason"
+              name="ref_reason"
+              value={formData.ref_reason}
               onChange={handleInputChange}
               className="h-32 border-none bg-yellow-100"
             />
@@ -223,13 +281,13 @@ const MedCert = () => {
           />
         </div>
         <div className="mb-6">
-          <Label htmlFor="refferedTo" className="text-yellow-100">
+          <Label htmlFor="reffered" className="text-yellow-100">
             REFFERED TO:
           </Label>
           <Input
-            id="refferedTo"
-            name="refferedTo"
-            value={formData.refferedTo}
+            id="reffered"
+            name="reffered"
+            value={formData.reffered}
             onChange={handleInputChange}
             className="border-none bg-yellow-100"
           />

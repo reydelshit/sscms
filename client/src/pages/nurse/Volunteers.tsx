@@ -25,8 +25,8 @@ import {
 import usePagination from '@/hooks/usePagination';
 import Moment from '@/lib/Moment';
 import { useState } from 'react';
-import EditVolunteer from './volunteer/EditVolunteer';
 import AddVolunteer from './volunteer/AddVolunteer';
+import EditVolunteer from './volunteer/EditVolunteer';
 
 interface VolunteerItem {
   student_id: string;
@@ -90,7 +90,7 @@ const Volunteers = () => {
 
   return (
     <div
-      className="h-screen w-full bg-cover bg-center p-8"
+      className="min-h-screen w-full bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
       <div className="mt-[2rem] h-[80%] rounded-3xl bg-[#526C71] p-4 text-[#FDF3C0]">

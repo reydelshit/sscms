@@ -1,35 +1,14 @@
 
 import { Router } from 'express';
-import fs from 'fs';
-import multer from 'multer';
-import path from 'path';
 import { databaseConnection } from '../../connections/DatabaseConnection';
 
 const router = Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '..', '..', 'uploads');
-    
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
+  
 
-    cb(null, uploadPath); 
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
-  }
-});
-
-  
-  const upload = multer({ storage });
-  
-  
-  
   // get all 
   router.get("/", (req, res) => {
-    const query = "SELECT * FROM prescription";
+    const query = "SELECT * FROM medcert";
   
     databaseConnection.query(query, (err, data) => {
         if (err) return res.json(err);
@@ -40,7 +19,7 @@ const storage = multer.diskStorage({
   
   // specific  
   router.get("/:id", (req, res) => {
-    const query = "SELECT * FROM prescription WHERE prescription_id = ?"
+    const query = "SELECT * FROM medcert WHERE med_cert_id = ?"
     const id = req.params.id
     databaseConnection.query(query, id, (err, data) => {
         if(err) return res.json(err)
@@ -54,20 +33,21 @@ const storage = multer.diskStorage({
   //CREATE 
   router.post("/create", (req, res) => {
     const query = `
-      INSERT INTO prescription (prescription_id, studentId, illness, prescrip, sig, quantity, date, studentName, courseYear) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO medcert (med_cert_id, studentId, gender, address, age, diagnosis, ref_reason, referenceClassification, reffered, date) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
-      req.body.prescription_id,
+      req.body.med_cert_id,
       req.body.studentId,
-      req.body.illness,
-      req.body.prescrip,
-      req.body.sig,
-      req.body.quantity,
-      req.body.date,
-      req.body.studentName,
-      req.body.courseYear
+      req.body.gender,
+      req.body.address,
+      req.body.age,
+      req.body.diagnosis,
+      req.body.ref_reason,
+      req.body.referenceClassification,
+      req.body.reffered,
+      req.body.date
     ];
 
     databaseConnection.query(query, values, (err, data) => {
@@ -77,36 +57,39 @@ const storage = multer.diskStorage({
       }
       return res.json({
         ...data,
-        message: "Successfully added prescription",
+        message: "Successfully added medcert",
         status: "success",
       });
     });
 });
+
 
   
   
   // UPDATE  
   router.put("/update/:id", (req, res) => {
     const query = `
-      UPDATE prescription 
+      UPDATE medcert 
       SET studentId = ?, 
-          illness = ?, 
-          prescrip = ?, 
-          sig = ?, 
-          quantity = ?, 
-          studentName = ?, 
-          courseYear = ?
-      WHERE prescription_id = ?
+          gender = ?, 
+          address = ?, 
+          age = ?, 
+          diagnosis = ?, 
+          ref_reason = ?, 
+          referenceClassification = ?, 
+          reffered = ?
+      WHERE med_cert_id = ?
     `;
 
     const values = [
       req.body.studentId,
-      req.body.illness,
-      req.body.prescrip,
-      req.body.sig,
-      req.body.quantity,
-      req.body.studentName,
-      req.body.courseYear,
+      req.body.gender,
+      req.body.address,
+      req.body.age,
+      req.body.diagnosis,
+      req.body.ref_reason,
+      req.body.referenceClassification,
+      req.body.reffered,
       req.params.id
     ];
 
@@ -117,20 +100,21 @@ const storage = multer.diskStorage({
       }
 
       if (data.affectedRows === 0) {
-        return res.status(404).json({ message: "Prescription not found" });
+        return res.status(404).json({ message: "medcert not found" });
       }
 
       return res.json({
-        message: "Successfully updated prescription",
+        message: "Successfully updated medcert",
         status: "success"
       });
     });
 });
 
+
   
   // DELETE  
   router.delete("/delete/:id", (req, res) => {
-    const query = "DELETE FROM prescription WHERE prescription_id = ?"
+    const query = "DELETE FROM medcert WHERE med_cert_id = ?"
     const id = req.params.id
   
     databaseConnection.query(query, id, (err, data) => {
@@ -147,7 +131,7 @@ const storage = multer.diskStorage({
 
   
 
-  export const transactionsPrescription = router;
+  export const transactionsMedicalCert = router;
   
   
   

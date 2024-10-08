@@ -3,9 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
-import { transactionsPrescription } from './api/transactions/prescription';
 import { inventoryRouter } from './api/inventory';
+import { transactionsMedReport } from './api/transactions/medical-report';
+import { transactionsPrescription } from './api/transactions/prescription';
 import { volunteerRouter } from './api/volunteer';
+import { transactionsMedicalCert } from './api/transactions/medical-certificate';
 // import { studentRouter } from './api/studentRoute';
 // import { attendanceRouter } from './api/attendanceRoute';
 // import { messageRouter } from './api/messagesRoute';
@@ -49,6 +51,8 @@ app.listen(PORT, () => {
 
 
 app.use("/transaction/prescription", transactionsPrescription);
+app.use("/transaction/medical-report", transactionsMedReport)
+app.use("/transaction/medical-certificate", transactionsMedicalCert)
 app.use("/inventory", inventoryRouter);
 app.use("/volunteer", volunteerRouter)
 

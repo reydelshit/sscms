@@ -10,12 +10,12 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 
-import { IllnessData, PrescriptionData } from '@/data/data';
+import { IllnessData } from '@/data/data';
 import illnessJSON from '@/data/illness.json';
 
-import prescriptionJSON from '@/data/medicine.json';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { toast } from '@/hooks/use-toast';
 
 interface InventoryItem {
   inventory_id: string;
@@ -29,6 +29,54 @@ interface InventoryItem {
   lotNo: string;
   category: string;
 }
+
+interface FormDataType {
+  date: string;
+  studentName: string;
+  studentId: string;
+  courseYear: string;
+  illness: string;
+  prescrip: string;
+  quantity: string;
+  sig: string;
+}
+
+const useAddPrescription = () => {
+  return useMutation({
+    mutationFn: async (data: {
+      formData: FormDataType;
+      illness: string;
+      prescrip: string;
+    }) => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/transaction/prescription/create`,
+        {
+          ...data.formData,
+          illness: data.illness,
+          prescrip: data.prescrip,
+        },
+      );
+      return response.data;
+    },
+
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        console.log('Success', data);
+        toast({
+          title: 'Success',
+          description: new Date().toLocaleTimeString(),
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('Error:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Something went wrong.',
+      });
+    },
+  });
+};
 
 const useFetchInventory = () => {
   return useQuery<InventoryItem[]>({
@@ -45,28 +93,27 @@ const useFetchInventory = () => {
 
 const Prescription = () => {
   const [formData, setFormData] = useState({
-    transNo: '',
     date: '',
     studentName: '',
     studentId: '',
     courseYear: '',
     illness: '',
-    prescription: '',
+    prescrip: '',
     quantity: '',
     sig: '',
   });
 
   const [selectedIllness, setSelectedIllness] = useState('');
-  const [selectedPrescription, setSelectedPrescription] = useState<string[]>(
-    [],
-  );
-
+  const [associatedPrescription, setAssociatedPrescription] = useState<
+    InventoryItem[]
+  >([]);
+  const [selectedPrescription, setSelectedPrescription] = useState<string>('');
   const studentIds = ['S12345', 'S23456', 'S34567', 'S45678'];
 
   const illnesses: IllnessData = illnessJSON;
-  const prescriptions: PrescriptionData = prescriptionJSON;
 
   const { data: inventoryData } = useFetchInventory();
+  const addPrescription = useAddPrescription();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -74,6 +121,10 @@ const Prescription = () => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleSelectPrescription = (value: string) => {
+    setSelectedPrescription(value);
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -86,40 +137,43 @@ const Prescription = () => {
   const handleSelectIllness = (value: string) => {
     console.log('Selected value:', value);
 
-    const { illness_id } = JSON.parse(value);
+    const { illness_id, illness } = JSON.parse(value);
+    setSelectedIllness(illness);
 
-    const filteredMedicine = inventoryData
-      ?.filter((item) => {
-        const associatedIllnessArray = item.associated_Illnesses
-          ?.split(',')
-          .map((id) => id.trim());
+    const filteredMedicine = inventoryData?.filter((item) => {
+      const associatedIllnessArray = item.associated_Illnesses
+        ?.split(',')
+        .map((id) => id.trim());
 
-        if (associatedIllnessArray?.includes(illness_id)) {
-          console.log('Item:', item);
-          // setSelectedPrescription([...item.itemName, item.itemName]);
-          return true;
-        }
-        return false;
-      })
-      .map((item) => item.itemName);
+      if (associatedIllnessArray?.includes(illness_id)) {
+        console.log('Item:', item);
+        return true;
+      }
+      return false;
+    });
 
-    setSelectedPrescription(filteredMedicine || []);
+    console.log('Filtered medicine:', filteredMedicine);
+
+    setAssociatedPrescription(filteredMedicine || []);
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would typically send the data to a server
+
+    addPrescription.mutate({
+      formData,
+      illness: selectedIllness,
+      prescrip: selectedPrescription,
+    });
   };
 
   const handleClear = () => {
     setFormData({
-      transNo: '',
       date: '',
       studentName: '',
       studentId: '',
       courseYear: '',
       illness: '',
-      prescription: '',
+      prescrip: '',
       quantity: '',
       sig: '',
     });
@@ -134,10 +188,10 @@ const Prescription = () => {
               TRANS NO.
             </Label>
             <Input
+              placeholder="[Auto-Generated]"
               disabled
               id="transNo"
               name="transNo"
-              value={formData.transNo}
               onChange={handleInputChange}
               className="border-none bg-[#FDF3C0] text-[#193F56]"
             />
@@ -223,6 +277,7 @@ const Prescription = () => {
                       key={index}
                       value={JSON.stringify({
                         illness_id: ill.ill_id,
+                        illness: ill.illness,
                       })}
                     >
                       {ill.illness}
@@ -236,21 +291,33 @@ const Prescription = () => {
                 SUGGESTED PRESCRIPTION
               </Label>
               <Select
-                onValueChange={(value) =>
-                  handleSelectChange('prescription', value)
-                }
+                disabled={selectedIllness.length === 0}
+                onValueChange={(value) => handleSelectPrescription(value)}
               >
                 <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
                   <SelectValue placeholder="Select prescription" />
                 </SelectTrigger>
                 <SelectContent>
-                  {selectedPrescription.map((pres, index) => (
-                    <SelectItem key={index} value={pres}>
-                      {pres}
+                  {associatedPrescription.map((pres, index) => (
+                    <SelectItem key={index} value={pres.itemName}>
+                      {pres.itemName} - {pres.quantity}qty
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+
+              <div className="w-full">
+                <Label htmlFor="quantity" className="text-yellow-100">
+                  QUANTITY:
+                </Label>
+                <Input
+                  id="quantity"
+                  name="quantity"
+                  value={formData.quantity}
+                  onChange={handleInputChange}
+                  className="border-none bg-[#FFD863] text-[#193F56]"
+                />
+              </div>
             </div>
             <div>
               <Label htmlFor="sig" className="text-yellow-100">
@@ -264,18 +331,6 @@ const Prescription = () => {
                 className="border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
-          </div>
-          <div className="w-full">
-            <Label htmlFor="quantity" className="text-yellow-100">
-              QUANTITY:
-            </Label>
-            <Input
-              id="quantity"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleInputChange}
-              className="border-none bg-[#FFD863] text-[#193F56]"
-            />
           </div>
         </div>
 

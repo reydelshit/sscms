@@ -20,11 +20,11 @@ const Root = () => {
     window.location.href = '/login';
   };
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <Header />
-
-      <div className="relative mx-auto flex h-full w-full">
-        <div className="sticky left-0 top-0 flex h-screen w-[280px] flex-col gap-2 border-r-[1px] bg-[#FED883] p-2 px-4 pt-[4rem]">
+      <div className="relative flex h-screen w-full grow overflow-auto">
+        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 border-r-[1px] bg-[#FED883] p-2 px-4 pt-[4rem]">
+          {/* <div className="sticky left-0 top-0 z-10 h-screen w-[280px] flex-col gap-2 border-r-[1px] bg-[#FED883] p-2 px-4 pt-[4rem]"> */}
           <ButtonShadow
             to="/"
             className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
@@ -85,7 +85,7 @@ const Root = () => {
           </Button>
         </div>
 
-        <div className="h-full w-full">
+        <div className="min-h-screen w-full">
           {/* This is where the child routes get rendered */}
           {params.pathname === '/' ? <Dashboard /> : <Outlet />}
         </div>

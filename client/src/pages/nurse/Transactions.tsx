@@ -8,7 +8,7 @@ const Transactions = () => {
   const path = useLocation().pathname;
   return (
     <div
-      className="h-fit w-full bg-cover bg-center p-8"
+      className="min-h-screen w-full bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
       <div className="flex w-full justify-between gap-4 rounded-full bg-[#526C71] p-4">
