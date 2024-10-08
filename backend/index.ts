@@ -5,6 +5,7 @@ import express, { Express, Request, Response } from 'express';
 import path from 'path';
 import { transactionsPrescription } from './api/transactions/prescription';
 import { inventoryRouter } from './api/inventory';
+import { volunteerRouter } from './api/volunteer';
 // import { studentRouter } from './api/studentRoute';
 // import { attendanceRouter } from './api/attendanceRoute';
 // import { messageRouter } from './api/messagesRoute';
@@ -49,9 +50,8 @@ app.listen(PORT, () => {
 
 app.use("/transaction/prescription", transactionsPrescription);
 app.use("/inventory", inventoryRouter);
-// app.use("/attendance", attendanceRouter);
-// app.use("/messages", messageRouter);
-// app.use("/dashboard", dashboardRouter);
+app.use("/volunteer", volunteerRouter)
+
 
 
 
