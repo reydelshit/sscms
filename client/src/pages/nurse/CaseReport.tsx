@@ -23,14 +23,6 @@ import {
 } from '@/components/ui/table';
 
 import PaginationTemplate from '@/components/Pagination';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import Moment from '@/lib/Moment';
 
 type MedicalReportType = {
@@ -85,15 +77,13 @@ const CaseReport = () => {
     isError,
   } = useFetchMedicalHistory();
 
-  const deleteMutation = useDeleteMedicalHistory();
-
   const [search, setSearch] = useState('');
   const filteredAttendance = medicalHistoryData?.filter((item) =>
     item.studentName.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const [selectedYear, setSelectedYear] = useState('All');
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('2024');
+  const [selectedMonth, setSelectedMonth] = useState('All');
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
@@ -101,9 +91,6 @@ const CaseReport = () => {
       data: filteredAttendance || [],
     });
 
-  const handleDelete = async (id: string) => {
-    deleteMutation.mutate(id);
-  };
   return (
     <div
       className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
@@ -174,17 +161,21 @@ const CaseReport = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-white !text-black">
-                    <TableHead className="text-black">STUDENT ID</TableHead>
-                    <TableHead className="text-black">STUDENT NAME</TableHead>
-                    <TableHead className="text-black">COURSE/YEAR</TableHead>
-                    <TableHead className="text-black">
-                      FINDINGS/SYMPTOMS/REMARKS{' '}
+                    <TableHead className="text-center text-black">
+                      DATE
                     </TableHead>
-                    <TableHead className="text-black">
-                      TREATMENT/RECOMMENDATION
+                    <TableHead className="text-center text-black">
+                      STUDENT NAME
                     </TableHead>
-                    <TableHead className="text-black">DATE</TableHead>
-                    <TableHead className="text-black">ACTIONS</TableHead>
+                    <TableHead className="text-center text-black">
+                      COURSE/YEAR
+                    </TableHead>
+                    <TableHead className="text-center text-black">
+                      CASE
+                    </TableHead>
+                    <TableHead className="text-center text-black">
+                      TREATMENT
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -232,43 +223,15 @@ const CaseReport = () => {
                           className="h-[1rem] bg-white text-sm text-black"
                           key={index}
                         >
-                          <TableCell>{vol.studentId}</TableCell>
+                          <TableCell>
+                            <Moment time={vol.date} />
+                          </TableCell>
                           <TableCell>{vol.studentName}</TableCell>
                           <TableCell>
                             {vol.course} {vol.year}
                           </TableCell>
                           <TableCell>{vol.remarks}</TableCell>
                           <TableCell>{vol.recom}</TableCell>
-                          <TableCell>
-                            <Moment time={vol.date} />
-                          </TableCell>
-
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Dialog>
-                                <DialogTrigger>Update</DialogTrigger>
-                                <DialogContent>
-                                  <DialogHeader>
-                                    <div className="hidden">
-                                      <DialogTitle>
-                                        Edit student details
-                                      </DialogTitle>
-                                      <DialogDescription>
-                                        Fill in the form to edit student details
-                                      </DialogDescription>
-                                    </div>
-                                  </DialogHeader>
-                                </DialogContent>
-                              </Dialog>
-
-                              <span
-                                className="cursor-pointer"
-                                onClick={() => handleDelete(vol.med_rep_id)}
-                              >
-                                DELETE
-                              </span>
-                            </div>
-                          </TableCell>
                         </TableRow>
                       ))
                   ) : (
