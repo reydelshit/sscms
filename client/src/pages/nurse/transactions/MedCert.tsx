@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -11,9 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from '@/hooks/use-toast';
+import { useState } from 'react';
+
+import { Students } from '@/data/students';
 
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
@@ -34,12 +36,17 @@ type FormDataType = {
 
 const useAddMedCert = () => {
   return useMutation({
-    mutationFn: async (data: { formData: FormDataType; studentId: string }) => {
+    mutationFn: async (data: {
+      formData: FormDataType;
+      studentId: string;
+      studentName: string;
+    }) => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_LINK}/transaction/medical-certificate/create`,
         {
           ...data.formData,
           studentId: data.studentId,
+          studentName: data.studentName,
         },
       );
       return response.data;
@@ -77,6 +84,10 @@ const MedCert = () => {
     referenceClassification: '',
     reffered: '',
   });
+  const [search, setSearch] = useState('');
+  const [studentFullname, setStudentFullname] = useState('');
+  const [studentCourseYear, setStudentCourseYear] = useState('');
+  const [studentDepartment, setStudentDepartment] = useState('');
 
   const addMedCert = useAddMedCert();
 
@@ -89,8 +100,19 @@ const MedCert = () => {
       [name]: value,
     }));
   };
-
   const handleSelectChange = (name: string, value: string) => {
+    const filterStudents = Students.filter((stud) => stud.student_id === value);
+
+    if (filterStudents.length === 0) {
+      return;
+    }
+
+    setStudentFullname(
+      `${filterStudents[0].f_name} ${filterStudents[0].m_init} ${filterStudents[0].l_name}`,
+    );
+    setStudentCourseYear(filterStudents[0].year);
+    setStudentDepartment(filterStudents[0].course);
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -110,6 +132,7 @@ const MedCert = () => {
     addMedCert.mutate({
       formData,
       studentId: formData.studentId,
+      studentName: studentFullname,
     });
     console.log('Form submitted:', formData);
   };
@@ -167,7 +190,7 @@ const MedCert = () => {
             <Input
               id="studentName"
               name="studentName"
-              value={formData.studentName}
+              value={studentFullname}
               onChange={handleInputChange}
               className="border-none bg-yellow-100"
             />
@@ -183,9 +206,20 @@ const MedCert = () => {
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="id1">ID1</SelectItem>
-                <SelectItem value="id2">ID2</SelectItem>
-                <SelectItem value="id3">ID3</SelectItem>
+                <Input
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search ID"
+                  className="border-none"
+                />
+                {Students.filter(
+                  (stud) =>
+                    stud.f_name.includes(search.toLowerCase()) ||
+                    stud.student_id.includes(search),
+                ).map((id, index) => (
+                  <SelectItem key={index} value={id.student_id}>
+                    {id.student_id} - {id.f_name} {id.l_name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

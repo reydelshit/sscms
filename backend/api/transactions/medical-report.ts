@@ -33,8 +33,8 @@ const router = Router();
   //CREATE 
   router.post("/create", (req, res) => {
     const query = `
-      INSERT INTO medreport (med_rep_id, studentId, remarks, recom, date, studentName, courseYear) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO medreport (med_rep_id, studentId, remarks, recom, date, studentName, course, year) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -44,7 +44,9 @@ const router = Router();
       req.body.recom,
       req.body.date,
       req.body.studentName,
-      req.body.courseYear
+      req.body.course,
+      req.body.year
+
     ];
 
     databaseConnection.query(query, values, (err, data) => {
@@ -70,7 +72,8 @@ const router = Router();
           recom = ?, 
           remarks = ?, 
           studentName = ?, 
-          courseYear = ?
+          course = ?,
+          year = ?
       WHERE med_rep_id = ?
     `;
 
@@ -79,7 +82,8 @@ const router = Router();
       req.body.recom,
       req.body.remarks,
       req.body.studentName,
-      req.body.courseYear,
+      req.body.course,
+      req.body.year,
       req.params.id
     ];
 

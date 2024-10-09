@@ -9,32 +9,39 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Students } from '@/data/students';
 import { toast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
-
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
 
 type FormDataType = {
   date: string;
-  studentName: string;
   studentId: string;
-  courseYear: string;
   remarks: string;
   recom: string;
 };
 
-const useAddPrescription = () => {
+const useAddMedicalReport = () => {
   return useMutation({
-    mutationFn: async (data: { formData: FormDataType; studentId: string }) => {
+    mutationFn: async (data: {
+      formData: FormDataType;
+      studentId: string;
+      course: string;
+      year: string;
+      studentName: string;
+    }) => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_LINK}/transaction/medical-report/create`,
         {
           ...data.formData,
           studentId: data.studentId,
+          course: data.course,
+          year: data.year,
+          studentName: data.studentName,
         },
       );
       return response.data;
@@ -62,9 +69,7 @@ const useAddPrescription = () => {
 const MedicalReport = () => {
   const [formData, setFormData] = useState({
     date: '',
-    studentName: '',
     studentId: '',
-    courseYear: '',
     remarks: '',
     recom: '',
   });
@@ -72,15 +77,17 @@ const MedicalReport = () => {
   const handleClear = () => {
     setFormData({
       date: '',
-      studentName: '',
       studentId: '',
-      courseYear: '',
       remarks: '',
       recom: '',
     });
   };
 
   const [selectedStudentID, setSelectedStudentID] = useState('');
+  const [search, setSearch] = useState('');
+  const [studentFullname, setStudentFullname] = useState('');
+  const [studentCourseYear, setStudentCourseYear] = useState('');
+  const [studentDepartment, setStudentDepartment] = useState('');
 
   const handleInputChange = (e: ChangeEvent) => {
     const { name, value } = e.target;
@@ -90,22 +97,42 @@ const MedicalReport = () => {
     }));
   };
 
-  const addMedicalReport = useAddPrescription();
+  const addMedicalReport = useAddMedicalReport();
+
+  const handleSelectChange = (value: string) => {
+    const filterStudents = Students.filter((stud) => stud.student_id === value);
+
+    if (filterStudents.length === 0) {
+      return;
+    }
+
+    setStudentFullname(
+      `${filterStudents[0].f_name} ${filterStudents[0].m_init} ${filterStudents[0].l_name}`,
+    );
+    setStudentCourseYear(filterStudents[0].year);
+    setStudentDepartment(filterStudents[0].course);
+
+    setSelectedStudentID(value);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addMedicalReport.mutate({
       formData,
       studentId: selectedStudentID,
+      course: studentDepartment,
+      year: studentCourseYear,
+      studentName: studentFullname,
     });
 
     console.log('Form submitted:', {
       ...formData,
       studentId: selectedStudentID,
+      course: studentDepartment,
+      year: studentCourseYear,
+      studentName: studentFullname,
     });
   };
-
-  const studentIds = ['S12345', 'S23456', 'S34567', 'S45678'];
 
   return (
     <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#526C71] p-4">
@@ -146,20 +173,20 @@ const MedicalReport = () => {
               <Input
                 id="studentName"
                 name="studentName"
-                value={formData.studentName}
+                value={studentFullname}
                 onChange={handleInputChange}
                 className="border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
 
             <div className="mb-6">
-              <Label htmlFor="courseYear" className="text-yellow-100">
+              <Label htmlFor="year" className="text-yellow-100">
                 COURSE/YEAR:
               </Label>
               <Input
-                id="courseYear"
-                name="courseYear"
-                value={formData.courseYear}
+                id="year"
+                name="year"
+                value={studentCourseYear}
                 onChange={handleInputChange}
                 className="border-none bg-[#FDF3C0] text-[#193F56]"
               />
@@ -170,19 +197,40 @@ const MedicalReport = () => {
             <Label htmlFor="studentId" className="text-yellow-100">
               STUDENT ID:
             </Label>
-            <Select onValueChange={(value) => setSelectedStudentID(value)}>
+            <Select onValueChange={(value) => handleSelectChange(value)}>
               <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
-                <Input placeholder="Search ID" className="border-none" />
-                {studentIds.map((id) => (
-                  <SelectItem key={id} value={id}>
-                    {id}
+                <Input
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search ID"
+                  className="border-none"
+                />
+                {Students.filter(
+                  (stud) =>
+                    stud.f_name.includes(search.toLowerCase()) ||
+                    stud.student_id.includes(search),
+                ).map((id, index) => (
+                  <SelectItem key={index} value={id.student_id}>
+                    {id.student_id} - {id.f_name} {id.l_name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+
+            <div className="mb-6">
+              <Label htmlFor="course" className="text-yellow-100">
+                COURSE:
+              </Label>
+              <Input
+                id="course"
+                name="course"
+                value={studentDepartment}
+                onChange={handleInputChange}
+                className="border-none bg-[#FDF3C0] text-[#193F56]"
+              />
+            </div>
           </div>
         </div>
 

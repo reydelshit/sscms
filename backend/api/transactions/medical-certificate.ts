@@ -33,13 +33,14 @@ const router = Router();
   //CREATE 
   router.post("/create", (req, res) => {
     const query = `
-      INSERT INTO medcert (med_cert_id, studentId, gender, address, age, diagnosis, ref_reason, referenceClassification, reffered, date) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO medcert (med_cert_id, studentId, studentName, gender, address, age, diagnosis, ref_reason, referenceClassification, reffered, date) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
       req.body.med_cert_id,
       req.body.studentId,
+      req.body.studentName,
       req.body.gender,
       req.body.address,
       req.body.age,
@@ -71,6 +72,7 @@ const router = Router();
     const query = `
       UPDATE medcert 
       SET studentId = ?, 
+          studentName = ?,
           gender = ?, 
           address = ?, 
           age = ?, 
@@ -83,6 +85,7 @@ const router = Router();
 
     const values = [
       req.body.studentId,
+      req.body.studentName,
       req.body.gender,
       req.body.address,
       req.body.age,

@@ -85,7 +85,7 @@ const Root = () => {
           </Button>
         </div>
 
-        <div className="min-h-screen w-full">
+        <div className="min-h-screen w-full overflow-x-hidden">
           {/* This is where the child routes get rendered */}
           {params.pathname === '/' ? <Dashboard /> : <Outlet />}
         </div>

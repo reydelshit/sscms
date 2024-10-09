@@ -9,13 +9,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useState } from 'react';
-
-import { IllnessData } from '@/data/data';
-import illnessJSON from '@/data/illness.json';
-
+import { Students } from '@/data/students';
+import { Illness } from '@/data/illness';
+import { toast } from '@/hooks/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from '@/hooks/use-toast';
 
 interface InventoryItem {
   inventory_id: string;
@@ -32,9 +30,7 @@ interface InventoryItem {
 
 interface FormDataType {
   date: string;
-  studentName: string;
   studentId: string;
-  courseYear: string;
   illness: string;
   prescrip: string;
   quantity: string;
@@ -47,6 +43,9 @@ const useAddPrescription = () => {
       formData: FormDataType;
       illness: string;
       prescrip: string;
+      year: string;
+      course: string;
+      studentName: string;
     }) => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_LINK}/transaction/prescription/create`,
@@ -54,6 +53,9 @@ const useAddPrescription = () => {
           ...data.formData,
           illness: data.illness,
           prescrip: data.prescrip,
+          year: data.year,
+          course: data.course,
+          studentName: data.studentName,
         },
       );
       return response.data;
@@ -94,9 +96,7 @@ const useFetchInventory = () => {
 const Prescription = () => {
   const [formData, setFormData] = useState({
     date: '',
-    studentName: '',
     studentId: '',
-    courseYear: '',
     illness: '',
     prescrip: '',
     quantity: '',
@@ -108,12 +108,13 @@ const Prescription = () => {
     InventoryItem[]
   >([]);
   const [selectedPrescription, setSelectedPrescription] = useState<string>('');
-  const studentIds = ['S12345', 'S23456', 'S34567', 'S45678'];
-
-  const illnesses: IllnessData = illnessJSON;
-
+  const [search, setSearch] = useState<string>('');
   const { data: inventoryData } = useFetchInventory();
   const addPrescription = useAddPrescription();
+
+  const [studentFullname, setStudentFullname] = useState('');
+  const [studentCourseYear, setStudentCourseYear] = useState('');
+  const [studentDepartment, setStudentDepartment] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -128,6 +129,18 @@ const Prescription = () => {
   };
 
   const handleSelectChange = (name: string, value: string) => {
+    const filterStudents = Students.filter((stud) => stud.student_id === value);
+
+    if (filterStudents.length === 0) {
+      return;
+    }
+
+    setStudentFullname(
+      `${filterStudents[0].f_name} ${filterStudents[0].m_init} ${filterStudents[0].l_name}`,
+    );
+    setStudentCourseYear(filterStudents[0].year);
+    setStudentDepartment(filterStudents[0].course);
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -163,15 +176,16 @@ const Prescription = () => {
       formData,
       illness: selectedIllness,
       prescrip: selectedPrescription,
+      year: studentCourseYear,
+      course: studentDepartment,
+      studentName: studentFullname,
     });
   };
 
   const handleClear = () => {
     setFormData({
       date: '',
-      studentName: '',
       studentId: '',
-      courseYear: '',
       illness: '',
       prescrip: '',
       quantity: '',
@@ -219,20 +233,20 @@ const Prescription = () => {
               <Input
                 id="studentName"
                 name="studentName"
-                value={formData.studentName}
+                value={studentFullname}
                 onChange={handleInputChange}
                 className="border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
 
             <div className="mb-6">
-              <Label htmlFor="courseYear" className="text-yellow-100">
-                COURSE/YEAR:
+              <Label htmlFor="year" className="text-yellow-100">
+                YEAR:
               </Label>
               <Input
-                id="courseYear"
-                name="courseYear"
-                value={formData.courseYear}
+                id="year"
+                name="year"
+                value={studentCourseYear}
                 onChange={handleInputChange}
                 className="border-none bg-[#FDF3C0] text-[#193F56]"
               />
@@ -250,14 +264,34 @@ const Prescription = () => {
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
-                <Input placeholder="Search ID" className="border-none" />
-                {studentIds.map((id) => (
-                  <SelectItem key={id} value={id}>
-                    {id}
+                <Input
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search ID"
+                  className="border-none"
+                />
+                {Students.filter(
+                  (stud) =>
+                    stud.f_name.includes(search.toLowerCase()) ||
+                    stud.student_id.includes(search),
+                ).map((id, index) => (
+                  <SelectItem key={index} value={id.student_id}>
+                    {id.student_id} - {id.f_name} {id.l_name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            <div className="mb-6">
+              <Label htmlFor="course" className="text-yellow-100">
+                COURSE:
+              </Label>
+              <Input
+                id="course"
+                name="course"
+                value={studentDepartment}
+                onChange={handleInputChange}
+                className="border-none bg-[#FDF3C0] text-[#193F56]"
+              />
+            </div>
           </div>
         </div>
 
@@ -272,7 +306,7 @@ const Prescription = () => {
                   <SelectValue placeholder="Select illness" />
                 </SelectTrigger>
                 <SelectContent>
-                  {illnesses.illness.map((ill, index) => (
+                  {Illness.map((ill, index) => (
                     <SelectItem
                       key={index}
                       value={JSON.stringify({
