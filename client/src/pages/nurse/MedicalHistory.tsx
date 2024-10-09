@@ -82,6 +82,8 @@ const MedicalHistory = () => {
 
   const [search, setSearch] = useState<string>('');
   const deleteMutation = useDeleteMedicalHistory();
+  const [searchDepartment, setSearchDepartment] = useState<string>('');
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
 
   const filteredAttendance = medicalHistoryData?.filter((item) =>
     item.studentName.toLowerCase().includes(search.toLowerCase()),
@@ -102,32 +104,145 @@ const MedicalHistory = () => {
       className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#526C71] p-4 text-[#FDF3C0]">
+      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#526C71] p-4">
         <div className="my-2 flex items-center justify-between">
-          <h1 className="text-[2rem]">MEDICAL HISTORY</h1>
-          <Input className="w-[40%]" placeholder="Search Department" />
+          <h1 className="text-[2rem] font-semibold text-[#FDF3C0]">
+            MEDICAL HISTORY
+          </h1>
+          <Input
+            onChange={(e) => setSearchDepartment(e.target.value)}
+            className="w-[40%]"
+            placeholder="Search Department"
+          />
         </div>
-        <div className="custom-scrollbar flex h-full max-h-[15rem] w-full flex-nowrap gap-4 overflow-x-auto scroll-smooth whitespace-nowrap rounded-full bg-[#274A5D] px-4">
-          {SchoolDepartment.map((dep, index) => (
-            <div
-              key={index}
-              className="flex w-[20rem] flex-none flex-col items-center justify-center gap-4 px-[4rem]"
+        <div className="custom-scrollbar flex h-full max-h-[15rem] w-full flex-nowrap gap-2 overflow-x-auto scroll-smooth whitespace-nowrap rounded-full bg-[#274A5D] px-4">
+          <div className="flex w-[15rem] flex-none flex-col items-center justify-center gap-4 px-[4rem]">
+            <img src={Dep} alt="department" className="w-h-28 h-28" />
+            <span
+              onClick={() => setSelectedDepartment('All')}
+              className="mb-[1rem] w-fit min-w-full cursor-pointer rounded-full bg-[#FFD863] p-2 text-center text-xl font-semibold text-black"
             >
-              <img src={Dep} alt="department" className="w-h-28 h-28" />
-              <p className="mb-[1rem] w-full rounded-full bg-[#FFD863] p-2 text-center text-xl font-semibold text-black">
-                {dep.course_name}
+              All
+            </span>
+          </div>
+          {SchoolDepartment.length > 0 ? (
+            SchoolDepartment.filter((dep) =>
+              dep.course_name
+                .toLowerCase()
+                .includes(searchDepartment.toLowerCase()),
+            ).length > 0 ? (
+              SchoolDepartment.filter((dep) =>
+                dep.course_name
+                  .toLowerCase()
+                  .includes(searchDepartment.toLowerCase()),
+              ).map((dep, index) => (
+                <div
+                  key={index}
+                  className="flex w-[15rem] flex-none flex-col items-center justify-center gap-4 px-[4rem]"
+                >
+                  <img src={Dep} alt="department" className="w-h-28 h-28" />
+                  <span
+                    onClick={() => setSelectedDepartment(dep.course_name)}
+                    className="mb-[1rem] w-fit min-w-full cursor-pointer rounded-full bg-[#FFD863] p-2 text-center text-xl font-semibold text-black"
+                  >
+                    {dep.course_name}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="flex h-[10rem] items-center justify-center text-center text-white">
+                No department found
               </p>
-            </div>
-          ))}
+            )
+          ) : (
+            <p>No departments available</p>
+          )}
         </div>
 
         {isLoading ? (
           <p>Loading...</p>
         ) : (
           <div className="mt-[2rem] border-2">
+            {/* <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      Student ID
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Student Name
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Course/Year
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Findings/Symptoms/Remarks
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Treatment/Recommendation
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Date
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      <span className="sr-only">Edit</span>
+                      <span className="sr-only">Delete</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems &&
+                    currentItems?.map((med, index) => (
+                      <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
+                        <th
+                          scope="row"
+                          className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+                        >
+                          {med.studentId}
+                        </th>
+                        <td className="px-6 py-4">{med.studentName}</td>
+                        <td className="px-6 py-4">
+                          {med.course} - {med.year}
+                        </td>
+                        <td className="px-6 py-4">{med.remarks}</td>
+                        <td className="px-6 py-4">{med.recom}</td>
+                        <td className="px-6 py-4">
+                          <Moment time={med.date} />
+                        </td>
+
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex gap-2">
+                            <Dialog>
+                              <DialogTrigger>Update</DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <div className="hidden">
+                                    <DialogTitle>
+                                      Edit student details
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                      Fill in the form to edit student details
+                                    </DialogDescription>
+                                  </div>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+
+                            <span onClick={() => handleDelete(med.med_rep_id)}>
+                              DELETE
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div> */}
+
             <Table>
               <TableHeader>
-                <TableRow className="bg-[#99ACFF] !text-black">
+                <TableRow className="bg-white !text-black">
                   <TableHead className="text-black">STUDENT ID</TableHead>
                   <TableHead className="text-black">STUDENT NAME</TableHead>
                   <TableHead className="text-black">COURSE/YEAR</TableHead>
@@ -143,49 +258,69 @@ const MedicalHistory = () => {
               </TableHeader>
               <TableBody>
                 {currentItems &&
-                  currentItems?.map((vol, index) => (
-                    <TableRow
-                      className="h-[1rem] bg-[#CDD6FF] text-sm text-black"
-                      key={index}
-                    >
-                      <TableCell>{vol.studentId}</TableCell>
-                      <TableCell>{vol.studentName}</TableCell>
-                      <TableCell>
-                        {vol.course} {vol.year}
-                      </TableCell>
-                      <TableCell>{vol.remarks}</TableCell>
-                      <TableCell>{vol.recom}</TableCell>
-                      <TableCell>
-                        <Moment time={vol.date} />
-                      </TableCell>
+                currentItems?.filter(
+                  (dep) =>
+                    selectedDepartment === 'All' || // If 'All' is selected, display all items
+                    dep.course
+                      .toLowerCase()
+                      .includes(selectedDepartment.toLowerCase()),
+                ).length > 0 ? (
+                  currentItems
+                    ?.filter(
+                      (dep) =>
+                        selectedDepartment === 'All' || // Apply the same logic here
+                        dep.course
+                          .toLowerCase()
+                          .includes(selectedDepartment.toLowerCase()),
+                    )
+                    .map((vol, index) => (
+                      <TableRow
+                        className="h-[1rem] bg-white text-sm text-black"
+                        key={index}
+                      >
+                        <TableCell>{vol.studentId}</TableCell>
+                        <TableCell>{vol.studentName}</TableCell>
+                        <TableCell>
+                          {vol.course} {vol.year}
+                        </TableCell>
+                        <TableCell>{vol.remarks}</TableCell>
+                        <TableCell>{vol.recom}</TableCell>
+                        <TableCell>
+                          <Moment time={vol.date} />
+                        </TableCell>
 
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Dialog>
-                            <DialogTrigger>Update</DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
-                                <div className="hidden">
-                                  <DialogTitle>
-                                    Edit student details
-                                  </DialogTitle>
-                                  <DialogDescription>
-                                    Fill in the form to edit student details
-                                  </DialogDescription>
-                                </div>
-                              </DialogHeader>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Dialog>
+                              <DialogTrigger>Update</DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <div className="hidden">
+                                    <DialogTitle>
+                                      Edit student details
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                      Fill in the form to edit student details
+                                    </DialogDescription>
+                                  </div>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
 
-                              {/* <EditVolunteer volunteerID={vol.volunteer_id} /> */}
-                            </DialogContent>
-                          </Dialog>
-
-                          <Button onClick={() => handleDelete(vol.med_rep_id)}>
-                            DELETE
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                            <span onClick={() => handleDelete(vol.med_rep_id)}>
+                              DELETE
+                            </span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                ) : (
+                  <TableRow className="h-[8rem] bg-white text-sm text-black">
+                    <TableCell colSpan={7} className="text-center">
+                      No medical history found
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
