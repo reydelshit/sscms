@@ -206,10 +206,10 @@ const Inventory = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-cover bg-center p-8"
+      className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="mt-[2rem] h-fit rounded-3xl bg-[#526C71] p-4 text-[#FDF3C0]">
+      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#526C71] bg-opacity-85 p-4">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">INVENTORY</h1>
           <Input
@@ -278,9 +278,12 @@ const Inventory = () => {
                           </DialogContent>
                         </Dialog>
 
-                        <Button onClick={() => handleDelete(item.inventory_id)}>
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => handleDelete(item.inventory_id)}
+                        >
                           DELETE
-                        </Button>
+                        </span>
                       </div>
                     </TableCell>
                   </TableRow>

@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import { Button } from '@/components/ui/button';
+import PaginationTemplate from '@/components/Pagination';
 import {
   Table,
   TableBody,
@@ -23,10 +23,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import Moment from '@/lib/Moment';
 import usePagination from '@/hooks/usePagination';
+import Moment from '@/lib/Moment';
 import { useState } from 'react';
-import PaginationTemplate from '@/components/Pagination';
 
 type MedicalReportType = {
   date: string;
@@ -52,7 +51,7 @@ const useFetchMedicalHistory = () => {
   });
 };
 
-const deleteVolunteer = async (id: string): Promise<void> => {
+const deleteMedicalReport = async (id: string): Promise<void> => {
   await axios.delete(
     `${import.meta.env.VITE_API_LINK}/medical-history/delete/${id}`,
   );
@@ -62,7 +61,7 @@ export const useDeleteMedicalHistory = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteVolunteer,
+    mutationFn: deleteMedicalReport,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['medicalReportData'] });
     },
@@ -104,7 +103,7 @@ const MedicalHistory = () => {
       className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#526C71] p-4">
+      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#526C71] bg-opacity-85 p-4">
         <div className="my-2 flex items-center justify-between">
           <h1 className="text-[2rem] font-semibold text-[#FDF3C0]">
             MEDICAL HISTORY
@@ -163,83 +162,6 @@ const MedicalHistory = () => {
           <p>Loading...</p>
         ) : (
           <div className="mt-[2rem] border-2">
-            {/* <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Student ID
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Student Name
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Course/Year
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Findings/Symptoms/Remarks
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Treatment/Recommendation
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Date
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      <span className="sr-only">Edit</span>
-                      <span className="sr-only">Delete</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentItems &&
-                    currentItems?.map((med, index) => (
-                      <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                        <th
-                          scope="row"
-                          className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                        >
-                          {med.studentId}
-                        </th>
-                        <td className="px-6 py-4">{med.studentName}</td>
-                        <td className="px-6 py-4">
-                          {med.course} - {med.year}
-                        </td>
-                        <td className="px-6 py-4">{med.remarks}</td>
-                        <td className="px-6 py-4">{med.recom}</td>
-                        <td className="px-6 py-4">
-                          <Moment time={med.date} />
-                        </td>
-
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex gap-2">
-                            <Dialog>
-                              <DialogTrigger>Update</DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <div className="hidden">
-                                    <DialogTitle>
-                                      Edit student details
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      Fill in the form to edit student details
-                                    </DialogDescription>
-                                  </div>
-                                </DialogHeader>
-                              </DialogContent>
-                            </Dialog>
-
-                            <span onClick={() => handleDelete(med.med_rep_id)}>
-                              DELETE
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div> */}
-
             <Table>
               <TableHeader>
                 <TableRow className="bg-white !text-black">
@@ -260,7 +182,7 @@ const MedicalHistory = () => {
                 {currentItems &&
                 currentItems?.filter(
                   (dep) =>
-                    selectedDepartment === 'All' || // If 'All' is selected, display all items
+                    selectedDepartment === 'All' ||
                     dep.course
                       .toLowerCase()
                       .includes(selectedDepartment.toLowerCase()),
@@ -268,7 +190,7 @@ const MedicalHistory = () => {
                   currentItems
                     ?.filter(
                       (dep) =>
-                        selectedDepartment === 'All' || // Apply the same logic here
+                        selectedDepartment === 'All' ||
                         dep.course
                           .toLowerCase()
                           .includes(selectedDepartment.toLowerCase()),
@@ -307,7 +229,10 @@ const MedicalHistory = () => {
                               </DialogContent>
                             </Dialog>
 
-                            <span onClick={() => handleDelete(vol.med_rep_id)}>
+                            <span
+                              className="cursor-pointer"
+                              onClick={() => handleDelete(vol.med_rep_id)}
+                            >
                               DELETE
                             </span>
                           </div>

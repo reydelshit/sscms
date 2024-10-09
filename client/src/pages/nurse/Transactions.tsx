@@ -11,7 +11,7 @@ const Transactions = () => {
       className="min-h-screen w-full bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="flex w-full justify-between gap-4 rounded-full bg-[#526C71] p-4">
+      <div className="flex w-full justify-between gap-4 rounded-full bg-[#526C71] bg-opacity-85 p-4">
         <div className="mb-2 w-full rounded-full bg-[#F2700A]">
           <Link to="/transactions">
             <Button

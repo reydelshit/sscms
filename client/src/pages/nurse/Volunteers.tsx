@@ -93,7 +93,7 @@ const Volunteers = () => {
       className="min-h-screen w-full bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="mt-[2rem] h-[80%] rounded-3xl bg-[#526C71] p-4 text-[#FDF3C0]">
+      <div className="mt-[2rem] h-[80%] rounded-3xl bg-[#526C71] bg-opacity-85 p-4 text-[#FDF3C0]">
         <Dialog>
           <DialogTrigger>
             <Button>ADD VOLUNTEEER</Button>

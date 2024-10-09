@@ -135,7 +135,7 @@ const MedicalReport = () => {
   };
 
   return (
-    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#526C71] p-4">
+    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#526C71] bg-opacity-85 p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
