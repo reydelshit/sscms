@@ -26,6 +26,7 @@ import {
 import usePagination from '@/hooks/usePagination';
 import Moment from '@/lib/Moment';
 import { useState } from 'react';
+import EditMedicalHistory from '../medical-history/EditMedicalHistory';
 
 type MedicalReportType = {
   date: string;
@@ -79,19 +80,14 @@ const MedicalHistory = () => {
     isError,
   } = useFetchMedicalHistory();
 
-  const [search, setSearch] = useState<string>('');
   const deleteMutation = useDeleteMedicalHistory();
   const [searchDepartment, setSearchDepartment] = useState<string>('');
-  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
-
-  const filteredAttendance = medicalHistoryData?.filter((item) =>
-    item.studentName.toLowerCase().includes(search.toLowerCase()),
-  );
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('All');
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
       itemsPerPage: 5,
-      data: filteredAttendance || [],
+      data: medicalHistoryData || [],
     });
 
   const handleDelete = async (id: string) => {
@@ -119,7 +115,7 @@ const MedicalHistory = () => {
             <img src={Dep} alt="department" className="w-h-28 h-28" />
             <span
               onClick={() => setSelectedDepartment('All')}
-              className="mb-[1rem] w-fit min-w-full cursor-pointer rounded-full bg-[#FFD863] p-2 text-center text-xl font-semibold text-black"
+              className={`mb-[1rem] w-fit min-w-full cursor-pointer rounded-full ${selectedDepartment === 'All' ? 'bg-[#FFA114]' : 'bg-[#FFD863]'} p-2 text-center text-xl font-semibold text-black`}
             >
               All
             </span>
@@ -140,9 +136,10 @@ const MedicalHistory = () => {
                   className="flex w-[15rem] flex-none flex-col items-center justify-center gap-4 px-[4rem]"
                 >
                   <img src={Dep} alt="department" className="w-h-28 h-28" />
+
                   <span
                     onClick={() => setSelectedDepartment(dep.course_name)}
-                    className="mb-[1rem] w-fit min-w-full cursor-pointer rounded-full bg-[#FFD863] p-2 text-center text-xl font-semibold text-black"
+                    className={`mb-[1rem] w-fit min-w-full cursor-pointer rounded-full ${selectedDepartment === dep.course_name ? 'bg-[#FFA114]' : 'bg-[#FFD863]'} p-2 text-center text-xl font-semibold text-black`}
                   >
                     {dep.course_name}
                   </span>
@@ -217,15 +214,19 @@ const MedicalHistory = () => {
                               <DialogTrigger>Update</DialogTrigger>
                               <DialogContent>
                                 <DialogHeader>
-                                  <div className="hidden">
+                                  <div>
                                     <DialogTitle>
-                                      Edit student details
+                                      Edit Medical Report Details
                                     </DialogTitle>
                                     <DialogDescription>
-                                      Fill in the form to edit student details
+                                      Fill in the form to edit details
                                     </DialogDescription>
                                   </div>
                                 </DialogHeader>
+
+                                <EditMedicalHistory
+                                  medicalHistoryID={vol.med_rep_id}
+                                />
                               </DialogContent>
                             </Dialog>
 

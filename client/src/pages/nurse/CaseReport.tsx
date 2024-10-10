@@ -142,6 +142,7 @@ const CaseReport = () => {
           </Select>
 
           <Input
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             className="w-full border-none bg-[#FFD863] text-[#193F56]"
           />

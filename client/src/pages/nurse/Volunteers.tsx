@@ -31,7 +31,8 @@ import EditVolunteer from './volunteer/EditVolunteer';
 interface VolunteerItem {
   student_id: string;
   student_name: string;
-  course_year: string;
+  course: string;
+  year: string;
   phone_number: string;
   email: string;
   created_at: string;
@@ -120,7 +121,8 @@ const Volunteers = () => {
               <TableRow className="bg-[#99ACFF] !text-black">
                 <TableHead className="text-black">STUDENT ID</TableHead>
                 <TableHead className="text-black">STUDENT NAME</TableHead>
-                <TableHead className="text-black">COURSE/YEAR</TableHead>
+                <TableHead className="text-black">COURSE</TableHead>
+                <TableHead className="text-black">YEAR</TableHead>
                 <TableHead className="text-black">PHONE NUMBER.</TableHead>
                 <TableHead className="text-black">EMAIL</TableHead>
                 <TableHead className="text-black">CREATED AT</TableHead>
@@ -133,7 +135,8 @@ const Volunteers = () => {
                   <TableRow className="bg-[#CDD6FF] text-black" key={index}>
                     <TableCell>{vol.student_id}</TableCell>
                     <TableCell>{vol.student_name}</TableCell>
-                    <TableCell>{vol.course_year}</TableCell>
+                    <TableCell>{vol.course}</TableCell>
+                    <TableCell>{vol.year}</TableCell>
                     <TableCell>{vol.phone_number}</TableCell>
                     <TableCell>{vol.email}</TableCell>
                     <TableCell>

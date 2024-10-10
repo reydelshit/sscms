@@ -54,19 +54,21 @@ const storage = multer.diskStorage({
   //ADD volunteer
   router.post("/create", (req, res) => {
     const query = `
-      INSERT INTO volunteer (volunteer_id, student_name, course_year, email, student_id, phone_number, created_at) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO volunteer (volunteer_id, student_name, course, year, email, student_id, phone_number, password, created_at) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?)
     `;
   
     const created_at = new Date();
     const values = [
       req.body.volunteer_id,
       req.body.student_name,
-      req.body.course_year,
+      req.body.course,
+      req.body.year,
       req.body.email,
       req.body.student_id,
       req.body.phone_number,
-        created_at
+      req.body.password,
+      created_at
     ];
   
     databaseConnection.query(query, values, (err, data) => {
@@ -90,7 +92,8 @@ const storage = multer.diskStorage({
       UPDATE volunteer 
       SET  student_id = ?, 
            student_name = ?, 
-          course_year = ?, 
+          course = ?, 
+          year = ?,
           email = ?, 
           phone_number = ?
       WHERE volunteer_id = ?
@@ -99,7 +102,8 @@ const storage = multer.diskStorage({
     const values = [
       req.body.student_id,
       req.body.student_name,
-      req.body.course_year,
+      req.body.course,
+      req.body.year,
       req.body.email,
       req.body.phone_number,
       req.params.id
