@@ -27,7 +27,11 @@ function ExportToPDF<T extends object>({
     doc.save(`${fileName}.pdf`);
   };
 
-  return <Button onClick={handleExport}>Export to PDF</Button>;
+  return (
+    <Button className="rounded-full bg-green-500" onClick={handleExport}>
+      GENERATE PDF
+    </Button>
+  );
 }
 
 export { ExportToPDF };

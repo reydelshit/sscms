@@ -26,7 +26,7 @@ const PaginationTemplate = ({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              className="cursor-pointer"
+              className="cursor-pointer text-[#FDF3C0]"
               onClick={() =>
                 currentPage === 1
                   ? handlePageChange(totalPages)
@@ -42,8 +42,8 @@ const PaginationTemplate = ({
                   href="#"
                   className={`mx-1 ${
                     currentPage === pageNumber
-                      ? 'bg-black text-white'
-                      : 'bg-gray-200'
+                      ? 'bg-orange-500'
+                      : 'bg-[#FFD863]'
                   }`}
                   onClick={() => handlePageChange(pageNumber)}
                 >
@@ -58,6 +58,7 @@ const PaginationTemplate = ({
           </PaginationItem>
           <PaginationItem>
             <PaginationNext
+              className="text-[#FDF3C0]"
               href="#"
               onClick={() =>
                 currentPage === totalPages

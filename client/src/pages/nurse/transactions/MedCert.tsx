@@ -153,7 +153,7 @@ const MedCert = () => {
   };
 
   return (
-    <div className="mt-[2rem] h-fit rounded-3xl bg-[#526C71] bg-opacity-85 p-4">
+    <div className="mt-[2rem] h-fit rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-3 gap-4">
           <div className="col-span-2">
@@ -165,7 +165,7 @@ const MedCert = () => {
               name="transNo"
               disabled
               placeholder="[Auto-Generated]"
-              className="border-none bg-yellow-100"
+              className="rounded-full border-none bg-yellow-100"
             />
           </div>
           <div>
@@ -178,7 +178,7 @@ const MedCert = () => {
               type="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="border-none bg-yellow-100"
+              className="rounded-full border-none bg-yellow-100"
             />
           </div>
         </div>
@@ -192,7 +192,7 @@ const MedCert = () => {
               name="studentName"
               value={studentFullname}
               onChange={handleInputChange}
-              className="border-none bg-yellow-100"
+              className="rounded-full border-none bg-yellow-100"
             />
           </div>
           <div>
@@ -202,7 +202,7 @@ const MedCert = () => {
             <Select
               onValueChange={(value) => handleSelectChange('studentId', value)}
             >
-              <SelectTrigger className="border-none bg-yellow-100">
+              <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
@@ -234,7 +234,7 @@ const MedCert = () => {
               name="address"
               value={formData.address}
               onChange={handleInputChange}
-              className="border-none bg-yellow-100"
+              className="rounded-full border-none bg-yellow-100"
             />
           </div>
           <div>
@@ -246,7 +246,7 @@ const MedCert = () => {
               name="age"
               value={formData.age}
               onChange={handleInputChange}
-              className="border-none bg-yellow-100"
+              className="rounded-full border-none bg-yellow-100"
             />
           </div>
           <div className="mb-6">
@@ -286,7 +286,7 @@ const MedCert = () => {
               name="diagnosis"
               value={formData.diagnosis}
               onChange={handleInputChange}
-              className="h-32 border-none bg-yellow-100"
+              className="h-32 rounded-2xl border-none bg-yellow-100"
             />
           </div>
           <div>
@@ -298,7 +298,7 @@ const MedCert = () => {
               name="ref_reason"
               value={formData.ref_reason}
               onChange={handleInputChange}
-              className="h-32 border-none bg-yellow-100"
+              className="h-32 rounded-2xl border-none bg-yellow-100"
             />
           </div>
         </div>
@@ -311,43 +311,46 @@ const MedCert = () => {
             name="referenceClassification"
             value={formData.referenceClassification}
             onChange={handleInputChange}
-            className="h-24 border-none bg-yellow-100"
+            className="h-24 rounded-2xl border-none bg-yellow-100"
           />
         </div>
-        <div className="mb-6">
-          <Label htmlFor="reffered" className="text-yellow-100">
-            REFFERED TO:
-          </Label>
-          <Input
-            id="reffered"
-            name="reffered"
-            value={formData.reffered}
-            onChange={handleInputChange}
-            className="border-none bg-yellow-100"
-          />
+        <div className="my-4 flex w-full items-center justify-between">
+          <div className="w-[40%]">
+            <Label htmlFor="reffered" className="text-yellow-100">
+              REFFERED TO:
+            </Label>
+            <Input
+              id="reffered"
+              name="reffered"
+              value={formData.reffered}
+              onChange={handleInputChange}
+              className="rounded-full border-none bg-yellow-100"
+            />
+          </div>
+
+          <Button
+            type="button"
+            className="mt-[1rem] rounded-full bg-red-500 text-white"
+          >
+            NOTIFY EMERGENCY CONTACT
+          </Button>
         </div>
         <div className="flex items-center justify-between">
           <div className="space-x-4">
             <Button
               type="submit"
-              className="bg-green-500 text-white hover:bg-green-600"
+              className="rounded-full bg-green-500 text-white hover:bg-green-600"
             >
               CONFIRM & PRINT
             </Button>
             <Button
               type="button"
               onClick={handleClear}
-              className="bg-yellow-500 text-white hover:bg-yellow-600"
+              className="rounded-full bg-yellow-500 text-white hover:bg-yellow-600"
             >
               CLEAR
             </Button>
           </div>
-          <Button
-            type="button"
-            className="bg-red-500 text-white hover:bg-red-600"
-          >
-            NOTIFY EMERGENCY CONTACT
-          </Button>
         </div>
       </form>
     </div>

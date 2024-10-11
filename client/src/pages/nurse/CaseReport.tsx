@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/table';
 
 import PaginationTemplate from '@/components/Pagination';
-import Moment from '@/lib/Moment';
+import Moment from '@/components/Moment';
 import { ExportToPDF } from '@/components/ExportToPdf';
 
 type MedicalReportType = {
@@ -97,14 +97,14 @@ const CaseReport = () => {
       className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#526C71] bg-opacity-85 p-4 text-center">
+      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#193F56] bg-opacity-75 p-4 text-center">
         <h1 className="text-2xl font-semibold text-[#FFD863]">
           MONTHLY CASE REPORT
         </h1>
 
         <div className="my-4 flex gap-4">
           <Select onValueChange={(value) => setSelectedMonth(value)}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full rounded-full border-none bg-[#FFD863] text-[#193F56]">
               <SelectValue placeholder="Month" />
             </SelectTrigger>
             <SelectContent>
@@ -124,7 +124,7 @@ const CaseReport = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={(value) => setSelectedYear(value)}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full rounded-full border-none bg-[#FFD863] text-[#193F56]">
               <SelectValue placeholder="Select Year" />
             </SelectTrigger>
             <SelectContent>
@@ -145,7 +145,7 @@ const CaseReport = () => {
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
-            className="w-full border-none bg-[#FFD863] text-[#193F56]"
+            className="w-full rounded-full border-none text-[#193F56]"
           />
 
           <ExportToPDF
@@ -178,10 +178,10 @@ const CaseReport = () => {
           {isLoading ? (
             <p>Loading...</p>
           ) : (
-            <div className="mt-[2rem] border-2">
+            <div className="mt-[2rem] overflow-hidden rounded-3xl">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-white !text-black">
+                  <TableRow className="bg-[#FFD699] !text-black">
                     <TableHead className="text-center text-black">
                       DATE
                     </TableHead>
@@ -244,15 +244,21 @@ const CaseReport = () => {
                           className="h-[1rem] bg-white text-sm text-black"
                           key={index}
                         >
-                          <TableCell>
+                          <TableCell className="bg-[#FFEBCD]">
                             <Moment time={vol.date} />
                           </TableCell>
-                          <TableCell>{vol.studentName}</TableCell>
-                          <TableCell>
+                          <TableCell className="bg-[#FFEBCD]">
+                            {vol.studentName}
+                          </TableCell>
+                          <TableCell className="bg-[#FFEBCD]">
                             {vol.course} {vol.year}
                           </TableCell>
-                          <TableCell>{vol.remarks}</TableCell>
-                          <TableCell>{vol.recom}</TableCell>
+                          <TableCell className="bg-[#FFF4E3]">
+                            {vol.remarks}
+                          </TableCell>
+                          <TableCell className="bg-[#FFF4E3]">
+                            {vol.recom}
+                          </TableCell>
                         </TableRow>
                       ))
                   ) : (

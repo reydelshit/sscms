@@ -24,7 +24,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import usePagination from '@/hooks/usePagination';
-import Moment from '@/lib/Moment';
+import Moment from '@/components/Moment';
 import { useState } from 'react';
 import EditMedicalHistory from '../medical-history/EditMedicalHistory';
 
@@ -86,7 +86,7 @@ const MedicalHistory = () => {
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
-      itemsPerPage: 5,
+      itemsPerPage: 3,
       data: medicalHistoryData || [],
     });
 
@@ -96,22 +96,22 @@ const MedicalHistory = () => {
 
   return (
     <div
-      className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
+      className="min-h-screen w-full bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#526C71] bg-opacity-85 p-4">
+      <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
         <div className="my-2 flex items-center justify-between">
           <h1 className="text-[2rem] font-semibold text-[#FDF3C0]">
             MEDICAL HISTORY
           </h1>
           <Input
             onChange={(e) => setSearchDepartment(e.target.value)}
-            className="w-[40%]"
+            className="w-[40%] rounded-full"
             placeholder="Search Department"
           />
         </div>
-        <div className="custom-scrollbar flex h-full max-h-[15rem] w-full flex-nowrap gap-2 overflow-x-auto scroll-smooth whitespace-nowrap rounded-full bg-[#274A5D] px-4">
-          <div className="flex w-[15rem] flex-none flex-col items-center justify-center gap-4 px-[4rem]">
+        <div className="custom-scrollbar flex h-screen max-h-[15rem] w-full flex-nowrap overflow-x-auto scroll-smooth whitespace-nowrap rounded-full bg-[#274A5D] px-4">
+          <div className="flex w-[15rem] flex-none flex-col items-center justify-center gap-2 px-[4rem]">
             <img src={Dep} alt="department" className="w-h-28 h-28" />
             <span
               onClick={() => setSelectedDepartment('All')}
@@ -158,10 +158,10 @@ const MedicalHistory = () => {
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-          <div className="mt-[2rem] border-2">
+          <div className="mt-[2rem] h-full overflow-hidden rounded-3xl">
             <Table>
               <TableHeader>
-                <TableRow className="bg-white !text-black">
+                <TableRow className="bg-[#FFD699] !text-black">
                   <TableHead className="text-black">STUDENT ID</TableHead>
                   <TableHead className="text-black">STUDENT NAME</TableHead>
                   <TableHead className="text-black">COURSE/YEAR</TableHead>
@@ -197,21 +197,31 @@ const MedicalHistory = () => {
                         className="h-[1rem] bg-white text-sm text-black"
                         key={index}
                       >
-                        <TableCell>{vol.studentId}</TableCell>
-                        <TableCell>{vol.studentName}</TableCell>
-                        <TableCell>
+                        <TableCell className="bg-[#FFEBCD]">
+                          {vol.studentId}
+                        </TableCell>
+                        <TableCell className="bg-[#FFF4E3]">
+                          {vol.studentName}
+                        </TableCell>
+                        <TableCell className="bg-[#FFF4E3]">
                           {vol.course} {vol.year}
                         </TableCell>
-                        <TableCell>{vol.remarks}</TableCell>
-                        <TableCell>{vol.recom}</TableCell>
-                        <TableCell>
+                        <TableCell className="bg-[#FFF4E3]">
+                          {vol.remarks}
+                        </TableCell>
+                        <TableCell className="bg-[#FFF4E3]">
+                          {vol.recom}
+                        </TableCell>
+                        <TableCell className="bg-[#FFF4E3]">
                           <Moment time={vol.date} />
                         </TableCell>
 
-                        <TableCell>
-                          <div className="flex gap-2">
+                        <TableCell className="bg-[#FFF4E3]">
+                          <div className="flex flex-col gap-2">
                             <Dialog>
-                              <DialogTrigger>Update</DialogTrigger>
+                              <DialogTrigger className="w-full rounded-full bg-[#FFA114] p-2 font-semibold text-white">
+                                Update
+                              </DialogTrigger>
                               <DialogContent>
                                 <DialogHeader>
                                   <div>
@@ -231,7 +241,7 @@ const MedicalHistory = () => {
                             </Dialog>
 
                             <span
-                              className="cursor-pointer"
+                              className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white"
                               onClick={() => handleDelete(vol.med_rep_id)}
                             >
                               DELETE

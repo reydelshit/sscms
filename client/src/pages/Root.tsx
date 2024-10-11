@@ -1,6 +1,5 @@
 import ButtonShadow from '@/components/ButtonShadow';
 import Header from '@/components/structure/Header';
-import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/nurse/Dashboard';
 import { Outlet, useLocation } from 'react-router-dom';
@@ -22,8 +21,8 @@ const Root = () => {
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <Header />
-      <div className="relative flex h-screen w-full grow overflow-auto">
-        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 border-r-[1px] bg-[#FED883] p-2 px-4 pt-[4rem]">
+      <div className="relative flex h-full w-full grow">
+        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 bg-[#FED883] p-2 px-4 pt-[4rem]">
           {/* <div className="sticky left-0 top-0 z-10 h-screen w-[280px] flex-col gap-2 border-r-[1px] bg-[#FED883] p-2 px-4 pt-[4rem]"> */}
           <ButtonShadow
             to="/"
@@ -37,7 +36,7 @@ const Root = () => {
           <ButtonShadow
             to="/transactions"
             className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
-            outsideBG="bg-[#F2700A]"
+            outsideBG="bg-black"
           >
             {' '}
             TRANSACTIONS{' '}
@@ -55,7 +54,7 @@ const Root = () => {
           <ButtonShadow
             to="/case-report"
             className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/case-report' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
-            outsideBG="bg-[#F2700A]"
+            outsideBG="bg-black"
           >
             {' '}
             CASE REPORT{' '}
@@ -76,16 +75,9 @@ const Root = () => {
           >
             VOLUNTEERS
           </ButtonShadow>
-
-          <Button
-            onClick={handleLogout}
-            className="absolute bottom-2 left-2 right-2"
-          >
-            Logout
-          </Button>
         </div>
 
-        <div className="min-h-screen w-full overflow-x-hidden">
+        <div className="w-full overflow-x-hidden">
           {/* This is where the child routes get rendered */}
           {params.pathname === '/' ? <Dashboard /> : <Outlet />}
         </div>

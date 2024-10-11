@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
+import Moment from '@/components/Moment';
 import PaginationTemplate from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,10 +24,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import usePagination from '@/hooks/usePagination';
-import Moment from '@/lib/Moment';
 import { useState } from 'react';
 import AddVolunteer from './volunteer/AddVolunteer';
 import EditVolunteer from './volunteer/EditVolunteer';
+import { Input } from '@/components/ui/input';
 
 interface VolunteerItem {
   student_id: string;
@@ -94,82 +95,106 @@ const Volunteers = () => {
       className="min-h-screen w-full bg-cover bg-center p-8"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="mt-[2rem] h-[80%] rounded-3xl bg-[#526C71] bg-opacity-85 p-4 text-[#FDF3C0]">
-        <Dialog>
-          <DialogTrigger>
-            <Button>ADD VOLUNTEEER</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <div className="hidden">
-                <DialogTitle>Edit student details</DialogTitle>
-                <DialogDescription>
-                  Fill in the form to edit student details
-                </DialogDescription>
-              </div>
-            </DialogHeader>
+      <div className="mt-[2rem] h-[80%] rounded-3xl bg-[#193F56] bg-opacity-75 p-4 text-[#FDF3C0]">
+        <div className="flex w-full justify-between gap-4">
+          <h1 className="text-[2rem] font-semibold text-[#FDF3C0]">
+            VOLUNTEERS
+          </h1>
+          <div className="flex w-[40%] items-end justify-end gap-4">
+            <Dialog>
+              <DialogTrigger>
+                <Button className="rounded-3xl bg-green-500">
+                  ADD VOLUNTEEER
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <div className="hidden">
+                    <DialogTitle>Edit student details</DialogTitle>
+                    <DialogDescription>
+                      Fill in the form to edit student details
+                    </DialogDescription>
+                  </div>
+                </DialogHeader>
 
-            <AddVolunteer />
-          </DialogContent>
-        </Dialog>
+                <AddVolunteer />
+              </DialogContent>
+            </Dialog>
+
+            <Input
+              placeholder="Search"
+              className="w-[200px] rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
 
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-          <Table className="h-[300px] max-h-[300px] border-2">
-            <TableHeader>
-              <TableRow className="bg-[#99ACFF] !text-black">
-                <TableHead className="text-black">STUDENT ID</TableHead>
-                <TableHead className="text-black">STUDENT NAME</TableHead>
-                <TableHead className="text-black">COURSE</TableHead>
-                <TableHead className="text-black">YEAR</TableHead>
-                <TableHead className="text-black">PHONE NUMBER.</TableHead>
-                <TableHead className="text-black">EMAIL</TableHead>
-                <TableHead className="text-black">CREATED AT</TableHead>
-                <TableHead className="text-black">ACTIONS</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentItems &&
-                currentItems?.map((vol, index) => (
-                  <TableRow className="bg-[#CDD6FF] text-black" key={index}>
-                    <TableCell>{vol.student_id}</TableCell>
-                    <TableCell>{vol.student_name}</TableCell>
-                    <TableCell>{vol.course}</TableCell>
-                    <TableCell>{vol.year}</TableCell>
-                    <TableCell>{vol.phone_number}</TableCell>
-                    <TableCell>{vol.email}</TableCell>
-                    <TableCell>
-                      <Moment time={vol.created_at} />
-                    </TableCell>
+          <div className="mt-[2rem] h-full overflow-hidden rounded-3xl">
+            <Table className="h-[300px] max-h-[300px]">
+              <TableHeader>
+                <TableRow className="bg-[#99ACFF] !text-black">
+                  <TableHead className="text-black">STUDENT ID</TableHead>
+                  <TableHead className="text-black">STUDENT NAME</TableHead>
+                  <TableHead className="text-black">COURSE</TableHead>
+                  <TableHead className="text-black">YEAR</TableHead>
+                  <TableHead className="text-black">PHONE NUMBER.</TableHead>
+                  <TableHead className="text-black">EMAIL</TableHead>
+                  <TableHead className="text-black">CREATED AT</TableHead>
+                  <TableHead className="text-black">ACTIONS</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentItems &&
+                  currentItems?.map((vol, index) => (
+                    <TableRow className="bg-[#CDD6FF] text-black" key={index}>
+                      <TableCell>{vol.student_id}</TableCell>
+                      <TableCell>{vol.student_name}</TableCell>
+                      <TableCell>{vol.course}</TableCell>
+                      <TableCell>{vol.year}</TableCell>
+                      <TableCell>{vol.phone_number}</TableCell>
+                      <TableCell>{vol.email}</TableCell>
+                      <TableCell>
+                        <Moment time={vol.created_at} />
+                      </TableCell>
 
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Dialog>
-                          <DialogTrigger>Update</DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <div className="hidden">
-                                <DialogTitle>Edit student details</DialogTitle>
-                                <DialogDescription>
-                                  Fill in the form to edit student details
-                                </DialogDescription>
-                              </div>
-                            </DialogHeader>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Dialog>
+                            <DialogTrigger className="w-full rounded-full bg-[#FFA114] p-2 font-semibold text-white">
+                              Update
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <div className="hidden">
+                                  <DialogTitle>
+                                    Edit student details
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    Fill in the form to edit student details
+                                  </DialogDescription>
+                                </div>
+                              </DialogHeader>
 
-                            <EditVolunteer volunteerID={vol.volunteer_id} />
-                          </DialogContent>
-                        </Dialog>
+                              <EditVolunteer volunteerID={vol.volunteer_id} />
+                            </DialogContent>
+                          </Dialog>
 
-                        <Button onClick={() => handleDelete(vol.volunteer_id)}>
-                          DELETE
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
+                          <span
+                            onClick={() => handleDelete(vol.volunteer_id)}
+                            className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white"
+                          >
+                            DELETE
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
 
         <PaginationTemplate

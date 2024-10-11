@@ -194,7 +194,7 @@ const Prescription = () => {
   };
 
   return (
-    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#526C71] bg-opacity-85 p-4">
+    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
@@ -207,7 +207,7 @@ const Prescription = () => {
               id="transNo"
               name="transNo"
               onChange={handleInputChange}
-              className="border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
             />
           </div>
           <div>
@@ -220,7 +220,7 @@ const Prescription = () => {
               type="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
             />
           </div>
         </div>
@@ -235,7 +235,7 @@ const Prescription = () => {
                 name="studentName"
                 value={studentFullname}
                 onChange={handleInputChange}
-                className="border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
 
@@ -248,7 +248,7 @@ const Prescription = () => {
                 name="year"
                 value={studentCourseYear}
                 onChange={handleInputChange}
-                className="border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
           </div>
@@ -260,7 +260,7 @@ const Prescription = () => {
             <Select
               onValueChange={(value) => handleSelectChange('studentId', value)}
             >
-              <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
+              <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
@@ -289,7 +289,7 @@ const Prescription = () => {
                 name="course"
                 value={studentDepartment}
                 onChange={handleInputChange}
-                className="border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
           </div>
@@ -302,7 +302,7 @@ const Prescription = () => {
                 ILLNESS
               </Label>
               <Select onValueChange={handleSelectIllness}>
-                <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
+                <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
                   <SelectValue placeholder="Select illness" />
                 </SelectTrigger>
                 <SelectContent>
@@ -328,7 +328,7 @@ const Prescription = () => {
                 disabled={selectedIllness.length === 0}
                 onValueChange={(value) => handleSelectPrescription(value)}
               >
-                <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
+                <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
                   <SelectValue placeholder="Select prescription" />
                 </SelectTrigger>
                 <SelectContent>
@@ -349,7 +349,7 @@ const Prescription = () => {
                   name="quantity"
                   value={formData.quantity}
                   onChange={handleInputChange}
-                  className="border-none bg-[#FFD863] text-[#193F56]"
+                  className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
                 />
               </div>
             </div>
@@ -362,13 +362,13 @@ const Prescription = () => {
                 name="sig"
                 value={formData.sig}
                 onChange={handleInputChange}
-                className="border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex flex-row-reverse gap-4">
           <Button
             type="submit"
             className="rounded-full bg-green-500 text-white hover:bg-green-600"

@@ -135,7 +135,7 @@ const MedicalReport = () => {
   };
 
   return (
-    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#526C71] bg-opacity-85 p-4">
+    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
@@ -147,7 +147,7 @@ const MedicalReport = () => {
               id="transNo"
               name="transNo"
               placeholder="[Auto-Generated]"
-              className="border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
             />
           </div>
           <div>
@@ -160,7 +160,7 @@ const MedicalReport = () => {
               type="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
             />
           </div>
         </div>
@@ -175,7 +175,7 @@ const MedicalReport = () => {
                 name="studentName"
                 value={studentFullname}
                 onChange={handleInputChange}
-                className="border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
 
@@ -188,7 +188,7 @@ const MedicalReport = () => {
                 name="year"
                 value={studentCourseYear}
                 onChange={handleInputChange}
-                className="border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
           </div>
@@ -198,7 +198,7 @@ const MedicalReport = () => {
               STUDENT ID:
             </Label>
             <Select onValueChange={(value) => handleSelectChange(value)}>
-              <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
+              <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
@@ -228,7 +228,7 @@ const MedicalReport = () => {
                 name="course"
                 value={studentDepartment}
                 onChange={handleInputChange}
-                className="border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               />
             </div>
           </div>
@@ -239,13 +239,13 @@ const MedicalReport = () => {
             placeholder="FINDINGS/SYMPTOMS/REMARKS:"
             onChange={handleInputChange}
             name="remarks"
-            className="h-full border-none bg-[#FDF3C0] text-[#193F56]"
+            className="h-full rounded-2xl border-none bg-[#FDF3C0] text-[#193F56]"
           />
           <Textarea
             placeholder="TREATMENT/RECOMMENDATION:"
             onChange={handleInputChange}
             name="recom"
-            className="h-full border-none bg-[#FDF3C0] text-[#193F56]"
+            className="h-full rounded-2xl border-none bg-[#FDF3C0] text-[#193F56]"
           />
         </div>
 
@@ -253,20 +253,22 @@ const MedicalReport = () => {
           <div className="flex gap-4">
             <Button
               type="submit"
-              className="rounded-full bg-green-500 text-white hover:bg-green-600"
+              className="w-[10rem] rounded-full bg-green-500 text-white"
             >
               CONFIRM
             </Button>
             <Button
               type="button"
               onClick={handleClear}
-              className="w-[8rem] rounded-full bg-[#F2700A]"
+              className="w-[10rem] rounded-full bg-[#F2700A]"
             >
               CLEAR
             </Button>
           </div>
 
-          <Button className="bg-red-500">NOTIFY EMERGENCY CONTACT</Button>
+          <Button className="rounded-full bg-red-500">
+            NOTIFY EMERGENCY CONTACT
+          </Button>
         </div>
       </form>
     </div>
