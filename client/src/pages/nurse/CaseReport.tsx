@@ -24,6 +24,7 @@ import {
 
 import PaginationTemplate from '@/components/Pagination';
 import Moment from '@/lib/Moment';
+import { ExportToPDF } from '@/components/ExportToPdf';
 
 type MedicalReportType = {
   date: string;
@@ -147,7 +148,26 @@ const CaseReport = () => {
             className="w-full border-none bg-[#FFD863] text-[#193F56]"
           />
 
-          <Button className="w-full">GENERATE PDF</Button>
+          <ExportToPDF
+            data={currentItems?.filter((dep) => {
+              const depYear = String(new Date(dep.date).getFullYear());
+              const depMonth = String(new Date(dep.date).getMonth() + 1);
+
+              if (!selectedYear || !selectedMonth) {
+                return true;
+              }
+
+              const isYearMatch = selectedYear
+                ? depYear === selectedYear
+                : false;
+              const isMonthMatch = selectedMonth
+                ? depMonth === selectedMonth
+                : false;
+
+              return isYearMatch || isMonthMatch;
+            })}
+            fileName="case-report"
+          />
         </div>
 
         <div>
