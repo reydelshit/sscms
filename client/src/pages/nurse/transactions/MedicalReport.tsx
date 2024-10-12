@@ -148,6 +148,7 @@ const MedicalReport = () => {
               name="transNo"
               placeholder="[Auto-Generated]"
               className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              required
             />
           </div>
           <div>
@@ -161,6 +162,7 @@ const MedicalReport = () => {
               value={formData.date}
               onChange={handleInputChange}
               className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              required
             />
           </div>
         </div>
@@ -176,6 +178,7 @@ const MedicalReport = () => {
                 value={studentFullname}
                 onChange={handleInputChange}
                 className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                required
               />
             </div>
 
@@ -189,6 +192,7 @@ const MedicalReport = () => {
                 value={studentCourseYear}
                 onChange={handleInputChange}
                 className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                required
               />
             </div>
           </div>
@@ -229,6 +233,7 @@ const MedicalReport = () => {
                 value={studentDepartment}
                 onChange={handleInputChange}
                 className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                required
               />
             </div>
           </div>

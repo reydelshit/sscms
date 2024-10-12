@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { DialogClose } from '@/components/ui/dialog';
 
 interface FormDataType {
   student_id: string;
@@ -131,15 +132,21 @@ const AddVolunteer = () => {
       student_name: studentFullname,
       password: password,
     });
+
+    setFormData({
+      student_id: '',
+      student_name: '',
+      course_year: '',
+      phone_number: '',
+      email: '',
+    });
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <Label htmlFor="studentId" className="text-yellow-100">
-            STUDENT ID:
-          </Label>
+          <Label htmlFor="studentId">STUDENT ID:</Label>
           <Select
             onValueChange={(value) => handleSelectChange('student_id', value)}
           >
@@ -221,15 +228,18 @@ const AddVolunteer = () => {
         <div className="my-4 flex gap-4">
           <Button
             type="submit"
-            className="w-full bg-[#FFA114] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56]"
+            className="w-full bg-green-500 text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56]"
           >
             {' '}
             ADD{' '}
           </Button>
-          <Button className="w-full bg-[#FFA114] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56]">
-            {' '}
-            CLEAR{' '}
-          </Button>
+
+          <DialogClose asChild>
+            <Button className="w-full bg-red-500 text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56]">
+              {' '}
+              CANCEL{' '}
+            </Button>
+          </DialogClose>
         </div>
       </form>
     </div>

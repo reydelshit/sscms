@@ -27,6 +27,8 @@ import usePagination from '@/hooks/usePagination';
 import Moment from '@/components/Moment';
 import { useState } from 'react';
 import EditMedicalHistory from '../medical-history/EditMedicalHistory';
+import { Button } from '@/components/ui/button';
+import DeleteMakeSure from '@/components/DeleteMakeSure';
 
 type MedicalReportType = {
   date: string;
@@ -222,7 +224,7 @@ const MedicalHistory = () => {
                               <DialogTrigger className="w-full rounded-full bg-[#FFA114] p-2 font-semibold text-white">
                                 Update
                               </DialogTrigger>
-                              <DialogContent>
+                              <DialogContent className="w-[60%]">
                                 <DialogHeader>
                                   <div>
                                     <DialogTitle>
@@ -240,12 +242,13 @@ const MedicalHistory = () => {
                               </DialogContent>
                             </Dialog>
 
-                            <span
-                              className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white"
-                              onClick={() => handleDelete(vol.med_rep_id)}
+                            <DeleteMakeSure
+                              deleteAction={() => handleDelete(vol.med_rep_id)}
                             >
-                              DELETE
-                            </span>
+                              <Button className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white">
+                                DELETE
+                              </Button>
+                            </DeleteMakeSure>
                           </div>
                         </TableCell>
                       </TableRow>

@@ -166,6 +166,7 @@ const MedCert = () => {
               disabled
               placeholder="[Auto-Generated]"
               className="rounded-full border-none bg-yellow-100"
+              required
             />
           </div>
           <div>
@@ -179,6 +180,7 @@ const MedCert = () => {
               value={formData.date}
               onChange={handleInputChange}
               className="rounded-full border-none bg-yellow-100"
+              required
             />
           </div>
         </div>
@@ -193,6 +195,7 @@ const MedCert = () => {
               value={studentFullname}
               onChange={handleInputChange}
               className="rounded-full border-none bg-yellow-100"
+              required
             />
           </div>
           <div>
@@ -235,6 +238,7 @@ const MedCert = () => {
               value={formData.address}
               onChange={handleInputChange}
               className="rounded-full border-none bg-yellow-100"
+              required
             />
           </div>
           <div>
@@ -247,6 +251,7 @@ const MedCert = () => {
               value={formData.age}
               onChange={handleInputChange}
               className="rounded-full border-none bg-yellow-100"
+              required
             />
           </div>
           <div className="mb-6">
@@ -287,6 +292,7 @@ const MedCert = () => {
               value={formData.diagnosis}
               onChange={handleInputChange}
               className="h-32 rounded-2xl border-none bg-yellow-100"
+              required
             />
           </div>
           <div>
@@ -299,6 +305,7 @@ const MedCert = () => {
               value={formData.ref_reason}
               onChange={handleInputChange}
               className="h-32 rounded-2xl border-none bg-yellow-100"
+              required
             />
           </div>
         </div>
@@ -312,6 +319,7 @@ const MedCert = () => {
             value={formData.referenceClassification}
             onChange={handleInputChange}
             className="h-24 rounded-2xl border-none bg-yellow-100"
+            required
           />
         </div>
         <div className="my-4 flex w-full items-center justify-between">
@@ -325,6 +333,7 @@ const MedCert = () => {
               value={formData.reffered}
               onChange={handleInputChange}
               className="rounded-full border-none bg-yellow-100"
+              required
             />
           </div>
 

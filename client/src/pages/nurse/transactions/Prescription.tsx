@@ -208,6 +208,7 @@ const Prescription = () => {
               name="transNo"
               onChange={handleInputChange}
               className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              required
             />
           </div>
           <div>
@@ -221,6 +222,7 @@ const Prescription = () => {
               value={formData.date}
               onChange={handleInputChange}
               className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              required
             />
           </div>
         </div>
@@ -236,6 +238,7 @@ const Prescription = () => {
                 value={studentFullname}
                 onChange={handleInputChange}
                 className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                required
               />
             </div>
 
@@ -249,6 +252,7 @@ const Prescription = () => {
                 value={studentCourseYear}
                 onChange={handleInputChange}
                 className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                required
               />
             </div>
           </div>
@@ -290,6 +294,7 @@ const Prescription = () => {
                 value={studentDepartment}
                 onChange={handleInputChange}
                 className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                required
               />
             </div>
           </div>
@@ -332,11 +337,17 @@ const Prescription = () => {
                   <SelectValue placeholder="Select prescription" />
                 </SelectTrigger>
                 <SelectContent>
-                  {associatedPrescription.map((pres, index) => (
-                    <SelectItem key={index} value={pres.itemName}>
-                      {pres.itemName} - {pres.quantity}qty
+                  {associatedPrescription.length === 0 ? (
+                    <SelectItem value="No prescription available">
+                      No prescription available
                     </SelectItem>
-                  ))}
+                  ) : (
+                    associatedPrescription.map((pres, index) => (
+                      <SelectItem key={index} value={pres.itemName}>
+                        {pres.itemName} - {pres.quantity}qty
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
 
@@ -345,11 +356,13 @@ const Prescription = () => {
                   QUANTITY:
                 </Label>
                 <Input
+                  type="number"
                   id="quantity"
                   name="quantity"
                   value={formData.quantity}
                   onChange={handleInputChange}
                   className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                  required
                 />
               </div>
             </div>
@@ -363,6 +376,7 @@ const Prescription = () => {
                 value={formData.sig}
                 onChange={handleInputChange}
                 className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                required
               />
             </div>
           </div>

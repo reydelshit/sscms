@@ -37,6 +37,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import UpdateInventory from './inventory/UpdateInventory';
 import { QrCode, X } from 'lucide-react';
+import DeleteMakeSure from '@/components/DeleteMakeSure';
 
 type SelectedIllness = {
   illness_id: string;
@@ -304,12 +305,13 @@ const Inventory = () => {
                             </DialogContent>
                           </Dialog>
 
-                          <span
-                            className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white"
-                            onClick={() => handleDelete(item.inventory_id)}
+                          <DeleteMakeSure
+                            deleteAction={() => handleDelete(item.inventory_id)}
                           >
-                            DELETE
-                          </span>
+                            <Button className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white">
+                              DELETE
+                            </Button>
+                          </DeleteMakeSure>
                         </div>
                       </TableCell>
                     </TableRow>

@@ -28,6 +28,7 @@ import { useState } from 'react';
 import AddVolunteer from './volunteer/AddVolunteer';
 import EditVolunteer from './volunteer/EditVolunteer';
 import { Input } from '@/components/ui/input';
+import DeleteMakeSure from '@/components/DeleteMakeSure';
 
 interface VolunteerItem {
   student_id: string;
@@ -107,12 +108,12 @@ const Volunteers = () => {
                   ADD VOLUNTEEER
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="w-[50%]">
                 <DialogHeader>
-                  <div className="hidden">
-                    <DialogTitle>Edit student details</DialogTitle>
+                  <div>
+                    <DialogTitle>Add volunteer account</DialogTitle>
                     <DialogDescription>
-                      Fill in the form to edit student details
+                      Fill in the form to add a new volunteer account
                     </DialogDescription>
                   </div>
                 </DialogHeader>
@@ -123,7 +124,7 @@ const Volunteers = () => {
 
             <Input
               placeholder="Search"
-              className="w-[200px] rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              className="w-[250px] rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
@@ -182,12 +183,13 @@ const Volunteers = () => {
                             </DialogContent>
                           </Dialog>
 
-                          <span
-                            onClick={() => handleDelete(vol.volunteer_id)}
-                            className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white"
+                          <DeleteMakeSure
+                            deleteAction={() => handleDelete(vol.volunteer_id)}
                           >
-                            DELETE
-                          </span>
+                            <Button className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white">
+                              DELETE
+                            </Button>
+                          </DeleteMakeSure>
                         </div>
                       </TableCell>
                     </TableRow>

@@ -11,30 +11,30 @@ const Transactions = () => {
       style={{ backgroundImage: `url(${BGPage})` }}
     >
       <div className="flex w-full justify-between gap-4 rounded-full bg-[#193F56] bg-opacity-75 p-4">
-        <div className={`mb-2 w-full rounded-full bg-[#193F56]`}>
+        <div className={`mb-2 h-full w-full rounded-full bg-[#193F56]`}>
           <Link to="/transactions">
             <Button
-              className={`mb-2 ml-1 h-[3.5rem] w-full rounded-full border-none bg-[#95CCD5] text-xl text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
             >
               PRESCRIPTION
             </Button>
           </Link>
         </div>
 
-        <div className="mb-2 w-full rounded-full bg-[#193F56]">
+        <div className="mb-2 h-full w-full rounded-full bg-[#193F56]">
           <Link to="/transactions/medical-report">
             <Button
-              className={`mb-2 ml-1 h-[3.5rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/medical-report' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/medical-report' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
             >
               Medical Report
             </Button>
           </Link>
         </div>
 
-        <div className="mb-2 w-full rounded-full bg-[#193F56]">
+        <div className="mb-2 h-full w-full rounded-full bg-[#193F56]">
           <Link to="/transactions/med-cert">
             <Button
-              className={`mb-2 ml-1 h-[3.5rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/med-cert' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/med-cert' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
             >
               Medical Certificate
             </Button>
