@@ -301,56 +301,60 @@ const Prescription = () => {
         </div>
 
         <div className="mb-4 flex w-full items-center gap-4">
-          <div className="w-full">
-            <div>
-              <Label htmlFor="illness" className="text-yellow-100">
-                ILLNESS
-              </Label>
-              <Select onValueChange={handleSelectIllness}>
-                <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
-                  <SelectValue placeholder="Select illness" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Illness.map((ill, index) => (
-                    <SelectItem
-                      key={index}
-                      value={JSON.stringify({
-                        illness_id: ill.ill_id,
-                        illness: ill.illness,
-                      })}
-                    >
-                      {ill.illness}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="prescription" className="text-yellow-100">
-                SUGGESTED PRESCRIPTION
-              </Label>
-              <Select
-                disabled={selectedIllness.length === 0}
-                onValueChange={(value) => handleSelectPrescription(value)}
-              >
-                <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
-                  <SelectValue placeholder="Select prescription" />
-                </SelectTrigger>
-                <SelectContent>
-                  {associatedPrescription.length === 0 ? (
-                    <SelectItem value="No prescription available">
-                      No prescription available
-                    </SelectItem>
-                  ) : (
-                    associatedPrescription.map((pres, index) => (
-                      <SelectItem key={index} value={pres.itemName}>
-                        {pres.itemName} - {pres.quantity}qty
+          <div className="flex w-full gap-4">
+            <div className="w-full">
+              <div>
+                <Label htmlFor="illness" className="text-yellow-100">
+                  ILLNESS
+                </Label>
+                <Select onValueChange={handleSelectIllness}>
+                  <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
+                    <SelectValue placeholder="Select illness" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Illness.map((ill, index) => (
+                      <SelectItem
+                        key={index}
+                        value={JSON.stringify({
+                          illness_id: ill.ill_id,
+                          illness: ill.illness,
+                        })}
+                      >
+                        {ill.illness}
                       </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="prescription" className="text-yellow-100">
+                  SUGGESTED PRESCRIPTION
+                </Label>
+                <Select
+                  disabled={selectedIllness.length === 0}
+                  onValueChange={(value) => handleSelectPrescription(value)}
+                >
+                  <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
+                    <SelectValue placeholder="Select prescription" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {associatedPrescription.length === 0 ? (
+                      <SelectItem value="No prescription available">
+                        No prescription available
+                      </SelectItem>
+                    ) : (
+                      associatedPrescription.map((pres, index) => (
+                        <SelectItem key={index} value={pres.itemName}>
+                          {pres.itemName} - {pres.quantity}qty
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
+            <div className="w-full">
               <div className="w-full">
                 <Label htmlFor="quantity" className="text-yellow-100">
                   QUANTITY:
@@ -365,19 +369,19 @@ const Prescription = () => {
                   required
                 />
               </div>
-            </div>
-            <div>
-              <Label htmlFor="sig" className="text-yellow-100">
-                SIG
-              </Label>
-              <Input
-                id="sig"
-                name="sig"
-                value={formData.sig}
-                onChange={handleInputChange}
-                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
-                required
-              />
+              <div>
+                <Label htmlFor="sig" className="text-yellow-100">
+                  SIG
+                </Label>
+                <Input
+                  id="sig"
+                  name="sig"
+                  value={formData.sig}
+                  onChange={handleInputChange}
+                  className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                  required
+                />
+              </div>
             </div>
           </div>
         </div>

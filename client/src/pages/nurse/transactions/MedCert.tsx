@@ -336,13 +336,6 @@ const MedCert = () => {
               required
             />
           </div>
-
-          <Button
-            type="button"
-            className="mt-[1rem] rounded-full bg-red-500 text-white"
-          >
-            NOTIFY EMERGENCY CONTACT
-          </Button>
         </div>
         <div className="flex items-center justify-between">
           <div className="space-x-4">

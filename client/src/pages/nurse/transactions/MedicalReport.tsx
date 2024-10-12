@@ -270,10 +270,6 @@ const MedicalReport = () => {
               CLEAR
             </Button>
           </div>
-
-          <Button className="rounded-full bg-red-500">
-            NOTIFY EMERGENCY CONTACT
-          </Button>
         </div>
       </form>
     </div>
