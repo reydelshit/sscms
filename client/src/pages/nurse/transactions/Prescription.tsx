@@ -1,3 +1,4 @@
+import { usePrintPDF } from '@/components/PrintPDF';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,12 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useState } from 'react';
-import { Students } from '@/data/students';
 import { Illness } from '@/data/illness';
+import { Students } from '@/data/students';
 import { toast } from '@/hooks/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useState } from 'react';
 
 interface InventoryItem {
   inventory_id: string;
@@ -34,6 +35,18 @@ interface FormDataType {
   illness: string;
   prescrip: string;
   quantity: string;
+  sig: string;
+}
+
+interface StudentPrescriptionData {
+  date: string;
+  studentName: string;
+  studentId: string;
+  year: string;
+  course: string;
+  illness: string;
+  quantity: string;
+  suggestedPrescription: string;
   sig: string;
 }
 
@@ -115,6 +128,7 @@ const Prescription = () => {
   const [studentFullname, setStudentFullname] = useState('');
   const [studentCourseYear, setStudentCourseYear] = useState('');
   const [studentDepartment, setStudentDepartment] = useState('');
+  const generatePDF = usePrintPDF<Record<string, string>>();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -180,6 +194,26 @@ const Prescription = () => {
       course: studentDepartment,
       studentName: studentFullname,
     });
+
+    generatePDF({
+      data: prescriptionData,
+      fileName: studentFullname + '_prescription',
+      title: 'Prescription',
+      subtitle: 'Student Prescription',
+      footer: ['Thank you for using our service.'],
+    });
+  };
+
+  const prescriptionData: Record<string, string> = {
+    date: formData.date,
+    studentName: studentFullname,
+    studentId: formData.studentId || '', // Assuming this is in your formData
+    year: studentCourseYear,
+    course: studentDepartment,
+    illness: selectedIllness,
+    quantity: formData.quantity || '', // Assuming this is in your formData
+    suggestedPrescription: selectedPrescription,
+    sig: formData.sig || '', // Assuming this is in your formData
   };
 
   const handleClear = () => {
@@ -393,6 +427,7 @@ const Prescription = () => {
           >
             CONFIRM & PRINT
           </Button>
+
           <Button
             type="button"
             onClick={handleClear}
