@@ -16,6 +16,7 @@ import axios from 'axios';
 import { useState } from 'react';
 
 import { Students } from '@/data/students';
+import { usePrintPDF } from '@/components/PrintPDF';
 
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
@@ -88,6 +89,7 @@ const MedCert = () => {
   const [studentFullname, setStudentFullname] = useState('');
   const [studentCourseYear, setStudentCourseYear] = useState('');
   const [studentDepartment, setStudentDepartment] = useState('');
+  const generatePDF = usePrintPDF<Record<string, string>>();
 
   const addMedCert = useAddMedCert();
 
@@ -135,8 +137,31 @@ const MedCert = () => {
       studentName: studentFullname,
     });
     console.log('Form submitted:', formData);
+
+    generatePDF({
+      data: medCertDate,
+      fileName: studentFullname + '_MEDICAL_CERTIFICATE',
+      title: 'MEDICAL CERTIFICATE',
+      subtitle: 'SSCMS',
+      footer: [
+        'This is a computer-generated document and it does not require a signature.',
+        'This document is valid without an authorized signature.',
+      ],
+    });
   };
 
+  const medCertDate: Record<string, string> = {
+    date: formData.date,
+    studentName: studentFullname,
+    studentId: formData.studentId || 'N/A',
+    address: formData.address,
+    age: formData.age,
+    gender: formData.gender,
+    diagnosis: formData.diagnosis,
+    ref_reason: formData.ref_reason,
+    referenceClassification: formData.referenceClassification,
+    reffered: formData.reffered,
+  };
   const handleClear = () => {
     setFormData({
       date: '',

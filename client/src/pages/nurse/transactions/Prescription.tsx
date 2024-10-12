@@ -207,13 +207,13 @@ const Prescription = () => {
   const prescriptionData: Record<string, string> = {
     date: formData.date,
     studentName: studentFullname,
-    studentId: formData.studentId || '', // Assuming this is in your formData
+    studentId: formData.studentId || '',
     year: studentCourseYear,
     course: studentDepartment,
     illness: selectedIllness,
-    quantity: formData.quantity || '', // Assuming this is in your formData
+    quantity: formData.quantity || '',
     suggestedPrescription: selectedPrescription,
-    sig: formData.sig || '', // Assuming this is in your formData
+    sig: formData.sig || '',
   };
 
   const handleClear = () => {
