@@ -13,6 +13,11 @@ import Transactions from './pages/nurse/Transactions.tsx';
 import MedCert from './pages/nurse/transactions/MedCert.tsx';
 import MedicalReport from './pages/nurse/transactions/MedicalReport.tsx';
 import Volunteers from './pages/nurse/Volunteers.tsx';
+import RootAssistant from './pages/nurse-assistant/RootAssistant.tsx';
+import TransactionsAssistant from './pages/nurse-assistant/TransactionsAssistant.tsx';
+import InventoryAssistant from './pages/nurse-assistant/InventoryAssistant.tsx';
+import RootVolunteer from './pages/volunteer/RootVolunteer.tsx';
+import DailyTimeRecord from './pages/volunteer/DailyTimeRecord.tsx';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -51,6 +56,27 @@ const router = createBrowserRouter([
       {
         path: '/volunteers',
         element: <Volunteers />,
+      },
+    ],
+  },
+  {
+    path: '/assistant',
+    element: <RootAssistant />,
+    children: [
+      {
+        path: 'inventory',
+        element: <InventoryAssistant />,
+      },
+    ],
+  },
+
+  {
+    path: '/volunteer',
+    element: <RootVolunteer />,
+    children: [
+      {
+        path: 'daily-time-record',
+        element: <DailyTimeRecord />,
       },
     ],
   },

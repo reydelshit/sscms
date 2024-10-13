@@ -2,22 +2,19 @@ import ButtonShadow from '@/components/ButtonShadow';
 import Header from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/nurse/Dashboard';
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 const Root = () => {
   const params = useLocation();
+  const role = localStorage.getItem('sscms_role');
 
-  //   useEffect(() => {
-  //     if (!localStorage.getItem('isLoggedIn_QR')) {
-  //       window.location.href = '/login';
-  //     }
-  //   }, []);
+  useEffect(() => {
+    if (!role) {
+      window.location.href = '/login';
+    }
+  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn_QR');
-    localStorage.removeItem('role');
-    window.location.href = '/login';
-  };
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <Header />

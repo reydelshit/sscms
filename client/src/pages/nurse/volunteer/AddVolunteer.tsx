@@ -1,11 +1,7 @@
 import { Button } from '@/components/ui/button';
+import { DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { useState } from 'react';
-import { Students } from '@/data/students';
 import {
   Select,
   SelectContent,
@@ -13,7 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { DialogClose } from '@/components/ui/dialog';
+import { Students } from '@/data/students';
+import { toast } from '@/hooks/use-toast';
+import useSendSMS from '@/hooks/useSendSMS';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { useState } from 'react';
 
 interface FormDataType {
   student_id: string;
@@ -78,6 +79,8 @@ const AddVolunteer = () => {
   const [studentCourseYear, setStudentCourseYear] = useState<string>('');
   const [studentDepartment, setStudentDepartment] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [contactNumber, setContactNumber] = useState('');
+  const { setContent, setTo, sendSMS } = useSendSMS();
 
   const createMutation = useCreateVolunteer();
 
@@ -113,11 +116,20 @@ const AddVolunteer = () => {
     );
     setStudentCourseYear(filterStudents[0].year);
     setStudentDepartment(filterStudents[0].course);
+    setContactNumber(filterStudents[0].contact_num);
 
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleSendSMS = () => {
+    setContent(
+      `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${new Date()}.`,
+    );
+    setTo(contactNumber);
+    sendSMS();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -132,6 +144,8 @@ const AddVolunteer = () => {
       student_name: studentFullname,
       password: password,
     });
+
+    // handleSendSMS();
 
     setFormData({
       student_id: '',
