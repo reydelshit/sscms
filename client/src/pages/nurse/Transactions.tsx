@@ -36,7 +36,7 @@ const Transactions = () => {
             <Button
               className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/med-cert' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
             >
-              Medical Certificate
+              med cert / referral
             </Button>
           </Link>
         </div>
