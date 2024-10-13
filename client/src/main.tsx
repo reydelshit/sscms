@@ -18,6 +18,7 @@ import DailyTimeRecord from './pages/volunteer/DailyTimeRecord.tsx';
 import RootVolunteer from './pages/volunteer/RootVolunteer.tsx';
 import Prescription from './pages/nurse/transactions/Prescription.tsx';
 import TransactionsAssistant from './pages/nurse-assistant/TransactionsAssistant.tsx';
+import TransactionsVol from './pages/volunteer/TransactionsVol.tsx';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -85,6 +86,17 @@ const router = createBrowserRouter([
     path: '/volunteer',
     element: <RootVolunteer />,
     children: [
+      {
+        path: 'transactions',
+        element: <TransactionsVol />,
+        children: [
+          {
+            path: 'medical-report',
+            element: <MedicalReport />,
+          },
+        ],
+      },
+
       {
         path: 'daily-time-record',
         element: <DailyTimeRecord />,

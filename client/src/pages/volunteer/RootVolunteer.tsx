@@ -32,7 +32,6 @@ const RootVolunteer = () => {
         </div>
 
         <div className="w-full overflow-x-hidden">
-          {/* This is where the child routes get rendered */}
           {params.pathname === '/volunteer' ? <TransactionsVol /> : <Outlet />}
         </div>
       </div>
