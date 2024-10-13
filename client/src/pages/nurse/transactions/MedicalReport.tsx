@@ -11,6 +11,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Students } from '@/data/students';
 import { toast } from '@/hooks/use-toast';
+import useSendSMS from '@/hooks/useSendSMS';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
@@ -88,6 +89,8 @@ const MedicalReport = () => {
   const [studentFullname, setStudentFullname] = useState('');
   const [studentCourseYear, setStudentCourseYear] = useState('');
   const [studentDepartment, setStudentDepartment] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const { setContent, setTo, sendSMS } = useSendSMS();
 
   const handleInputChange = (e: ChangeEvent) => {
     const { name, value } = e.target;
@@ -106,6 +109,7 @@ const MedicalReport = () => {
       return;
     }
 
+    setContactNumber(filterStudents[0].contact_num);
     setStudentFullname(
       `${filterStudents[0].f_name} ${filterStudents[0].m_init} ${filterStudents[0].l_name}`,
     );
@@ -113,6 +117,14 @@ const MedicalReport = () => {
     setStudentDepartment(filterStudents[0].course);
 
     setSelectedStudentID(value);
+  };
+
+  const handleSendSMS = () => {
+    setContent(
+      `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${formData.date}.`,
+    );
+    setTo(contactNumber);
+    sendSMS();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -124,6 +136,8 @@ const MedicalReport = () => {
       year: studentCourseYear,
       studentName: studentFullname,
     });
+
+    // handleSendSMS();
 
     console.log('Form submitted:', {
       ...formData,

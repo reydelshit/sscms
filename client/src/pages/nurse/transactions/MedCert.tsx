@@ -17,6 +17,7 @@ import { useState } from 'react';
 
 import { Students } from '@/data/students';
 import { usePrintPDF } from '@/components/PrintPDF';
+import useSendSMS from '@/hooks/useSendSMS';
 
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
@@ -89,7 +90,9 @@ const MedCert = () => {
   const [studentFullname, setStudentFullname] = useState('');
   const [studentCourseYear, setStudentCourseYear] = useState('');
   const [studentDepartment, setStudentDepartment] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
   const generatePDF = usePrintPDF<Record<string, string>>();
+  const { setContent, setTo, sendSMS } = useSendSMS();
 
   const addMedCert = useAddMedCert();
 
@@ -109,6 +112,7 @@ const MedCert = () => {
       return;
     }
 
+    setContactNumber(filterStudents[0].contact_num);
     setStudentFullname(
       `${filterStudents[0].f_name} ${filterStudents[0].m_init} ${filterStudents[0].l_name}`,
     );
@@ -128,6 +132,14 @@ const MedCert = () => {
     }));
   };
 
+  const handleSendSMS = () => {
+    setContent(
+      `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${formData.date}.`,
+    );
+    setTo(contactNumber);
+    sendSMS();
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -137,6 +149,8 @@ const MedCert = () => {
       studentName: studentFullname,
     });
     console.log('Form submitted:', formData);
+
+    // handleSendSMS();
 
     generatePDF({
       data: medCertDate,
