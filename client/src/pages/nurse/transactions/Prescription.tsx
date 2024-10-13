@@ -59,6 +59,7 @@ const useAddPrescription = () => {
       year: string;
       course: string;
       studentName: string;
+      inventory_id: string;
     }) => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_LINK}/transaction/prescription/create`,
@@ -69,6 +70,7 @@ const useAddPrescription = () => {
           year: data.year,
           course: data.course,
           studentName: data.studentName,
+          inventory_id: data.inventory_id,
         },
       );
       return response.data;
@@ -128,6 +130,7 @@ const Prescription = () => {
   const [studentFullname, setStudentFullname] = useState('');
   const [studentCourseYear, setStudentCourseYear] = useState('');
   const [studentDepartment, setStudentDepartment] = useState('');
+  const [selectedPrescriptionID, setSelectedPrescriptionID] = useState('');
   const generatePDF = usePrintPDF<Record<string, string>>();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,6 +196,7 @@ const Prescription = () => {
       year: studentCourseYear,
       course: studentDepartment,
       studentName: studentFullname,
+      inventory_id: selectedPrescriptionID,
     });
 
     generatePDF({
@@ -366,7 +370,12 @@ const Prescription = () => {
                 </Label>
                 <Select
                   disabled={selectedIllness.length === 0}
-                  onValueChange={(value) => handleSelectPrescription(value)}
+                  onValueChange={(value) => {
+                    const [itemName, inventoryID] = value.split('-');
+                    // console.log('Selected prescription:', inventoryID);
+                    setSelectedPrescriptionID(inventoryID);
+                    handleSelectPrescription(itemName);
+                  }}
                 >
                   <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
                     <SelectValue placeholder="Select prescription" />
@@ -378,7 +387,10 @@ const Prescription = () => {
                       </SelectItem>
                     ) : (
                       associatedPrescription.map((pres, index) => (
-                        <SelectItem key={index} value={pres.itemName}>
+                        <SelectItem
+                          key={index}
+                          value={pres.itemName + '-' + pres.inventory_id}
+                        >
                           {pres.itemName} - {pres.quantity}qty
                         </SelectItem>
                       ))

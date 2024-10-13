@@ -1,30 +1,9 @@
 
 import { Router } from 'express';
-import fs from 'fs';
-import multer from 'multer';
-import path from 'path';
 import { databaseConnection } from '../../connections/DatabaseConnection';
 
 const router = Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '..', '..', 'uploads');
-    
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-
-    cb(null, uploadPath); 
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
-  }
-});
-
-  
-  const upload = multer({ storage });
-  
   
   
   // get all 
@@ -51,39 +30,86 @@ const storage = multer.diskStorage({
   
   
   
-  //CREATE 
-  router.post("/create", (req, res) => {
-    const query = `
+// CREATE 
+router.post("/create", async (req, res) => {
+  const { prescription_id, studentId, illness, prescrip, sig, quantity, date, studentName, course, year, inventory_id } = req.body;
+
+  // Check for missing inventory_id or quantity
+  if (inventory_id === undefined || quantity === undefined) {
+    return res.status(400).json({ error: 'Missing inventory_id or quantity' });
+  }
+
+  try {
+    // Insert prescription query
+    const queryInsertPrescription = `
       INSERT INTO prescription (prescription_id, studentId, illness, prescrip, sig, quantity, date, studentName, course, year) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
-    const values = [
-      req.body.prescription_id,
-      req.body.studentId,
-      req.body.illness,
-      req.body.prescrip,
-      req.body.sig,
-      req.body.quantity,
-      req.body.date,
-      req.body.studentName,
-      req.body.course,
-      req.body.year
-
+    const valuesInsertPrescription = [
+      prescription_id,
+      studentId,
+      illness,
+      prescrip,
+      sig,
+      quantity,
+      date,
+      studentName,
+      course,
+      year
     ];
 
-    databaseConnection.query(query, values, (err, data) => {
+    // Execute the insert prescription query
+    databaseConnection.query(queryInsertPrescription, valuesInsertPrescription, (err, prescriptionResult) => {
       if (err) {
-        console.error('SQL Error:', err);
-        return res.status(500).json({ error: 'Database query failed' });
+        console.error('SQL Error during prescription insert:', err);
+        return res.status(500).json({ error: 'Failed to insert prescription data' });
       }
-      return res.json({
-        ...data,
-        message: "Successfully added prescription",
-        status: "success",
+
+      // Update inventory quantity query
+      const queryUpdateInventoryQuantity = "UPDATE inventory SET quantity = quantity - ? WHERE inventory_id = ?";
+      const valuesUpdateInventoryQuantity = [quantity, inventory_id];
+
+      databaseConnection.query(queryUpdateInventoryQuantity, valuesUpdateInventoryQuantity, (err, inventoryUpdateResult) => {
+        if (err) {
+          console.error('SQL Error during inventory update:', err);
+          return res.status(500).json({ error: 'Failed to update inventory quantity' });
+        }
+
+        // Additional query: For example, inserting into a log table
+        const queryInsertLog = `
+          INSERT INTO dispensed (dispensed_id, inventory_id, quantity, created_at) 
+          VALUES (?, ?, ?, ?)
+        `;
+        const valuesInsertLog = [
+          null,
+          inventory_id,
+          quantity,
+          new Date()
+        ];
+
+        databaseConnection.query(queryInsertLog, valuesInsertLog, (err, logResult) => {
+          if (err) {
+            console.error('SQL Error during log insert:', err);
+            return res.status(500).json({ error: 'Failed to log action' });
+          }
+
+          // Successfully inserted prescription, updated inventory, and logged the action
+          return res.json({
+            message: "Successfully added prescription, updated inventory, and logged the action",
+            prescriptionResult,
+            inventoryUpdateResult,
+            logResult,
+            status: "success"
+          });
+        });
       });
     });
+  } catch (error) {
+    console.error('Server Error:', error);
+    return res.status(500).json({ error: 'Server error' });
+  }
 });
+
 
   
   
