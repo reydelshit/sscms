@@ -16,6 +16,8 @@ import Volunteers from './pages/nurse/Volunteers.tsx';
 import Root from './pages/Root.tsx';
 import DailyTimeRecord from './pages/volunteer/DailyTimeRecord.tsx';
 import RootVolunteer from './pages/volunteer/RootVolunteer.tsx';
+import Prescription from './pages/nurse/transactions/Prescription.tsx';
+import TransactionsAssistant from './pages/nurse-assistant/TransactionsAssistant.tsx';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -62,8 +64,19 @@ const router = createBrowserRouter([
     element: <RootAssistant />,
     children: [
       {
+        path: 'transactions',
+        element: <TransactionsAssistant />,
+        children: [
+          {
+            path: 'medical-report',
+            element: <MedicalReport />,
+          },
+        ],
+      },
+
+      {
         path: 'inventory',
-        element: <InventoryAssistant />,
+        element: <Inventory />,
       },
     ],
   },

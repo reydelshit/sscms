@@ -1,7 +1,7 @@
+import ButtonShadow from '@/components/ButtonShadow';
 import Header from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
 import { Outlet, useLocation } from 'react-router-dom';
-import ButtonShadow from '@/components/ButtonShadow';
 import TransactionsAssistant from './TransactionsAssistant';
 
 const RootAssistant = () => {
@@ -32,7 +32,6 @@ const RootAssistant = () => {
         </div>
 
         <div className="w-full overflow-x-hidden">
-          {/* This is where the child routes get rendered */}
           {params.pathname === '/assistant' ? (
             <TransactionsAssistant />
           ) : (
