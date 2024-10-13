@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 import './index.css';
 import Login from './pages/Login.tsx';
-import Root from './pages/Root.tsx';
+import InventoryAssistant from './pages/nurse-assistant/InventoryAssistant.tsx';
+import RootAssistant from './pages/nurse-assistant/RootAssistant.tsx';
 import CaseReport from './pages/nurse/CaseReport.tsx';
 import Inventory from './pages/nurse/Inventory.tsx';
 import MedicalHistory from './pages/nurse/MedicalHistory.tsx';
@@ -13,11 +13,9 @@ import Transactions from './pages/nurse/Transactions.tsx';
 import MedCert from './pages/nurse/transactions/MedCert.tsx';
 import MedicalReport from './pages/nurse/transactions/MedicalReport.tsx';
 import Volunteers from './pages/nurse/Volunteers.tsx';
-import RootAssistant from './pages/nurse-assistant/RootAssistant.tsx';
-import TransactionsAssistant from './pages/nurse-assistant/TransactionsAssistant.tsx';
-import InventoryAssistant from './pages/nurse-assistant/InventoryAssistant.tsx';
-import RootVolunteer from './pages/volunteer/RootVolunteer.tsx';
+import Root from './pages/Root.tsx';
 import DailyTimeRecord from './pages/volunteer/DailyTimeRecord.tsx';
+import RootVolunteer from './pages/volunteer/RootVolunteer.tsx';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
