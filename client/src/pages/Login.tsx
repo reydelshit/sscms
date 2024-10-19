@@ -2,11 +2,47 @@ import Logo from '@/assets/LOGO.svg';
 import BGImage from '@/assets/SSCMS v2.0.png';
 import InputShadow from '@/components/InputShadow';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { useState } from 'react';
+
+interface VolunteerItem {
+  student_id: string;
+  student_name: string;
+  course: string;
+  year: string;
+  phone_number: string;
+  email: string;
+  created_at: string;
+  volunteer_id: string;
+}
+const useFetchCredentials = (username: string, password: string) => {
+  return useQuery<VolunteerItem>({
+    queryKey: ['volunteerData', username, password],
+    queryFn: async () => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/login`,
+        {
+          username,
+          password,
+        },
+      );
+      if (response.data.length === 0) {
+        throw new Error('Invalid credentials');
+      }
+      return response.data[0] as VolunteerItem;
+    },
+    enabled: false,
+    retry: false,
+  });
+};
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const { data, refetch } = useFetchCredentials(username, password);
 
   const isNurse = username.includes('nurse');
   const isAssistant = username.includes('assistant');
@@ -33,9 +69,28 @@ const Login = () => {
         localStorage.setItem('sscms_role', 'assistant');
       }
     } else {
-      window.location.href = '/volunteer';
+      const result = await refetch();
 
-      localStorage.setItem('sscms_role', 'volunteer');
+      if (result.isError) {
+        alert('Invalid credentials');
+        return;
+      }
+
+      if (result.data?.volunteer_id) {
+        console.log('Volunteer:', result.data);
+        localStorage.setItem('volunteer_id', result.data.volunteer_id);
+        localStorage.setItem('VolunteerName', result.data.student_name);
+
+        toast({
+          title: 'Login successful',
+          description: 'Redirecting to dashboard',
+        });
+
+        setTimeout(() => {
+          window.location.href = '/volunteer';
+        }, 2000);
+        localStorage.setItem('sscms_role', 'volunteer');
+      }
     }
   };
 

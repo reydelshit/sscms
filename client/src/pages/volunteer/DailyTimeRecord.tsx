@@ -1,225 +1,250 @@
+import BGPage from '@/assets/bg-page.png';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, PlusCircle } from 'lucide-react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-type TimeEntry = {
+interface TimeEntry {
+  dtr_id: number;
   date: string;
-  timeIn1: string;
-  timeOut1: string;
-  timeIn2: string;
-  timeOut2: string;
+  timeInMorning: string | null;
+  timeOutMorning: string | null;
+  timeInAfternoon: string | null;
+  timeOutAfternoon: string | null;
+  user_id: number;
+}
+
+// Custom hook to fetch DTR entries for a user
+const useFetchDTR = (id: string) => {
+  return useQuery<TimeEntry[]>({
+    queryKey: ['dtrData', id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_LINK}/dtr/${id}`,
+      );
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000, // Cache the data for 5 minutes
+  });
+};
+
+// Custom hook to create a new DTR entry
+const useCreateDTR = () => {
+  return useMutation({
+    mutationFn: async (data: { timeEntry: Partial<TimeEntry>; id: string }) => {
+      const filteredEntry = Object.fromEntries(
+        Object.entries(data.timeEntry).filter(([_, value]) => value !== ''),
+      );
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/dtr/create`,
+        {
+          ...filteredEntry,
+          user_id: data.id,
+        },
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        console.log('DTR successfully created:', data);
+        toast({
+          title: 'DTR successfully created',
+          description: new Date().toLocaleTimeString(),
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('Error creating DTR:', error);
+      toast({
+        title: 'Error creating DTR',
+        description: error.message || 'Something went wrong.',
+      });
+    },
+  });
 };
 
 export default function DailyTimeRecord() {
   const [currentDate, setCurrentDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
-  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([
-    { date: '', timeIn1: '', timeOut1: '', timeIn2: '', timeOut2: '' },
-  ]);
-  const [isSaving, setIsSaving] = useState(false);
-  // const { toast } = useToast()
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const [userId, setUserId] = useState(1);
+
+  // Fetch DTR entries when component mounts
+  const { data } = useFetchDTR(userId.toString());
+  const createMutation = useCreateDTR();
+
+  useEffect(() => {
+    // Sync fetched data with state when available
+    if (data) {
+      setTimeEntries(data);
+    }
+  }, [data]);
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      const formattedDate = now.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-      const formattedTime = now.toLocaleTimeString('en-US', {
+      setCurrentDate(now.toLocaleDateString('en-GB')); // Ensure consistent date format
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour12: true }));
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear interval on unmount
+  }, []);
+
+  const handleTimeEntry = () => {
+    const now = new Date();
+    const timeStr = now
+      .toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
         hour12: true,
-      });
-      setCurrentDate(formattedDate);
-      setCurrentTime(formattedTime);
+      })
+      .replace(/^0/, ''); // Remove leading zero if present
 
-      // Update the date for the first entry if it's empty
-      if (timeEntries[0].date === '') {
-        const updatedEntries = [...timeEntries];
-        updatedEntries[0].date = formattedDate;
-        setTimeEntries(updatedEntries);
-      }
-    }, 1000);
+    const existingEntryIndex = timeEntries.findIndex(
+      (entry) => entry.date === currentDate,
+    );
 
-    return () => clearInterval(timer);
-  }, [timeEntries]);
+    let newEntry;
 
-  const handleTimeAction = (
-    index: number,
-    field: 'timeIn1' | 'timeOut1' | 'timeIn2' | 'timeOut2',
-  ) => {
-    const newEntries = [...timeEntries];
-    newEntries[index][field] = currentTime;
-    setTimeEntries(newEntries);
-  };
-
-  const addNewEntry = () => {
-    setTimeEntries([
-      ...timeEntries,
-      {
+    if (existingEntryIndex !== -1) {
+      newEntry = { ...timeEntries[existingEntryIndex] };
+    } else {
+      newEntry = {
+        dtr_id: timeEntries.length + 1,
         date: currentDate,
-        timeIn1: '',
-        timeOut1: '',
-        timeIn2: '',
-        timeOut2: '',
-      },
-    ]);
+        timeInMorning: null,
+        timeOutMorning: null,
+        timeInAfternoon: null,
+        timeOutAfternoon: null,
+        user_id: userId,
+      };
+    }
+
+    const currentHour = now.getHours();
+
+    // Determine if it's morning or afternoon
+    if (currentHour < 12) {
+      // Morning
+      if (!newEntry.timeInMorning) {
+        newEntry.timeInMorning = timeStr;
+      } else if (!newEntry.timeOutMorning) {
+        newEntry.timeOutMorning = timeStr;
+      }
+    } else {
+      // Afternoon
+      if (!newEntry.timeInAfternoon) {
+        newEntry.timeInAfternoon = timeStr;
+      } else if (!newEntry.timeOutAfternoon) {
+        newEntry.timeOutAfternoon = timeStr;
+      }
+    }
+
+    if (existingEntryIndex !== -1) {
+      setTimeEntries((prev) => {
+        const updatedEntries = [...prev];
+        updatedEntries[existingEntryIndex] = newEntry;
+        return updatedEntries;
+      });
+    } else {
+      setTimeEntries((prev) => [...prev, newEntry]);
+    }
+
+    console.log('Updated Entry:', newEntry);
   };
 
-  const saveEntries = async () => {
-    setIsSaving(true);
-    try {
-      // Simulating a POST request to a database
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
+  const handleNewEntry = () => {
+    // Check if there's already an incomplete entry
+    const hasIncompleteEntry = timeEntries.some(
+      (entry) =>
+        entry.date === currentDate &&
+        (!entry.timeInMorning ||
+          !entry.timeOutMorning ||
+          !entry.timeInAfternoon ||
+          !entry.timeOutAfternoon),
+    );
 
-      // Simulating a successful response
-      console.log('Data saved:', timeEntries);
-
-      toast({
-        title: 'Success',
-        description: 'Time entries have been saved to the database.',
-      });
-    } catch (error) {
-      console.error('Error saving data:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to save time entries. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSaving(false);
+    if (hasIncompleteEntry) {
+      alert('Please complete the current entry before creating a new one');
+      return;
     }
+
+    // Get the highest dtr_id
+    const maxId = timeEntries.reduce(
+      (max, entry) => Math.max(max, entry.dtr_id),
+      0,
+    );
+
+    const newEntry = {
+      dtr_id: maxId + 1,
+      date: currentDate,
+      timeInMorning: null,
+      timeOutMorning: null,
+      timeInAfternoon: null,
+      timeOutAfternoon: null,
+      user_id: userId,
+    };
+
+    setTimeEntries((prev) => [...prev, newEntry]);
+    console.log('Created new entry:', newEntry);
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f0e6d2]">
-      <div className="w-full max-w-4xl rounded-lg bg-[#5f7470] p-6 shadow-lg">
-        <div className="mb-4 rounded bg-[#e8ddb5] p-2">
+    <div
+      className="min-h-screen w-full bg-cover bg-center p-8"
+      style={{ backgroundImage: `url(${BGPage})` }}
+    >
+      <div className="mt-[2rem] h-fit rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
+        <div className="mb-4 flex h-[8rem] items-center rounded-3xl bg-[#e8ddb5] p-2 text-black">
           <p className="font-mono text-lg">DATE: {currentDate}</p>
         </div>
-        <div className="mb-4 rounded bg-[#e8ddb5] p-2">
+        <div className="mb-4 flex h-[8rem] items-center rounded-3xl bg-[#e8ddb5] p-2 text-black">
           <p className="font-mono text-lg">TIME: {currentTime}</p>
         </div>
-        <ScrollArea className="mb-4 h-[400px] rounded">
-          <table className="w-full">
-            <thead className="sticky top-0 bg-[#5f7470]">
-              <tr>
-                <th className="bg-[#e8c59c] p-2 font-mono text-black">Date</th>
-                <th className="bg-[#a2c4c9] p-2 font-mono text-black">
-                  TIME IN
-                </th>
-                <th className="bg-[#a2c4c9] p-2 font-mono text-black">
-                  TIME OUT
-                </th>
-                <th className="bg-[#f4d06f] p-2 font-mono text-black">
-                  TIME IN
-                </th>
-                <th className="bg-[#f4d06f] p-2 font-mono text-black">
-                  TIME OUT
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {timeEntries.map((entry, index) => (
-                <tr key={index}>
-                  <td className="p-1">
-                    <Input
-                      value={entry.date}
-                      readOnly
-                      className="w-full bg-[#f0e6d2] font-mono"
-                    />
-                  </td>
-                  <td className="p-1">
-                    <div className="flex items-center">
-                      <Input
-                        value={entry.timeIn1}
-                        readOnly
-                        className="mr-2 w-full bg-[#d9e8eb] font-mono"
-                      />
-                      <Button
-                        onClick={() => handleTimeAction(index, 'timeIn1')}
-                        className="bg-[#a2c4c9] font-mono text-xs text-black hover:bg-[#7fa8b0]"
-                      >
-                        In
-                      </Button>
-                    </div>
-                  </td>
-                  <td className="p-1">
-                    <div className="flex items-center">
-                      <Input
-                        value={entry.timeOut1}
-                        readOnly
-                        className="mr-2 w-full bg-[#d9e8eb] font-mono"
-                      />
-                      <Button
-                        onClick={() => handleTimeAction(index, 'timeOut1')}
-                        className="bg-[#a2c4c9] font-mono text-xs text-black hover:bg-[#7fa8b0]"
-                      >
-                        Out
-                      </Button>
-                    </div>
-                  </td>
-                  <td className="p-1">
-                    <div className="flex items-center">
-                      <Input
-                        value={entry.timeIn2}
-                        readOnly
-                        className="mr-2 w-full bg-[#faf0d2] font-mono"
-                      />
-                      <Button
-                        onClick={() => handleTimeAction(index, 'timeIn2')}
-                        className="bg-[#f4d06f] font-mono text-xs text-black hover:bg-[#e9b84e]"
-                      >
-                        In
-                      </Button>
-                    </div>
-                  </td>
-                  <td className="p-1">
-                    <div className="flex items-center">
-                      <Input
-                        value={entry.timeOut2}
-                        readOnly
-                        className="mr-2 w-full bg-[#faf0d2] font-mono"
-                      />
-                      <Button
-                        onClick={() => handleTimeAction(index, 'timeOut2')}
-                        className="bg-[#f4d06f] font-mono text-xs text-black hover:bg-[#e9b84e]"
-                      >
-                        Out
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </ScrollArea>
-        <div className="mb-4 flex justify-between">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px] text-white">ID</TableHead>
+              <TableHead className="text-white">TIME IN (AM)</TableHead>
+              <TableHead className="text-white">TIME OUT (AM)</TableHead>
+              <TableHead className="text-white">TIME IN (PM)</TableHead>
+              <TableHead className="text-white">TIME OUT (PM)</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {timeEntries.map((entry, index) => (
+              <TableRow className="text-white" key={index}>
+                <TableCell>{entry.dtr_id}</TableCell>
+                <TableCell>{entry.timeInMorning}</TableCell>
+                <TableCell>{entry.timeOutMorning}</TableCell>
+                <TableCell>{entry.timeInAfternoon}</TableCell>
+                <TableCell>{entry.timeOutAfternoon}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <div className="mt-[2rem] flex items-center gap-4">
           <Button
-            onClick={addNewEntry}
-            className="flex items-center bg-[#4caf50] font-mono text-white hover:bg-[#45a049]"
+            className="w-full bg-[#f7a23c] text-white hover:bg-[#e89326]"
+            onClick={handleNewEntry}
           >
-            <PlusCircle className="mr-2 h-4 w-4" /> Add New Entry
+            New Entry
           </Button>
+
           <Button
-            onClick={saveEntries}
-            disabled={isSaving}
-            className="flex items-center bg-[#f4a261] font-mono text-black hover:bg-[#e76f51]"
+            className="w-full bg-[#f7a23c] text-white hover:bg-[#e89326]"
+            onClick={handleTimeEntry}
           >
-            {isSaving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              'SAVE'
-            )}
+            TIME
           </Button>
         </div>
       </div>

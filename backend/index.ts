@@ -10,6 +10,8 @@ import { volunteerRouter } from './api/volunteer';
 import { transactionsMedicalCert } from './api/transactions/medical-certificate';
 import { medicalHistoryRouter } from './api/medical-history';
 import { dashboardRouter } from './api/dashboard';
+import { dtrRouter } from './api/dtr';
+import { loginRouter } from './api/login';
 // import { studentRouter } from './api/studentRoute';
 // import { attendanceRouter } from './api/attendanceRoute';
 // import { messageRouter } from './api/messagesRoute';
@@ -51,7 +53,7 @@ app.listen(PORT, () => {
 
 
 
-
+app.use("/login", loginRouter)
 app.use("/dashboard", dashboardRouter)
 app.use("/transaction/prescription", transactionsPrescription);
 app.use("/transaction/medical-report", transactionsMedReport)
@@ -60,6 +62,7 @@ app.use("/transaction/medical-certificate", transactionsMedicalCert)
 app.use("/medical-history", medicalHistoryRouter);
 app.use("/inventory", inventoryRouter);
 app.use("/volunteer", volunteerRouter)
+app.use("/dtr", dtrRouter)
 
 
 
