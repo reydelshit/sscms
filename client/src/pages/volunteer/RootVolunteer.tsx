@@ -10,6 +10,28 @@ const RootVolunteer = () => {
   const role = localStorage.getItem('sscms_role');
   const VolunteerName = localStorage.getItem('sscms_volunteer_name');
 
+  const currentPath = window.location.pathname;
+
+  console.log('Current Path:', currentPath);
+
+  if (!role) {
+    if (currentPath !== '/login') {
+      window.location.href = '/login';
+    }
+  } else if (role === 'nurse') {
+    if (currentPath !== '/') {
+      window.location.href = '/';
+    }
+  } else if (role === 'assistant') {
+    if (currentPath !== '/assistant') {
+      window.location.href = '/assistant';
+    }
+  } else {
+    if (currentPath !== '/volunteer') {
+      window.location.href = '/volunteer';
+    }
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <Header />

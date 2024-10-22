@@ -1,19 +1,34 @@
+import NurseAvatar from '@/assets/nurse.png';
 import ButtonShadow from '@/components/ButtonShadow';
 import Header from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/nurse/Dashboard';
-import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import NurseAvatar from '@/assets/nurse.png';
 const Root = () => {
   const params = useLocation();
   const role = localStorage.getItem('sscms_role');
 
-  useEffect(() => {
-    if (!role) {
+  const currentPath = window.location.pathname;
+
+  console.log('Current Path:', currentPath);
+
+  if (!role) {
+    if (currentPath !== '/login') {
       window.location.href = '/login';
     }
-  }, []);
+  } else if (role === 'nurse') {
+    if (currentPath !== '/') {
+      window.location.href = '/';
+    }
+  } else if (role === 'assistant') {
+    if (currentPath !== '/assistant') {
+      window.location.href = '/assistant';
+    }
+  } else {
+    if (currentPath !== '/volunteer') {
+      window.location.href = '/volunteer';
+    }
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">

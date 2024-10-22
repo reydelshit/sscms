@@ -4,8 +4,8 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import Login from './pages/Login.tsx';
-import InventoryAssistant from './pages/nurse-assistant/InventoryAssistant.tsx';
 import RootAssistant from './pages/nurse-assistant/RootAssistant.tsx';
+import TransactionsAssistant from './pages/nurse-assistant/TransactionsAssistant.tsx';
 import CaseReport from './pages/nurse/CaseReport.tsx';
 import Inventory from './pages/nurse/Inventory.tsx';
 import MedicalHistory from './pages/nurse/MedicalHistory.tsx';
@@ -16,8 +16,6 @@ import Volunteers from './pages/nurse/Volunteers.tsx';
 import Root from './pages/Root.tsx';
 import DailyTimeRecord from './pages/volunteer/DailyTimeRecord.tsx';
 import RootVolunteer from './pages/volunteer/RootVolunteer.tsx';
-import Prescription from './pages/nurse/transactions/Prescription.tsx';
-import TransactionsAssistant from './pages/nurse-assistant/TransactionsAssistant.tsx';
 import TransactionsVol from './pages/volunteer/TransactionsVol.tsx';
 
 const queryClient = new QueryClient();
