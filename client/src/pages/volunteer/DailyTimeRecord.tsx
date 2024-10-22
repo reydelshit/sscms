@@ -1,5 +1,4 @@
-'use client';
-
+import BGPage from '@/assets/bg-page.png';
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,7 +34,6 @@ interface TimeEntry {
 
 const API_URL = import.meta.env.VITE_API_LINK;
 
-// Custom hook to fetch DTR entries for a user
 const useFetchDTR = (userId: string) => {
   return useQuery<TimeEntry[]>({
     queryKey: ['dtrData', userId],
@@ -43,11 +41,10 @@ const useFetchDTR = (userId: string) => {
       const response = await axios.get(`${API_URL}/dtr/${userId}`);
       return response.data;
     },
-    staleTime: 5 * 60 * 1000, // Cache the data for 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 };
 
-// Custom hook to create or update a DTR entry
 const useCreateOrUpdateDTR = () => {
   const queryClient = useQueryClient();
 
@@ -87,7 +84,7 @@ const useCreateOrUpdateDTR = () => {
 };
 
 export default function DailyTimeRecord() {
-  const userId = '1'; // Replace with actual user ID when available
+  const userId = '1';
   const { data: entries, isLoading, isError } = useFetchDTR(userId);
   const createOrUpdateDTR = useCreateOrUpdateDTR();
 
@@ -181,62 +178,106 @@ export default function DailyTimeRecord() {
   if (isError) return <div>Error loading DTR entries</div>;
 
   return (
-    <div className="mx-auto max-w-4xl p-4">
-      <div className="mb-4 rounded-lg bg-gray-100 p-4">
-        <h2 className="mb-2 text-2xl font-bold">Date: {currentDate}</h2>
-        <h3 className="mb-4 text-xl">Time: {currentTime}</h3>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              onClick={handleTimeClick}
-              className="mr-2"
-              disabled={isLogTimeDisabled}
+    <div
+      className="min-h-screen w-full bg-cover bg-center p-8"
+      style={{ backgroundImage: `url(${BGPage})` }}
+    >
+      <div className="mt-[2rem] rounded-3xl bg-[#193F56] bg-opacity-75 p-4 text-[#FDF3C0]">
+        <div className="mb-4 rounded-lg p-4">
+          <div className="inline-flex h-[8rem] w-full items-center rounded-3xl bg-[#FDF3C0]">
+            <h2 className="mb-2 p-4 text-2xl font-semibold text-black">
+              Date: {currentDate}
+            </h2>
+          </div>
+
+          <div className="mt-2 inline-flex h-[8rem] w-full items-center rounded-3xl bg-[#FDF3C0]">
+            <h2 className="mb-2 p-4 text-2xl font-semibold text-black">
+              Time: {currentTime}
+            </h2>
+          </div>
+
+          <div className="mt-4 flex w-full flex-row justify-center">
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  onClick={handleTimeClick}
+                  className="mr-2 h-[3rem] w-[10rem] rounded-full bg-[#FFA114] text-xl"
+                  disabled={isLogTimeDisabled}
+                >
+                  Log Time
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Confirm Time Log</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to log the time {currentTime}? This
+                    action cannot be undone.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={confirmTimeLog}>Confirm</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {/* <Button
+              onClick={handleNewEntry}
+              className="mr-2 h-[3rem] w-[10rem] rounded-full bg-[#FFA114] text-xl"
             >
-              Log Time
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Confirm Time Log</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to log the time {currentTime}? This action
-                cannot be undone.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={confirmTimeLog}>Confirm</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        <Button onClick={handleNewEntry}>New Entry</Button>
+              New Entry
+            </Button> */}
+          </div>
+        </div>
+        <div className="w-full overflow-hidden rounded-3xl bg-[#CDD6FF] text-black">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="bg-[#FFD699] text-black">Date</TableHead>
+                <TableHead className="bg-[#95CCD5] text-black">
+                  Time In (Morning)
+                </TableHead>
+                <TableHead className="bg-[#95CCD5] text-black">
+                  Time Out (Morning)
+                </TableHead>
+                <TableHead className="bg-[#FFD863] text-black">
+                  Time In (Afternoon)
+                </TableHead>
+                <TableHead className="bg-[#FFD863] text-black">
+                  Time Out (Afternoon)
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {entries?.map((entry) => (
+                <TableRow key={entry.dtr_id}>
+                  <TableCell className="bg-[#FFEBCD] text-black">
+                    {entry.date}
+                  </TableCell>
+                  <TableCell className="bg-[#CDE9FF] text-black">
+                    {entry.timeInMorning}
+                  </TableCell>
+                  <TableCell className="bg-[#CDE9FF] text-black">
+                    {entry.timeOutMorning}
+                  </TableCell>
+                  <TableCell className="bg-[#FEF7E5] text-black">
+                    {entry.timeInAfternoon}
+                  </TableCell>
+                  <TableCell className="bg-[#FEF7E5] text-black">
+                    {entry.timeOutAfternoon}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Date</TableHead>
-            <TableHead>Time In (Morning)</TableHead>
-            <TableHead>Time Out (Morning)</TableHead>
-            <TableHead>Time In (Afternoon)</TableHead>
-            <TableHead>Time Out (Afternoon)</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {entries?.map((entry) => (
-            <TableRow key={entry.dtr_id}>
-              <TableCell>{entry.date}</TableCell>
-              <TableCell>{entry.timeInMorning}</TableCell>
-              <TableCell>{entry.timeOutMorning}</TableCell>
-              <TableCell>{entry.timeInAfternoon}</TableCell>
-              <TableCell>{entry.timeOutAfternoon}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
     </div>
   );
 }
