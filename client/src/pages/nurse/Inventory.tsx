@@ -8,6 +8,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
+import DeleteMakeSure from '@/components/DeleteMakeSure';
+import Moment from '@/components/Moment';
 import PaginationTemplate from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,13 +33,19 @@ import { IllnessData } from '@/data/data';
 import illnessJSON from '@/data/illness.json';
 import { toast } from '@/hooks/use-toast';
 import usePagination from '@/hooks/usePagination';
-import Moment from '@/components/Moment';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { IBoundingBox, IPoint, Scanner } from '@yudiel/react-qr-scanner';
 import axios from 'axios';
+import { QrCode, X } from 'lucide-react';
 import { useState } from 'react';
 import UpdateInventory from './inventory/UpdateInventory';
-import { QrCode, X } from 'lucide-react';
-import DeleteMakeSure from '@/components/DeleteMakeSure';
+
+interface IDetectedBarcode {
+  boundingBox: IBoundingBox;
+  cornerPoints: IPoint[];
+  format: string;
+  rawValue: string;
+}
 
 type SelectedIllness = {
   illness_id: string;
@@ -162,6 +170,7 @@ const Inventory = () => {
   const createMutation = useCreateInventory();
   const deleteMutation = useDeleteInventory();
   const { data, isLoading, error, isError } = useFetchInventory();
+  const [open, setOpen] = useState(false);
 
   const handleSelectIllness = (value: string) => {
     setSelectedIllness((prevState) => [...prevState, JSON.parse(value)]);
@@ -183,9 +192,15 @@ const Inventory = () => {
     }));
   };
 
-  const filteredAttendance = data?.filter((item) =>
-    item.itemName.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredAttendance = data?.filter((item) => {
+    const isNameMatch = item.itemName
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const isCategoryMatch =
+      selectCategory === 'All' || item.category === selectCategory;
+
+    return isNameMatch && isCategoryMatch;
+  });
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
@@ -201,10 +216,50 @@ const Inventory = () => {
       selectedIllness,
       selectedCategory,
     });
+
+    setFormData({
+      itemName: '',
+      itemDescription: '',
+      quantity: 0,
+      manufacturingDate: '',
+      expiryDate: '',
+      lotNo: '',
+    });
   };
 
   const handleDelete = async (id: string) => {
     deleteMutation.mutate(id);
+  };
+
+  const parseScannedText = (text: string) => {
+    const regex = /Item Name: (.*?)\nItem Description: (.*)/;
+    const match = text.match(regex);
+
+    if (match) {
+      const itemName = match[1].trim();
+      const itemDescription = match[2].trim();
+
+      return { itemName, itemDescription };
+    } else {
+      return null;
+    }
+  };
+
+  const handleScan = (result: IDetectedBarcode[]) => {
+    if (result.length > 0) {
+      const parsedResult = parseScannedText(result[0].rawValue);
+
+      if (parsedResult) {
+        setFormData((prevState) => ({
+          ...prevState,
+          itemName: parsedResult.itemName || '',
+          itemDescription: parsedResult.itemDescription || '',
+        }));
+        console.log('Scanned:', parsedResult.itemName);
+      }
+
+      setOpen(false);
+    }
   };
 
   return (
@@ -258,7 +313,7 @@ const Inventory = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentItems &&
+                {currentItems.length > 0 ? (
                   currentItems?.map((item, index) => (
                     <TableRow className="bg-[#CDD6FF] text-black" key={index}>
                       <TableCell>{item.inventory_id}</TableCell>
@@ -315,7 +370,14 @@ const Inventory = () => {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ))
+                ) : (
+                  <TableRow className="bg-[#CDD6FF] text-black">
+                    <TableCell colSpan={9} className="text-center">
+                      No items found
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
@@ -345,13 +407,15 @@ const Inventory = () => {
               <Input
                 name="itemName"
                 onChange={handleInputChange}
-                placeholder="ITEM NAME:"
+                placeholder="ITEM NAME"
+                value={formData.itemName}
                 className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
               />
               <Input
                 name="itemDescription"
                 onChange={handleInputChange}
                 placeholder="ITEM DESCRIPTION"
+                value={formData.itemDescription}
                 className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
               />
               <Input
@@ -359,6 +423,7 @@ const Inventory = () => {
                 onChange={handleInputChange}
                 placeholder="QUANTITY"
                 type="number"
+                value={formData.quantity}
                 className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
               />
 
@@ -366,6 +431,7 @@ const Inventory = () => {
                 name="lotNo"
                 onChange={handleInputChange}
                 placeholder="LOT NO."
+                value={formData.lotNo}
                 className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
               />
             </div>
@@ -445,12 +511,29 @@ const Inventory = () => {
             </div>
 
             <div className="flex w-[40%] flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#FFD863]">
-              <div className="grid h-[50%] w-[35%] cursor-pointer place-content-center rounded-full bg-[#FFA114]">
-                <QrCode size={80} />
-              </div>
-              <span className="my-2 rounded-3xl bg-[#FDF3C0] p-4 font-semibold">
-                SCAN FOR QR CODE
-              </span>
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild className="w-full">
+                  <div className="flex h-full w-full flex-col items-center justify-center">
+                    <div className="grid h-[9rem] w-[35%] cursor-pointer place-content-center rounded-full bg-[#FFA114]">
+                      <QrCode size={80} />
+                    </div>
+
+                    <span className="my-2 cursor-pointer rounded-3xl bg-[#FDF3C0] p-4 font-semibold">
+                      SCAN FOR QR CODE
+                    </span>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="w-[40%]">
+                  <DialogHeader>
+                    <DialogTitle>Scan now</DialogTitle>
+                    <DialogDescription>
+                      Place the QR code in front of the camera to scan.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <Scanner allowMultiple={false} onScan={handleScan} />
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className="flex gap-4">

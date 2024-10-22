@@ -14,7 +14,7 @@ const Transactions = () => {
         <div className={`mb-2 h-full w-full rounded-full bg-[#193F56]`}>
           <Link to="/transactions">
             <Button
-              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions' ? 'bg-[#FFA114] text-white' : ''}`}
             >
               PRESCRIPTION
             </Button>
@@ -24,7 +24,7 @@ const Transactions = () => {
         <div className="mb-2 h-full w-full rounded-full bg-[#193F56]">
           <Link to="/transactions/medical-report">
             <Button
-              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/medical-report' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/medical-report' ? 'bg-[#FFA114] text-white' : ''}`}
             >
               Medical Report
             </Button>
@@ -34,7 +34,7 @@ const Transactions = () => {
         <div className="mb-2 h-full w-full rounded-full bg-[#193F56]">
           <Link to="/transactions/med-cert">
             <Button
-              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/med-cert' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/med-cert' ? 'bg-[#FFA114] text-white' : ''}`}
             >
               med cert / referral
             </Button>

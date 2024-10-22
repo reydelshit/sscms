@@ -85,11 +85,16 @@ const MedicalHistory = () => {
   const deleteMutation = useDeleteMedicalHistory();
   const [searchDepartment, setSearchDepartment] = useState<string>('');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('All');
+  const [search, setSearch] = useState<string>('');
+
+  const filteredMedicalHistory = medicalHistoryData?.filter((stud) =>
+    stud.studentName.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
       itemsPerPage: 3,
-      data: medicalHistoryData || [],
+      data: filteredMedicalHistory || [],
     });
 
   const handleDelete = async (id: string) => {
@@ -161,6 +166,12 @@ const MedicalHistory = () => {
           <p>Loading...</p>
         ) : (
           <div className="mt-[2rem] h-full overflow-hidden rounded-3xl">
+            <Input
+              placeholder="Search student name"
+              onChange={(e) => setSearch(e.target.value)}
+              className="my-4 w-[250px] rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+            />
+
             <Table>
               <TableHeader>
                 <TableRow className="bg-[#FFD699] !text-black">
@@ -256,7 +267,7 @@ const MedicalHistory = () => {
                 ) : (
                   <TableRow className="h-[8rem] bg-white text-sm text-black">
                     <TableCell colSpan={7} className="text-center">
-                      No medical history found
+                      No student history found
                     </TableCell>
                   </TableRow>
                 )}

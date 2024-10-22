@@ -3,6 +3,7 @@ import ButtonShadow from '@/components/ButtonShadow';
 import Header from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/nurse/Dashboard';
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 const Root = () => {
   const params = useLocation();
@@ -12,23 +13,25 @@ const Root = () => {
 
   console.log('Current Path:', currentPath);
 
-  if (!role) {
-    if (currentPath !== '/login') {
-      window.location.href = '/login';
+  useEffect(() => {
+    if (!role) {
+      if (currentPath !== '/login') {
+        window.location.href = '/login';
+      }
+    } else if (role === 'nurse') {
+      if (currentPath !== '/') {
+        window.location.href = '/';
+      }
+    } else if (role === 'assistant') {
+      if (currentPath !== '/assistant') {
+        window.location.href = '/assistant';
+      }
+    } else {
+      if (currentPath !== '/volunteer') {
+        window.location.href = '/volunteer';
+      }
     }
-  } else if (role === 'nurse') {
-    if (currentPath !== '/') {
-      window.location.href = '/';
-    }
-  } else if (role === 'assistant') {
-    if (currentPath !== '/assistant') {
-      window.location.href = '/assistant';
-    }
-  } else {
-    if (currentPath !== '/volunteer') {
-      window.location.href = '/volunteer';
-    }
-  }
+  }, []);
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
@@ -58,7 +61,7 @@ const Root = () => {
 
           <ButtonShadow
             to="/transactions"
-            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/transactions' ? 'bg-[#FFA114] text-white' : ''}`}
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname.includes('transactions') ? 'bg-[#FFA114] text-white' : ''}`}
             outsideBG="bg-black"
           >
             {' '}

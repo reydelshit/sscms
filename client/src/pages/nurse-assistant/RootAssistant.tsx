@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Outlet, useLocation } from 'react-router-dom';
 import TransactionsAssistant from './TransactionsAssistant';
 import NurseAssitant from '@/assets/assistant.png';
+import { useEffect } from 'react';
 
 const RootAssistant = () => {
   const params = useLocation();
@@ -13,23 +14,25 @@ const RootAssistant = () => {
 
   console.log('Current Path:', currentPath);
 
-  if (!role) {
-    if (currentPath !== '/login') {
-      window.location.href = '/login';
+  useEffect(() => {
+    if (!role) {
+      if (currentPath !== '/login') {
+        window.location.href = '/login';
+      }
+    } else if (role === 'nurse') {
+      if (currentPath !== '/') {
+        window.location.href = '/';
+      }
+    } else if (role === 'assistant') {
+      if (currentPath !== '/assistant') {
+        window.location.href = '/assistant';
+      }
+    } else {
+      if (currentPath !== '/volunteer') {
+        window.location.href = '/volunteer';
+      }
     }
-  } else if (role === 'nurse') {
-    if (currentPath !== '/') {
-      window.location.href = '/';
-    }
-  } else if (role === 'assistant') {
-    if (currentPath !== '/assistant') {
-      window.location.href = '/assistant';
-    }
-  } else {
-    if (currentPath !== '/volunteer') {
-      window.location.href = '/volunteer';
-    }
-  }
+  }, []);
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">

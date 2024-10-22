@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Outlet, useLocation } from 'react-router-dom';
 import TransactionsVol from './TransactionsVol';
 import DefaultProfile from '@/assets/default.webp';
+import { useEffect } from 'react';
 
 const RootVolunteer = () => {
   const params = useLocation();
@@ -14,23 +15,25 @@ const RootVolunteer = () => {
 
   console.log('Current Path:', currentPath);
 
-  if (!role) {
-    if (currentPath !== '/login') {
-      window.location.href = '/login';
+  useEffect(() => {
+    if (!role) {
+      if (currentPath !== '/login') {
+        window.location.href = '/login';
+      }
+    } else if (role === 'nurse') {
+      if (currentPath !== '/') {
+        window.location.href = '/';
+      }
+    } else if (role === 'assistant') {
+      if (currentPath !== '/assistant') {
+        window.location.href = '/assistant';
+      }
+    } else {
+      if (currentPath !== '/volunteer') {
+        window.location.href = '/volunteer';
+      }
     }
-  } else if (role === 'nurse') {
-    if (currentPath !== '/') {
-      window.location.href = '/';
-    }
-  } else if (role === 'assistant') {
-    if (currentPath !== '/assistant') {
-      window.location.href = '/assistant';
-    }
-  } else {
-    if (currentPath !== '/volunteer') {
-      window.location.href = '/volunteer';
-    }
-  }
+  }, []);
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
