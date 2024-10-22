@@ -41,7 +41,7 @@ const useFetchCredentials = (username: string, password: string) => {
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const [error, setError] = useState('');
   const { data, refetch } = useFetchCredentials(username, password);
 
   const isNurse = username.includes('nurse');
@@ -58,8 +58,14 @@ const Login = () => {
         window.location.href = '/';
 
         localStorage.setItem('sscms_role', 'nurse');
+      } else {
+        setError('Invalid Credentials, Please try again');
       }
     } else if (isAssistant) {
+      console.log('Assistant:', username, password);
+
+      console.log(import.meta.env.VITE_ASSISTANT_USERNAME);
+      console.log(import.meta.env.VITE_ASSISTANT_PASSWORD);
       if (
         username === import.meta.env.VITE_ASSISTANT_USERNAME &&
         password === import.meta.env.VITE_ASSISTANT_PASSWORD
@@ -67,19 +73,21 @@ const Login = () => {
         window.location.href = '/assistant';
 
         localStorage.setItem('sscms_role', 'assistant');
+      } else {
+        setError('Invalid Credentials, Please try again');
       }
     } else {
       const result = await refetch();
 
       if (result.isError) {
-        alert('Invalid credentials');
+        setError('Invalid Credentials, Please try again');
         return;
       }
 
       if (result.data?.volunteer_id) {
         console.log('Volunteer:', result.data);
         localStorage.setItem('volunteer_id', result.data.volunteer_id);
-        localStorage.setItem('VolunteerName', result.data.student_name);
+        localStorage.setItem('sscms_volunteer_name', result.data.student_name);
 
         toast({
           title: 'Login successful',
@@ -112,7 +120,7 @@ const Login = () => {
             placeholder="Username"
             outsideBG="bg-[#F2700A]"
             insideBG="bg-[#FFA114]"
-            customStyles="h-[3.5rem] rounded-full"
+            customStyles="h-[3.5rem] rounded-full text-white"
             onChange={(e) => setUsername(e.target.value)}
           />
 
@@ -120,10 +128,13 @@ const Login = () => {
             placeholder="Password"
             outsideBG="bg-[#F2700A]"
             insideBG="bg-[#FFA114]"
-            customStyles="h-[3.5rem] rounded-full"
+            customStyles="h-[3.5rem] rounded-full text-white"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
+          {error.length > 0 && (
+            <div className="my-4 text-center text-red-500">{error}</div>
+          )}
           <div className="w-[10rem]">
             <div className={`mb-2 w-full rounded-full bg-[#5D7576]`}>
               <Button

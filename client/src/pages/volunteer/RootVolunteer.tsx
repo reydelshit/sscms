@@ -3,18 +3,36 @@ import Header from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
 import { Outlet, useLocation } from 'react-router-dom';
 import TransactionsVol from './TransactionsVol';
+import DefaultProfile from '@/assets/default.webp';
 
 const RootVolunteer = () => {
   const params = useLocation();
+  const role = localStorage.getItem('sscms_role');
+  const VolunteerName = localStorage.getItem('sscms_volunteer_name');
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <Header />
       <div className="relative flex h-full w-full grow">
-        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 bg-[#FED883] p-2 px-4 pt-[4rem]">
+        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 bg-[#FED883] p-2 px-4">
+          {role === 'volunteer' && (
+            <div className="my-4 flex items-center gap-2">
+              <img
+                className="h-20 w-20 rounded-full object-cover"
+                src={DefaultProfile}
+                alt="nurse avatar"
+              />
+
+              <div>
+                <h1 className="text-xl font-semibold">{VolunteerName}</h1>
+                <p>Volunteer</p>
+              </div>
+            </div>
+          )}
+
           <ButtonShadow
             to="/volunteer"
-            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/volunteer' ? 'bg-[#FFA114] text-white' : ''}`}
             outsideBG="bg-black"
           >
             {' '}
@@ -23,7 +41,7 @@ const RootVolunteer = () => {
 
           <ButtonShadow
             to="/volunteer/daily-time-record"
-            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/volunteer/daily-time-record' ? 'bg-[#FFA114] text-white' : ''}`}
             outsideBG="bg-black"
           >
             {' '}

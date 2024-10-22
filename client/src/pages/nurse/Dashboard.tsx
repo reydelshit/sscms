@@ -78,7 +78,7 @@ const Dashboard = () => {
       className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center px-4"
       style={{ backgroundImage: `url(${BGPage})` }}
     >
-      <div className="flex h-full w-full items-center gap-4 rounded-3xl bg-transparent bg-opacity-75 p-4 text-center">
+      <div className="mt-2 flex w-full items-center gap-4 rounded-3xl bg-transparent bg-opacity-75 p-4 text-center">
         <div className="flex w-full flex-col gap-4">
           <div className="rounded-3xl bg-[#95CCD5] p-4">
             <div className="flex items-center justify-center gap-4">
@@ -141,7 +141,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="grid h-[70%] w-[60%] place-content-center rounded-3xl bg-white">
+        <div className="grid h-[70%] w-[60%] place-content-center rounded-3xl bg-white p-2">
           <h1 className="text-2xl">FREQUENT HEALTH ISSUES ENCOUNTERED</h1>
           <PieChart
             series={[
