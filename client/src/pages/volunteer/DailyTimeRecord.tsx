@@ -1,4 +1,6 @@
-import BGPage from '@/assets/bg-page.png';
+'use client';
+
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -8,64 +10,76 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 
 interface TimeEntry {
-  dtr_id: number;
+  dtr_id?: string;
   date: string;
-  timeInMorning: string | null;
-  timeOutMorning: string | null;
-  timeInAfternoon: string | null;
-  timeOutAfternoon: string | null;
-  user_id: number;
+  timeInMorning: string;
+  timeOutMorning: string;
+  timeInAfternoon: string;
+  timeOutAfternoon: string;
+  user_id: string;
 }
 
+const API_URL = import.meta.env.VITE_API_LINK;
+
 // Custom hook to fetch DTR entries for a user
-const useFetchDTR = (id: string) => {
+const useFetchDTR = (userId: string) => {
   return useQuery<TimeEntry[]>({
-    queryKey: ['dtrData', id],
+    queryKey: ['dtrData', userId],
     queryFn: async () => {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_LINK}/dtr/${id}`,
-      );
+      const response = await axios.get(`${API_URL}/dtr/${userId}`);
       return response.data;
     },
     staleTime: 5 * 60 * 1000, // Cache the data for 5 minutes
   });
 };
 
-// Custom hook to create a new DTR entry
-const useCreateDTR = () => {
+// Custom hook to create or update a DTR entry
+const useCreateOrUpdateDTR = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async (data: { timeEntry: Partial<TimeEntry>; id: string }) => {
-      const filteredEntry = Object.fromEntries(
-        Object.entries(data.timeEntry).filter(([_, value]) => value !== ''),
-      );
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_LINK}/dtr/create`,
-        {
-          ...filteredEntry,
-          user_id: data.id,
-        },
-      );
-      return response.data;
+    mutationFn: async (data: TimeEntry) => {
+      if (data.dtr_id) {
+        // Update existing entry
+        const response = await axios.put(
+          `${API_URL}/dtr/update/${data.dtr_id}`,
+          data,
+        );
+        return response.data;
+      } else {
+        // Create new entry
+        const response = await axios.post(`${API_URL}/dtr/create`, data);
+        return response.data;
+      }
     },
     onSuccess: (data) => {
       if (data.status === 'success') {
-        console.log('DTR successfully created:', data);
+        console.log('DTR successfully created/updated:', data);
         toast({
-          title: 'DTR successfully created',
+          title: 'DTR successfully created/updated',
           description: new Date().toLocaleTimeString(),
         });
+        queryClient.invalidateQueries({ queryKey: ['dtrData'] });
       }
     },
     onError: (error) => {
-      console.error('Error creating DTR:', error);
+      console.error('Error creating/updating DTR:', error);
       toast({
-        title: 'Error creating DTR',
+        title: 'Error creating/updating DTR',
         description: error.message || 'Something went wrong.',
       });
     },
@@ -73,181 +87,156 @@ const useCreateDTR = () => {
 };
 
 export default function DailyTimeRecord() {
+  const userId = '1'; // Replace with actual user ID when available
+  const { data: entries, isLoading, isError } = useFetchDTR(userId);
+  const createOrUpdateDTR = useCreateOrUpdateDTR();
+
   const [currentDate, setCurrentDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
-  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
-  const [userId, setUserId] = useState(1);
-
-  // Fetch DTR entries when component mounts
-  const { data } = useFetchDTR(userId.toString());
-  const createMutation = useCreateDTR();
-
-  useEffect(() => {
-    // Sync fetched data with state when available
-    if (data) {
-      setTimeEntries(data);
-    }
-  }, [data]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      setCurrentDate(now.toLocaleDateString('en-GB')); // Ensure consistent date format
-      setCurrentTime(now.toLocaleTimeString('en-US', { hour12: true }));
+      setCurrentDate(now.toLocaleDateString('en-GB'));
+      setCurrentTime(
+        now.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        }),
+      );
     }, 1000);
 
-    return () => clearInterval(timer); // Clear interval on unmount
+    return () => clearInterval(timer);
   }, []);
 
-  const handleTimeEntry = () => {
-    const now = new Date();
-    const timeStr = now
-      .toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      })
-      .replace(/^0/, ''); // Remove leading zero if present
+  const handleTimeClick = () => {
+    setIsDialogOpen(true);
+  };
 
-    const existingEntryIndex = timeEntries.findIndex(
-      (entry) => entry.date === currentDate,
-    );
+  const confirmTimeLog = async () => {
+    const todayEntry = entries?.find((entry) => entry.date === currentDate);
+    let updatedEntry: TimeEntry = todayEntry
+      ? { ...todayEntry }
+      : {
+          date: currentDate,
+          timeInMorning: '',
+          timeOutMorning: '',
+          timeInAfternoon: '',
+          timeOutAfternoon: '',
+          user_id: userId,
+        };
 
-    let newEntry;
-
-    if (existingEntryIndex !== -1) {
-      newEntry = { ...timeEntries[existingEntryIndex] };
-    } else {
-      newEntry = {
-        dtr_id: timeEntries.length + 1,
-        date: currentDate,
-        timeInMorning: null,
-        timeOutMorning: null,
-        timeInAfternoon: null,
-        timeOutAfternoon: null,
-        user_id: userId,
-      };
+    if (!todayEntry || !todayEntry.timeInMorning) {
+      updatedEntry.timeInMorning = currentTime;
+    } else if (!todayEntry.timeOutMorning) {
+      updatedEntry.timeOutMorning = currentTime;
+    } else if (!todayEntry.timeInAfternoon) {
+      updatedEntry.timeInAfternoon = currentTime;
+    } else if (!todayEntry.timeOutAfternoon) {
+      updatedEntry.timeOutAfternoon = currentTime;
     }
 
-    const currentHour = now.getHours();
-
-    // Determine if it's morning or afternoon
-    if (currentHour < 12) {
-      // Morning
-      if (!newEntry.timeInMorning) {
-        newEntry.timeInMorning = timeStr;
-      } else if (!newEntry.timeOutMorning) {
-        newEntry.timeOutMorning = timeStr;
-      }
-    } else {
-      // Afternoon
-      if (!newEntry.timeInAfternoon) {
-        newEntry.timeInAfternoon = timeStr;
-      } else if (!newEntry.timeOutAfternoon) {
-        newEntry.timeOutAfternoon = timeStr;
-      }
-    }
-
-    if (existingEntryIndex !== -1) {
-      setTimeEntries((prev) => {
-        const updatedEntries = [...prev];
-        updatedEntries[existingEntryIndex] = newEntry;
-        return updatedEntries;
+    try {
+      await createOrUpdateDTR.mutateAsync(updatedEntry);
+    } catch (error) {
+      console.error('Error creating/updating DTR:', error);
+      toast({
+        title: 'Error creating/updating DTR',
+        description:
+          'Something went wrong while creating/updating the DTR entry.',
       });
-    } else {
-      setTimeEntries((prev) => [...prev, newEntry]);
     }
 
-    console.log('Updated Entry:', newEntry);
+    setIsDialogOpen(false);
   };
 
   const handleNewEntry = () => {
-    // Check if there's already an incomplete entry
-    const hasIncompleteEntry = timeEntries.some(
-      (entry) =>
-        entry.date === currentDate &&
-        (!entry.timeInMorning ||
-          !entry.timeOutMorning ||
-          !entry.timeInAfternoon ||
-          !entry.timeOutAfternoon),
-    );
-
-    if (hasIncompleteEntry) {
-      alert('Please complete the current entry before creating a new one');
-      return;
-    }
-
-    // Get the highest dtr_id
-    const maxId = timeEntries.reduce(
-      (max, entry) => Math.max(max, entry.dtr_id),
-      0,
-    );
-
-    const newEntry = {
-      dtr_id: maxId + 1,
+    const newEntry: TimeEntry = {
       date: currentDate,
-      timeInMorning: null,
-      timeOutMorning: null,
-      timeInAfternoon: null,
-      timeOutAfternoon: null,
+      timeInMorning: '',
+      timeOutMorning: '',
+      timeInAfternoon: '',
+      timeOutAfternoon: '',
       user_id: userId,
     };
 
-    setTimeEntries((prev) => [...prev, newEntry]);
-    console.log('Created new entry:', newEntry);
+    createOrUpdateDTR.mutate(newEntry);
   };
 
-  return (
-    <div
-      className="min-h-screen w-full bg-cover bg-center p-8"
-      style={{ backgroundImage: `url(${BGPage})` }}
-    >
-      <div className="mt-[2rem] h-fit rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
-        <div className="mb-4 flex h-[8rem] items-center rounded-3xl bg-[#e8ddb5] p-2 text-black">
-          <p className="font-mono text-lg">DATE: {currentDate}</p>
-        </div>
-        <div className="mb-4 flex h-[8rem] items-center rounded-3xl bg-[#e8ddb5] p-2 text-black">
-          <p className="font-mono text-lg">TIME: {currentTime}</p>
-        </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px] text-white">ID</TableHead>
-              <TableHead className="text-white">TIME IN (AM)</TableHead>
-              <TableHead className="text-white">TIME OUT (AM)</TableHead>
-              <TableHead className="text-white">TIME IN (PM)</TableHead>
-              <TableHead className="text-white">TIME OUT (PM)</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {timeEntries.map((entry, index) => (
-              <TableRow className="text-white" key={index}>
-                <TableCell>{entry.dtr_id}</TableCell>
-                <TableCell>{entry.timeInMorning}</TableCell>
-                <TableCell>{entry.timeOutMorning}</TableCell>
-                <TableCell>{entry.timeInAfternoon}</TableCell>
-                <TableCell>{entry.timeOutAfternoon}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <div className="mt-[2rem] flex items-center gap-4">
-          <Button
-            className="w-full bg-[#f7a23c] text-white hover:bg-[#e89326]"
-            onClick={handleNewEntry}
-          >
-            New Entry
-          </Button>
+  const isLogTimeDisabled: boolean = useMemo(() => {
+    if (!entries) return false;
+    const todayEntry = entries.find((entry) => entry.date === currentDate);
+    return !!(
+      todayEntry &&
+      todayEntry.timeInMorning &&
+      todayEntry.timeOutMorning &&
+      todayEntry.timeInAfternoon &&
+      todayEntry.timeOutAfternoon
+    );
+  }, [entries, currentDate]);
 
-          <Button
-            className="w-full bg-[#f7a23c] text-white hover:bg-[#e89326]"
-            onClick={handleTimeEntry}
-          >
-            TIME
-          </Button>
-        </div>
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading DTR entries</div>;
+
+  return (
+    <div className="mx-auto max-w-4xl p-4">
+      <div className="mb-4 rounded-lg bg-gray-100 p-4">
+        <h2 className="mb-2 text-2xl font-bold">Date: {currentDate}</h2>
+        <h3 className="mb-4 text-xl">Time: {currentTime}</h3>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              onClick={handleTimeClick}
+              className="mr-2"
+              disabled={isLogTimeDisabled}
+            >
+              Log Time
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Time Log</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to log the time {currentTime}? This action
+                cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={confirmTimeLog}>Confirm</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Button onClick={handleNewEntry}>New Entry</Button>
       </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Date</TableHead>
+            <TableHead>Time In (Morning)</TableHead>
+            <TableHead>Time Out (Morning)</TableHead>
+            <TableHead>Time In (Afternoon)</TableHead>
+            <TableHead>Time Out (Afternoon)</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {entries?.map((entry) => (
+            <TableRow key={entry.dtr_id}>
+              <TableCell>{entry.date}</TableCell>
+              <TableCell>{entry.timeInMorning}</TableCell>
+              <TableCell>{entry.timeOutMorning}</TableCell>
+              <TableCell>{entry.timeInAfternoon}</TableCell>
+              <TableCell>{entry.timeOutAfternoon}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { medicalHistoryRouter } from './api/medical-history';
 import { dashboardRouter } from './api/dashboard';
 import { dtrRouter } from './api/dtr';
 import { loginRouter } from './api/login';
+
 // import { studentRouter } from './api/studentRoute';
 // import { attendanceRouter } from './api/attendanceRoute';
 // import { messageRouter } from './api/messagesRoute';

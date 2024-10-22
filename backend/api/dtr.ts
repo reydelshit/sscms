@@ -106,16 +106,6 @@ router.get("/", (req, res) => {
     });
   });
   
-  // Get specific DTR record 
-  router.get("/scan/:id", (req, res) => {
-    const query = "SELECT * FROM dtr WHERE dtr_id = ?";
-    const id = req.params.id;
-    databaseConnection.query(query, [id], (err, data) => {
-      if (err) return res.json(err);
-      return res.json(data);
-    });
-  });
-  
   
 
   export const dtrRouter = router;
