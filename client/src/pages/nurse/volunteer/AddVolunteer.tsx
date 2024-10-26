@@ -81,7 +81,7 @@ const AddVolunteer = () => {
   const [studentFullname, setStudentFullname] = useState<string>('');
   const [studentCourseYear, setStudentCourseYear] = useState<string>('');
   const [studentDepartment, setStudentDepartment] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  // const [password, setPassword] = useState<string>('');
   const [contactNumber, setContactNumber] = useState('');
   const { sendSMS } = useSendSMS();
 
@@ -130,7 +130,7 @@ const AddVolunteer = () => {
     e.preventDefault();
 
     const password = await generatePasswordRandom();
-    setPassword(password);
+    // setPassword(password);
 
     if (password !== '') {
       createMutation.mutate({
@@ -143,7 +143,7 @@ const AddVolunteer = () => {
     }
 
     if (contactNumber !== '') {
-      // handleSendSMS();
+      handleSendSMS(password);
     }
 
     setFormData({
@@ -160,7 +160,7 @@ const AddVolunteer = () => {
     setStudentDepartment('');
   };
 
-  const handleSendSMS = async () => {
+  const handleSendSMS = async (password: string) => {
     const messageContent = `
       Hi ${studentFullname},
       Your volunteer account has been created. 
