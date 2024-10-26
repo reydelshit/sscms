@@ -90,7 +90,7 @@ const MedicalReport = () => {
   const [studentCourseYear, setStudentCourseYear] = useState('');
   const [studentDepartment, setStudentDepartment] = useState('');
   const [contactNumber, setContactNumber] = useState('');
-  const { setContent, setTo, sendSMS } = useSendSMS();
+  const { sendSMS } = useSendSMS();
 
   const handleInputChange = (e: ChangeEvent) => {
     const { name, value } = e.target;
@@ -119,14 +119,6 @@ const MedicalReport = () => {
     setSelectedStudentID(value);
   };
 
-  const handleSendSMS = () => {
-    setContent(
-      `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${formData.date}.`,
-    );
-    setTo(contactNumber);
-    sendSMS();
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addMedicalReport.mutate({
@@ -137,7 +129,9 @@ const MedicalReport = () => {
       studentName: studentFullname,
     });
 
-    // handleSendSMS();
+    if (contactNumber) {
+      handleSendSMS();
+    }
 
     console.log('Form submitted:', {
       ...formData,
@@ -145,6 +139,13 @@ const MedicalReport = () => {
       course: studentDepartment,
       year: studentCourseYear,
       studentName: studentFullname,
+    });
+  };
+
+  const handleSendSMS = () => {
+    sendSMS({
+      content: `Hello ${studentFullname}, your medical report is ready. Please check your email for more details.`,
+      to: contactNumber,
     });
   };
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -43,7 +42,7 @@ const PaginationTemplate = ({
                   className={`mx-1 ${
                     currentPage === pageNumber
                       ? 'bg-orange-500'
-                      : 'bg-[#FFD863]'
+                      : 'bg-[#FFD863] text-black'
                   }`}
                   onClick={() => handlePageChange(pageNumber)}
                 >

@@ -4,10 +4,16 @@ const apiKey =
   '_A9QaZDJewc0TKL8sEUsNFoqOCbKT-a6zopzW2Dy30XZ1YnE1MwtmTPYQloPIyvH';
 
 const useSendSMS = () => {
-  const [content, setContent] = useState('');
-  const [to, setTo] = useState('');
+  // const [content, setContent] = useState('');
+  // const [to, setTo] = useState('');
 
-  const sendSMS = async () => {
+  const sendSMS = async ({
+    content = '',
+    to = '',
+  }: {
+    content: string;
+    to: string;
+  }) => {
     console.log('Sending SMS with content:', content, 'to:', to);
 
     // Validate content and recipient
@@ -45,7 +51,7 @@ const useSendSMS = () => {
     }
   };
 
-  return { setContent, setTo, sendSMS };
+  return { sendSMS };
 };
 
 export default useSendSMS;

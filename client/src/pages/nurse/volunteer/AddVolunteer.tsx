@@ -48,9 +48,9 @@ const useCreateVolunteer = () => {
 
     onSuccess: (data) => {
       if (data.status === 'success') {
-        console.log('Item added successfully', data);
+        console.log('Volunteer added successfully', data);
         toast({
-          title: 'Item added successfully',
+          title: 'Volunteer added successfully and credentials sent via SMS',
           description: new Date().toLocaleTimeString(),
         });
       }
@@ -58,7 +58,7 @@ const useCreateVolunteer = () => {
     onError: (error) => {
       console.error('Error:', error);
       toast({
-        title: 'Error adding item',
+        title: 'Error adding Volunteer',
         description: error.message || 'Something went wrong.',
       });
     },
@@ -80,7 +80,7 @@ const AddVolunteer = () => {
   const [studentDepartment, setStudentDepartment] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [contactNumber, setContactNumber] = useState('');
-  const { setContent, setTo, sendSMS } = useSendSMS();
+  const { sendSMS } = useSendSMS();
 
   const createMutation = useCreateVolunteer();
 
@@ -116,20 +116,11 @@ const AddVolunteer = () => {
     );
     setStudentCourseYear(filterStudents[0].year);
     setStudentDepartment(filterStudents[0].course);
-    setContactNumber(filterStudents[0].contact_num);
 
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const handleSendSMS = () => {
-    setContent(
-      `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${new Date()}.`,
-    );
-    setTo(contactNumber);
-    sendSMS();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -145,7 +136,9 @@ const AddVolunteer = () => {
       password: password,
     });
 
-    // handleSendSMS();
+    if (contactNumber !== '') {
+      // handleSendSMS();
+    }
 
     setFormData({
       student_id: '',
@@ -153,6 +146,30 @@ const AddVolunteer = () => {
       course_year: '',
       phone_number: '',
       email: '',
+    });
+
+    setContactNumber('');
+    setStudentFullname('');
+    setStudentCourseYear('');
+    setStudentDepartment('');
+  };
+
+  const handleSendSMS = async () => {
+    const messageContent = `
+      Hi ${studentFullname},
+      Your volunteer account has been created. 
+      Your email/username ${formData.email} and password is ${password}.
+      Please be reminded to keep your password confidential.`;
+    const recipient = contactNumber;
+
+    // Log the contact number
+    console.log('contactNumber:', recipient);
+
+    console.log('Sending SMS with content:', messageContent, 'to:', recipient);
+
+    await sendSMS({
+      content: messageContent,
+      to: recipient,
     });
   };
 
@@ -193,7 +210,7 @@ const AddVolunteer = () => {
             value={studentFullname}
             onChange={handleInputChange}
             type="text"
-            className="border-none bg-[#FDF3C0] text-[#193F56]"
+            className="text-[#193F56]"
           />
         </div>
 
@@ -204,7 +221,7 @@ const AddVolunteer = () => {
             value={studentCourseYear}
             onChange={handleInputChange}
             type="text"
-            className="border-none bg-[#FDF3C0] text-[#193F56]"
+            className="text-[#193F56]"
           />
         </div>
 
@@ -215,7 +232,7 @@ const AddVolunteer = () => {
             value={studentDepartment}
             onChange={handleInputChange}
             type="text"
-            className="border-none bg-[#FDF3C0] text-[#193F56]"
+            className="text-[#193F56]"
           />
         </div>
 
@@ -223,9 +240,13 @@ const AddVolunteer = () => {
           <Label>Phone Number:</Label>
           <Input
             name="phone_number"
-            onChange={handleInputChange}
-            type="text"
-            className="border-none bg-[#FDF3C0] text-[#193F56]"
+            value={contactNumber}
+            onChange={(e) => {
+              setContactNumber(e.target.value);
+              handleInputChange(e);
+            }}
+            type="number"
+            className="text-[#193F56]"
           />
         </div>
 
@@ -234,8 +255,9 @@ const AddVolunteer = () => {
           <Input
             name="email"
             onChange={handleInputChange}
+            value={formData.email}
             type="email"
-            className="border-none bg-[#FDF3C0] text-[#193F56]"
+            className="text-[#193F56]"
           />
         </div>
 

@@ -92,7 +92,7 @@ const MedCert = () => {
   const [studentDepartment, setStudentDepartment] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const generatePDF = usePrintPDF<Record<string, string>>();
-  const { setContent, setTo, sendSMS } = useSendSMS();
+  const { sendSMS } = useSendSMS();
 
   const addMedCert = useAddMedCert();
 
@@ -132,14 +132,6 @@ const MedCert = () => {
     }));
   };
 
-  const handleSendSMS = () => {
-    setContent(
-      `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${formData.date}.`,
-    );
-    setTo(contactNumber);
-    sendSMS();
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -150,7 +142,9 @@ const MedCert = () => {
     });
     console.log('Form submitted:', formData);
 
-    // handleSendSMS();
+    if (contactNumber) {
+      handleSendSMS();
+    }
 
     generatePDF({
       data: medCertDate,
@@ -188,6 +182,13 @@ const MedCert = () => {
       ref_reason: '',
       referenceClassification: '',
       reffered: '',
+    });
+  };
+
+  const handleSendSMS = () => {
+    sendSMS({
+      content: `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${formData.date}.`,
+      to: contactNumber,
     });
   };
 
