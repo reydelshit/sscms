@@ -12,7 +12,7 @@ import {
 import { Students } from '@/data/students';
 import { toast } from '@/hooks/use-toast';
 import useSendSMS from '@/hooks/useSendSMS';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -25,6 +25,8 @@ interface FormDataType {
 }
 
 const useCreateVolunteer = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (data: {
       formData: FormDataType;
@@ -54,6 +56,7 @@ const useCreateVolunteer = () => {
           description: new Date().toLocaleTimeString(),
         });
       }
+      queryClient.invalidateQueries({ queryKey: ['volunteerData'] });
     },
     onError: (error) => {
       console.error('Error:', error);
@@ -92,7 +95,7 @@ const AddVolunteer = () => {
     }));
   };
 
-  const generatePasswordRandom = () => {
+  const generatePasswordRandom = async () => {
     const length = 8;
     const charset =
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -101,7 +104,7 @@ const AddVolunteer = () => {
       retVal += charset.charAt(Math.floor(Math.random() * n));
     }
 
-    setPassword(retVal);
+    return retVal;
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -126,15 +129,18 @@ const AddVolunteer = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    generatePasswordRandom();
+    const password = await generatePasswordRandom();
+    setPassword(password);
 
-    createMutation.mutate({
-      formData,
-      course: studentDepartment,
-      year: studentCourseYear,
-      student_name: studentFullname,
-      password: password,
-    });
+    if (password !== '') {
+      createMutation.mutate({
+        formData,
+        course: studentDepartment,
+        year: studentCourseYear,
+        student_name: studentFullname,
+        password: password,
+      });
+    }
 
     if (contactNumber !== '') {
       // handleSendSMS();

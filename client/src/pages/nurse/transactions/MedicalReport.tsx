@@ -144,7 +144,7 @@ const MedicalReport = () => {
 
   const handleSendSMS = () => {
     sendSMS({
-      content: `Hello ${studentFullname}, your medical report is ready. Please check your email for more details.`,
+      content: `Hello, the parent/guardian of ${studentFullname}. We would like to inform you that your student has been admitted to the clinic on ${new Date()}.`,
       to: contactNumber,
     });
   };

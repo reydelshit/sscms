@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -8,19 +9,21 @@ import { useEffect, useState } from 'react';
 interface VolunteerItem {
   student_id: string;
   student_name: string;
-  course_year: string;
+  course: string;
   phone_number: string;
   email: string;
   created_at: string;
   volunteer_id: string;
+  year: string;
 }
 
 type FormDataType = {
   student_id: string;
   student_name: string;
-  course_year: string;
+  course: string;
   phone_number: string;
   email: string;
+  year: string;
 };
 
 type ChangeEvent =
@@ -61,6 +64,14 @@ export const useUpdateVolunteer = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['volunteerList'] });
       console.log('Successfully updated Volunteer');
+
+      toast({
+        title: 'Volunteer updated successfully',
+        description: new Date().toLocaleDateString(),
+      });
+
+      queryClient.invalidateQueries({ queryKey: ['volunteerList'] });
+      queryClient.invalidateQueries({ queryKey: ['volunteerData'] });
     },
     onError: (error: Error) => {
       console.error('Error updating Volunteer:', error.message);
@@ -72,9 +83,10 @@ const EditVolunteer = ({ volunteerID }: { volunteerID: string }) => {
   const [formData, setFormData] = useState({
     student_id: '',
     student_name: '',
-    course_year: '',
+    course: '',
     phone_number: '',
     email: '',
+    year: '',
   });
 
   const updateMutation = useUpdateVolunteer();
@@ -88,12 +100,14 @@ const EditVolunteer = ({ volunteerID }: { volunteerID: string }) => {
 
   useEffect(() => {
     if (isSuccess) {
+      console.log(volunteerItem, 'ssss course');
       setFormData({
         student_id: volunteerItem.student_id,
         student_name: volunteerItem.student_name,
-        course_year: volunteerItem.course_year,
+        course: volunteerItem.course,
         phone_number: volunteerItem.phone_number,
         email: volunteerItem.email,
+        year: volunteerItem.year,
       });
     }
   }, [isSuccess, volunteerItem]);
@@ -148,14 +162,25 @@ const EditVolunteer = ({ volunteerID }: { volunteerID: string }) => {
         </div>
 
         <div>
-          <Label>Course / Year</Label>
+          <Label>Course</Label>
           <Input
             onChange={handleInputChange}
             type="text"
-            name="course_year"
-            defaultValue={volunteerItem?.course_year}
+            name="course"
+            defaultValue={volunteerItem?.course}
           />
         </div>
+
+        <div>
+          <Label>Year</Label>
+          <Input
+            onChange={handleInputChange}
+            type="text"
+            name="year"
+            defaultValue={volunteerItem?.year}
+          />
+        </div>
+
         <div>
           <Label>Phone Number</Label>
           <Input

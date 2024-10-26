@@ -14,7 +14,7 @@ const TransactionsAssistant = () => {
         <div className={`mb-2 h-full w-full rounded-full bg-[#193F56]`}>
           <Link to="/assistant">
             <Button
-              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/assistant' ? 'bg-[#FFA114] text-white' : ''}`}
             >
               PRESCRIPTION
             </Button>
@@ -24,7 +24,7 @@ const TransactionsAssistant = () => {
         <div className="mb-2 h-full w-full rounded-full bg-[#193F56]">
           <Link to="/assistant/transactions/medical-report">
             <Button
-              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/transactions/medical-report' ? 'bg-[#FDF3C0] text-[#193F56]' : ''}`}
+              className={`mb-2 ml-1 h-[3rem] w-full rounded-full border-none bg-[#95CCD5] text-xl uppercase text-white hover:bg-[#FDF3C0] hover:text-[#193F56] ${path === '/assistant/transactions/medical-report' ? 'bg-[#FFA114] text-white' : ''}`}
             >
               Medical Report
             </Button>

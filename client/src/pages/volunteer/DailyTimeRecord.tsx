@@ -84,8 +84,8 @@ const useCreateOrUpdateDTR = () => {
 };
 
 export default function DailyTimeRecord() {
-  const userId = '1';
-  const { data: entries, isLoading, isError } = useFetchDTR(userId);
+  const userId = localStorage.getItem('volunteer_id') as string;
+  const { data: entries, isLoading, isError } = useFetchDTR(userId || '');
   const createOrUpdateDTR = useCreateOrUpdateDTR();
 
   const [currentDate, setCurrentDate] = useState('');
