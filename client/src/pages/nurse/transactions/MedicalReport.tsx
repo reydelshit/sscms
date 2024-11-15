@@ -12,9 +12,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Students } from '@/data/students';
 import { toast } from '@/hooks/use-toast';
 import useSendSMS from '@/hooks/useSendSMS';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
@@ -25,6 +35,17 @@ type FormDataType = {
   remarks: string;
   recom: string;
 };
+
+interface VolunteerItem {
+  student_id: string;
+  student_name: string;
+  course: string;
+  year: string;
+  phone_number: string;
+  email: string;
+  created_at: string;
+  volunteer_id: string;
+}
 
 const useAddMedicalReport = () => {
   return useMutation({
@@ -67,6 +88,27 @@ const useAddMedicalReport = () => {
   });
 };
 
+const useFetchCredentials = (username: string, password: string) => {
+  return useQuery<VolunteerItem>({
+    queryKey: ['volunteerData', username, password],
+    queryFn: async () => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/login`,
+        {
+          username,
+          password,
+        },
+      );
+      if (response.data.length === 0) {
+        throw new Error('Invalid credentials');
+      }
+      return response.data[0] as VolunteerItem;
+    },
+    enabled: false,
+    retry: false,
+  });
+};
+
 const MedicalReport = () => {
   const [formData, setFormData] = useState({
     date: '',
@@ -75,15 +117,6 @@ const MedicalReport = () => {
     recom: '',
   });
 
-  const handleClear = () => {
-    setFormData({
-      date: '',
-      studentId: '',
-      remarks: '',
-      recom: '',
-    });
-  };
-
   const [selectedStudentID, setSelectedStudentID] = useState('');
   const [search, setSearch] = useState('');
   const [studentFullname, setStudentFullname] = useState('');
@@ -91,6 +124,15 @@ const MedicalReport = () => {
   const [studentDepartment, setStudentDepartment] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const { sendSMS } = useSendSMS();
+
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const userRole = localStorage.getItem('sscms_role');
+  const userEmail = localStorage.getItem('sscms_email') || '';
+
+  const [open, setOpen] = useState(false);
+
+  const { data, refetch } = useFetchCredentials(userEmail || '', password);
 
   const handleInputChange = (e: ChangeEvent) => {
     const { name, value } = e.target;
@@ -140,6 +182,19 @@ const MedicalReport = () => {
       year: studentCourseYear,
       studentName: studentFullname,
     });
+  };
+
+  const handleClear = () => {
+    setFormData({
+      date: '',
+      studentId: '',
+      remarks: '',
+      recom: '',
+    });
+
+    setStudentCourseYear('');
+    setStudentDepartment('');
+    setStudentFullname('');
   };
 
   const handleSendSMS = () => {
@@ -259,24 +314,111 @@ const MedicalReport = () => {
             placeholder="FINDINGS/SYMPTOMS/REMARKS:"
             onChange={handleInputChange}
             name="remarks"
+            value={formData.remarks}
             className="h-full rounded-2xl border-none bg-[#FDF3C0] text-[#193F56]"
           />
           <Textarea
             placeholder="TREATMENT/RECOMMENDATION:"
             onChange={handleInputChange}
             name="recom"
+            value={formData.recom}
             className="h-full rounded-2xl border-none bg-[#FDF3C0] text-[#193F56]"
           />
         </div>
 
         <div className="flex w-full justify-between">
           <div className="flex gap-4">
-            <Button
-              type="submit"
-              className="w-[10rem] rounded-full bg-green-500 text-white"
-            >
-              CONFIRM
-            </Button>
+            {userRole === 'volunteer' ? (
+              <Dialog
+                open={open}
+                onOpenChange={(isOpen) => {
+                  setOpen(isOpen);
+
+                  console.log('Is open:', isOpen);
+                  if (!isOpen) {
+                    setPassword('');
+                    setError('');
+                  }
+                }}
+              >
+                <DialogTrigger>
+                  <Button
+                    onClick={() => setOpen(true)}
+                    type="button"
+                    className="rounded-full bg-green-500 text-white hover:bg-green-600"
+                  >
+                    CONFIRM
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-[50%]">
+                  <DialogHeader>
+                    <DialogTitle>Please confirm your password?</DialogTitle>
+                    <DialogDescription>
+                      This action is a must to confirm your identity.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <Input
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    placeholder="Enter your password"
+                  />
+
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={async (e) => {
+                        e.preventDefault();
+
+                        if (password === '') {
+                          toast({
+                            title: 'Error',
+                            description:
+                              'Please enter your password to confirm.',
+                          });
+                          return;
+                        }
+
+                        try {
+                          const result = await refetch();
+
+                          if (result.isError) {
+                            setError('Incorrect Password, Please try again');
+                            return;
+                          }
+
+                          setOpen(false);
+
+                          const mainForm = document.querySelector('form');
+                          mainForm?.requestSubmit();
+
+                          handleClear();
+                          setError('');
+                        } catch (error) {
+                          setError(
+                            'An error occurred while validating credentials',
+                          );
+                        }
+                      }}
+                      type="submit"
+                      className="w-fit rounded-full bg-green-500 text-white hover:bg-green-600"
+                    >
+                      CONFIRM
+                    </Button>
+                  </div>
+
+                  {error.length > 0 && (
+                    <div className="my-4 text-center text-red-500">{error}</div>
+                  )}
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <Button
+                type="submit"
+                className="rounded-full bg-green-500 text-white hover:bg-green-600"
+              >
+                CONFIRM
+              </Button>
+            )}
             <Button
               type="button"
               onClick={handleClear}

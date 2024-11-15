@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
   
   // Get specific DTR record by ID
   router.get("/:id", (req, res) => {
-    const query = "SELECT * FROM dtr WHERE user_id = ?";
+    const query = "SELECT * FROM dtr WHERE volunteer_id = ?";
     const id = req.params.id;
     databaseConnection.query(query, id, (err, data) => {
       if (err) return res.json(err);
@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
   // Add DTR record
   router.post("/create", (req, res) => {
     const query = `
-      INSERT INTO dtr ( date, timeInMorning, timeOutMorning, timeInAfternoon, timeOutAfternoon, user_id) 
+      INSERT INTO dtr ( date, timeInMorning, timeOutMorning, timeInAfternoon, timeOutAfternoon, volunteer_id) 
       VALUES (?, ?, ?, ?, ?, ?)
     `;
   
@@ -37,7 +37,7 @@ router.get("/", (req, res) => {
       req.body.timeOutMorning,
       req.body.timeInAfternoon,
       req.body.timeOutAfternoon,
-      req.body.user_id
+      req.body.volunteer_id
     ];
   
     databaseConnection.query(query, values, (err, data) => {

@@ -15,6 +15,14 @@ import { toast } from '@/hooks/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface InventoryItem {
   inventory_id: string;
@@ -38,16 +46,15 @@ interface FormDataType {
   sig: string;
 }
 
-interface StudentPrescriptionData {
-  date: string;
-  studentName: string;
-  studentId: string;
-  year: string;
+interface VolunteerItem {
+  student_id: string;
+  student_name: string;
   course: string;
-  illness: string;
-  quantity: string;
-  suggestedPrescription: string;
-  sig: string;
+  year: string;
+  phone_number: string;
+  email: string;
+  created_at: string;
+  volunteer_id: string;
 }
 
 const useAddPrescription = () => {
@@ -108,6 +115,27 @@ const useFetchInventory = () => {
   });
 };
 
+const useFetchCredentials = (username: string, password: string) => {
+  return useQuery<VolunteerItem>({
+    queryKey: ['volunteerData', username, password],
+    queryFn: async () => {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/login`,
+        {
+          username,
+          password,
+        },
+      );
+      if (response.data.length === 0) {
+        throw new Error('Invalid credentials');
+      }
+      return response.data[0] as VolunteerItem;
+    },
+    enabled: false,
+    retry: false,
+  });
+};
+
 const Prescription = () => {
   const [formData, setFormData] = useState({
     date: '',
@@ -131,10 +159,32 @@ const Prescription = () => {
   const [studentCourseYear, setStudentCourseYear] = useState('');
   const [studentDepartment, setStudentDepartment] = useState('');
   const [selectedPrescriptionID, setSelectedPrescriptionID] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const userRole = localStorage.getItem('sscms_role');
+  const userEmail = localStorage.getItem('sscms_email') || '';
   const generatePDF = usePrintPDF<Record<string, string>>();
+  const [open, setOpen] = useState(false);
+
+  const { data, refetch } = useFetchCredentials(userEmail || '', password);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    switch (name) {
+      case 'studentName':
+        setStudentFullname(value);
+        break;
+      case 'year':
+        setStudentCourseYear(value);
+        break;
+      case 'course':
+        setStudentDepartment(value);
+        break;
+      default:
+        break;
+    }
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -186,7 +236,7 @@ const Prescription = () => {
 
     setAssociatedPrescription(filteredMedicine || []);
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     addPrescription.mutate({
@@ -229,6 +279,12 @@ const Prescription = () => {
       quantity: '',
       sig: '',
     });
+
+    setStudentCourseYear('');
+    setStudentDepartment('');
+    setStudentFullname('');
+    setSelectedIllness('');
+    setAssociatedPrescription([]);
   };
 
   return (
@@ -433,12 +489,96 @@ const Prescription = () => {
         </div>
 
         <div className="flex flex-row-reverse gap-4">
-          <Button
-            type="submit"
-            className="rounded-full bg-green-500 text-white hover:bg-green-600"
-          >
-            CONFIRM & PRINT
-          </Button>
+          {userRole === 'volunteer' ? (
+            <Dialog
+              open={open}
+              onOpenChange={(isOpen) => {
+                setOpen(isOpen);
+
+                console.log('Is open:', isOpen);
+                if (!isOpen) {
+                  setPassword('');
+                  setError('');
+                }
+              }}
+            >
+              <DialogTrigger>
+                <Button
+                  onClick={() => setOpen(true)}
+                  type="button"
+                  className="rounded-full bg-green-500 text-white hover:bg-green-600"
+                >
+                  CONFIRM & PRINT
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[50%]">
+                <DialogHeader>
+                  <DialogTitle>Please confirm your password?</DialogTitle>
+                  <DialogDescription>
+                    This action is a must to confirm your identity.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <Input
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  placeholder="Enter your password"
+                />
+
+                <div className="flex justify-end">
+                  <Button
+                    onClick={async (e) => {
+                      e.preventDefault();
+
+                      if (password === '') {
+                        toast({
+                          title: 'Error',
+                          description: 'Please enter your password to confirm.',
+                        });
+                        return;
+                      }
+
+                      try {
+                        const result = await refetch();
+
+                        if (result.isError) {
+                          setError('Incorrect Password, Please try again');
+                          return;
+                        }
+
+                        setOpen(false);
+
+                        const mainForm = document.querySelector('form');
+                        mainForm?.requestSubmit();
+
+                        handleClear();
+                        setError('');
+                      } catch (error) {
+                        setError(
+                          'An error occurred while validating credentials',
+                        );
+                      }
+                    }}
+                    type="submit"
+                    className="w-fit rounded-full bg-green-500 text-white hover:bg-green-600"
+                  >
+                    CONFIRM & PRINT
+                  </Button>
+                </div>
+
+                {error.length > 0 && (
+                  <div className="my-4 text-center text-red-500">{error}</div>
+                )}
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Button
+              type="submit"
+              className="rounded-full bg-green-500 text-white hover:bg-green-600"
+            >
+              CONFIRM & PRINTS
+            </Button>
+          )}
 
           <Button
             type="button"

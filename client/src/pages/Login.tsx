@@ -79,6 +79,13 @@ const Login = () => {
     } else {
       const result = await refetch();
 
+      if (result.isSuccess) {
+        toast({
+          title: 'Login successful',
+          description: 'Redirecting to dashboard',
+        });
+      }
+
       if (result.isError) {
         setError('Invalid Credentials, Please try again');
         return;
@@ -88,6 +95,7 @@ const Login = () => {
         console.log('Volunteer:', result.data);
         localStorage.setItem('volunteer_id', result.data.volunteer_id);
         localStorage.setItem('sscms_volunteer_name', result.data.student_name);
+        localStorage.setItem('sscms_email', result.data.email);
 
         toast({
           title: 'Login successful',

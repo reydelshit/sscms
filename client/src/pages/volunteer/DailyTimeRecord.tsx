@@ -29,7 +29,7 @@ interface TimeEntry {
   timeOutMorning: string;
   timeInAfternoon: string;
   timeOutAfternoon: string;
-  user_id: string;
+  volunteer_id: string;
 }
 
 const API_URL = import.meta.env.VITE_API_LINK;
@@ -122,7 +122,7 @@ export default function DailyTimeRecord() {
           timeOutMorning: '',
           timeInAfternoon: '',
           timeOutAfternoon: '',
-          user_id: userId,
+          volunteer_id: userId,
         };
 
     if (!todayEntry || !todayEntry.timeInMorning) {
@@ -156,7 +156,7 @@ export default function DailyTimeRecord() {
       timeOutMorning: '',
       timeInAfternoon: '',
       timeOutAfternoon: '',
-      user_id: userId,
+      volunteer_id: userId,
     };
 
     createOrUpdateDTR.mutate(newEntry);
@@ -207,7 +207,7 @@ export default function DailyTimeRecord() {
                   Log Time
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="w-[40%]">
                 <DialogHeader>
                   <DialogTitle>Confirm Time Log</DialogTitle>
                   <DialogDescription>

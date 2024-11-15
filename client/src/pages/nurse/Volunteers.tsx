@@ -26,7 +26,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import usePagination from '@/hooks/usePagination';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddVolunteer from './volunteer/AddVolunteer';
 import EditVolunteer from './volunteer/EditVolunteer';
 
@@ -38,6 +38,16 @@ interface VolunteerItem {
   phone_number: string;
   email: string;
   created_at: string;
+  volunteer_id: string;
+}
+
+interface TimeEntry {
+  dtr_id?: string;
+  date: string;
+  timeInMorning: string;
+  timeOutMorning: string;
+  timeInAfternoon: string;
+  timeOutAfternoon: string;
   volunteer_id: string;
 }
 
@@ -72,14 +82,52 @@ export const useDeleteVolunteer = () => {
   });
 };
 
+const useFetchDTR = (userId: string) => {
+  return useQuery<TimeEntry[]>({
+    queryKey: ['dtrData', userId],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_LINK}/dtr/${userId}`,
+      );
+      return response.data;
+    },
+    enabled: false,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
 const Volunteers = () => {
   const deleteMutation = useDeleteVolunteer();
   const { data, isLoading, error, isError } = useFetchVolunteer();
   const [search, setSearch] = useState<string>('');
+  const [userID, setUserID] = useState<string>('');
+
+  const {
+    data: entries,
+    isLoading: isLoadingDTR,
+    isError: isErrorDTR,
+    refetch: triggerFetch,
+  } = useFetchDTR(userID);
+
+  useEffect(() => {
+    if (userID) {
+      triggerFetch();
+    }
+  }, [userID, triggerFetch]);
 
   const filteredAttendance = data?.filter((item) =>
     item.student_name.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const {
+    currentItems: DTRItems,
+    totalPages: DTRTotalPages,
+    currentPage: DTRCurrentPage,
+    handlePageChange: DTRHandlePageCHange,
+  } = usePagination({
+    itemsPerPage: 5,
+    data: entries || [],
+  });
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
@@ -190,6 +238,95 @@ const Volunteers = () => {
                               DELETE
                             </Button>
                           </DeleteMakeSure>
+
+                          <Dialog>
+                            <DialogTrigger
+                              onClick={() => {
+                                setUserID(vol.volunteer_id);
+                                console.log(vol.volunteer_id);
+                              }}
+                              className="w-full rounded-full bg-[#536C70] p-2 font-semibold text-white"
+                            >
+                              View DTR
+                            </DialogTrigger>
+                            <DialogContent className="min-h-[40%] w-[60%] bg-[#536C70]">
+                              <DialogHeader>
+                                <div>
+                                  <DialogTitle className="text-white">
+                                    {vol.student_name}
+                                  </DialogTitle>
+                                  <DialogDescription className="text-white">
+                                    View {vol.student_name}'s daily time record
+                                  </DialogDescription>
+                                </div>
+                              </DialogHeader>
+
+                              {isLoadingDTR ? (
+                                <p>Loading...</p>
+                              ) : isErrorDTR ? (
+                                <p>
+                                  Failed to load data. Please try again later.
+                                </p>
+                              ) : (
+                                <Table>
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead className="bg-[#FFD699] text-black">
+                                        Date
+                                      </TableHead>
+                                      <TableHead className="bg-[#95CCD5] text-black">
+                                        Time In (Morning)
+                                      </TableHead>
+                                      <TableHead className="bg-[#95CCD5] text-black">
+                                        Time Out (Morning)
+                                      </TableHead>
+                                      <TableHead className="bg-[#FFD863] text-black">
+                                        Time In (Afternoon)
+                                      </TableHead>
+                                      <TableHead className="bg-[#FFD863] text-black">
+                                        Time Out (Afternoon)
+                                      </TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody className="bg-[#99ACFF] !text-black">
+                                    {entries && entries?.length > 0 ? (
+                                      DTRItems?.map((entry) => (
+                                        <TableRow key={entry.dtr_id}>
+                                          <TableCell className="bg-[#FFEBCD] text-black">
+                                            {entry.date}
+                                          </TableCell>
+                                          <TableCell className="bg-[#CDE9FF] text-black">
+                                            {entry.timeInMorning}
+                                          </TableCell>
+                                          <TableCell className="bg-[#CDE9FF] text-black">
+                                            {entry.timeOutMorning}
+                                          </TableCell>
+                                          <TableCell className="bg-[#FEF7E5] text-black">
+                                            {entry.timeInAfternoon}
+                                          </TableCell>
+                                          <TableCell className="bg-[#FEF7E5] text-black">
+                                            {entry.timeOutAfternoon}
+                                          </TableCell>
+                                        </TableRow>
+                                      ))
+                                    ) : (
+                                      <TableRow className="text-center">
+                                        <TableCell colSpan={5}>
+                                          No records found
+                                        </TableCell>
+                                      </TableRow>
+                                    )}
+                                  </TableBody>
+                                </Table>
+                              )}
+
+                              <PaginationTemplate
+                                totalPages={DTRTotalPages}
+                                currentPage={DTRCurrentPage}
+                                handlePageChange={DTRHandlePageCHange}
+                              />
+                            </DialogContent>
+                          </Dialog>
                         </div>
                       </TableCell>
                     </TableRow>
