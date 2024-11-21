@@ -29,19 +29,31 @@ const router = Router();
    //graph dispensed
    router.get("/visits", (req, res) => {
     const query = `
-            SELECT 
-                DAYNAME(medreport.date) AS name, 
-                COUNT(*) AS total 
+         SELECT 
+                YEAR(CURDATE()) AS CurrentYear,
+                MONTHNAME(CURDATE()) AS MonthName,
+                WEEK(medreport.date) - WEEK(DATE_SUB(medreport.date, INTERVAL DAY(medreport.date) - 1 DAY)) + 1 AS WeekOfMonth,
+                daynames.name AS name,
+                COALESCE(COUNT(medreport.date), 0) AS total
             FROM 
-                medreport
-            WHERE 
-                MONTH(medreport.date) = MONTH(CURDATE())  
-                AND YEAR(medreport.date) = YEAR(CURDATE())  
-                AND WEEK(medreport.date) = WEEK(CURDATE())  
+                (SELECT 'Monday' AS name UNION ALL
+                SELECT 'Tuesday' UNION ALL
+                SELECT 'Wednesday' UNION ALL
+                SELECT 'Thursday' UNION ALL
+                SELECT 'Friday' UNION ALL
+                SELECT 'Saturday' UNION ALL
+                SELECT 'Sunday') AS daynames
+            LEFT JOIN 
+                medreport 
+            ON 
+                DAYNAME(medreport.date) = daynames.name
+                AND WEEK(medreport.date) = WEEK(CURDATE())
+                AND MONTH(medreport.date) = MONTH(CURDATE())
+                AND YEAR(medreport.date) = YEAR(CURDATE())
             GROUP BY 
-                DAYNAME(medreport.date) 
+                daynames.name
             ORDER BY 
-                FIELD(DAYNAME(medreport.date), 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+                FIELD(daynames.name, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 
             `;
     databaseConnection.query(query, (err, data) => {

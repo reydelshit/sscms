@@ -27,6 +27,9 @@ interface DispensedData {
 interface VisitsData {
   name: string;
   total: number;
+  MonthName: string;
+  WEEK: number;
+  CurrentYear: number;
 }
 
 const useFetchPieChartData = () => {
@@ -84,7 +87,8 @@ const Dashboard = () => {
             <div className="flex items-center justify-center gap-4">
               <span className="block h-[2rem] w-[2rem] bg-white"></span>
               <h1 className="font-semibold">
-                PATIENTS VISITS WEEK 2 (DECEMBER 2024){' '}
+                PATIENT VISITS WEEK {visitsData[0]?.WEEK} OF{' '}
+                {visitsData[0]?.MonthName} ({visitsData[0]?.CurrentYear})
               </h1>
             </div>
             <ResponsiveContainer width="100%" height={200}>
