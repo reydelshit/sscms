@@ -2,6 +2,7 @@ import Logo from '@/assets/LOGO.svg';
 import BGImage from '@/assets/SSCMS v2.0.png';
 import InputShadow from '@/components/InputShadow';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -111,49 +112,51 @@ const Login = () => {
   };
 
   return (
-    <div
-      className="grid h-screen w-screen place-content-center place-items-center bg-cover bg-center"
-      style={{ backgroundImage: `url(${BGImage})` }}
-    >
-      <div className="flex h-[35rem] w-[30rem] flex-col items-center rounded-2xl bg-[#FDF3C0] px-[5rem]">
-        <img src={Logo} alt="Logo" />
-        <h1 className="my-2 text-center text-4xl font-bold text-[#193F56]">
-          Login
-        </h1>
+    <div className="flex h-screen w-screen justify-between gap-4 bg-cover bg-center">
+      <div className="flex h-screen w-[30rem] flex-col items-start justify-center rounded-r-2xl bg-[#FF9B15] px-[2rem] text-white">
+        <h1 className="my-2 text-start text-6xl font-bold">Login</h1>
         <form
           onSubmit={handleSubmit}
-          className="flex h-full w-full flex-col items-center"
+          className="flex w-full flex-col items-center"
         >
-          <InputShadow
-            placeholder="Username"
-            outsideBG="bg-[#F2700A]"
-            insideBG="bg-[#FFA114]"
-            customStyles="h-[3.5rem] rounded-full text-white"
+          <Input
+            className="my-4 h-[3rem] w-full rounded-full border-none p-4 text-black"
+            placeholder="Enter username"
+            type="text"
+            name="username"
             onChange={(e) => setUsername(e.target.value)}
           />
-
-          <InputShadow
-            placeholder="Password"
-            outsideBG="bg-[#F2700A]"
-            insideBG="bg-[#FFA114]"
-            customStyles="h-[3.5rem] rounded-full text-white"
+          <Input
+            className="mb-4 h-[3rem] w-full rounded-full border-none p-4 text-black"
+            placeholder="Enter password"
             type="password"
+            name="password"
             onChange={(e) => setPassword(e.target.value)}
           />
+
           {error.length > 0 && (
-            <div className="my-4 text-center text-red-500">{error}</div>
-          )}
-          <div className="w-[10rem]">
-            <div className={`mb-2 w-full rounded-full bg-[#5D7576]`}>
-              <Button
-                className={`mb-2 ml-1 h-[3.5rem] w-full rounded-full border-none bg-[#193F56] text-[2rem] font-bold uppercase text-[#FDF3C0]`}
-                type="submit"
-              >
-                Login{' '}
-              </Button>
+            <div className="my-4 bg-white p-2 text-center text-red-500">
+              {error}
             </div>
-          </div>
+          )}
+          <Button
+            className={`mb-2 ml-1 h-[3rem] w-[15rem] rounded-full border-none bg-white uppercase text-black`}
+            variant={'secondary'}
+            type="submit"
+          >
+            Login{' '}
+          </Button>
         </form>
+      </div>
+
+      <div className="flex w-full flex-col items-center justify-center bg-cover bg-center">
+        <div className="flex flex-row items-center">
+          <h1 className="text-8xl font-bold">SSCMS</h1>
+
+          <img src={Logo} alt="Logo" />
+        </div>
+
+        <p>SEAIT School Clinic Management System</p>
       </div>
     </div>
   );

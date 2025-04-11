@@ -77,15 +77,12 @@ const Dashboard = () => {
   const { data: visitsData = [] } = useFetchVisitsData();
 
   return (
-    <div
-      className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center px-4"
-      style={{ backgroundImage: `url(${BGPage})` }}
-    >
+    <div className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center px-4">
       <div className="mt-2 flex w-full items-center gap-4 rounded-3xl bg-transparent bg-opacity-75 p-4 text-center">
         <div className="flex w-full flex-col gap-4">
-          <div className="rounded-3xl bg-[#95CCD5] p-4">
+          <div className="rounded-3xl bg-[#D4D5D6] p-4">
             <div className="flex items-center justify-center gap-4">
-              <span className="block h-[2rem] w-[2rem] bg-white"></span>
+              <span className="block h-[2rem] w-[2rem] bg-[#FF9B15]"></span>
               <h1 className="font-semibold">
                 PATIENT VISITS WEEK {visitsData[0]?.WEEK} OF{' '}
                 {visitsData[0]?.MonthName} ({visitsData[0]?.CurrentYear})
@@ -112,15 +109,15 @@ const Dashboard = () => {
                   type="linear"
                   dataKey="total"
                   stroke="white"
-                  fill="white"
+                  fill="#FF9B15"
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="flex w-full flex-col items-center justify-center rounded-3xl bg-[#95CCD5] p-4">
+          <div className="flex w-full flex-col items-center justify-center rounded-3xl bg-[#D4D5D6] p-4">
             <div className="flex items-center justify-center gap-4">
-              <span className="block h-[2rem] w-[2rem] bg-white"></span>
+              <span className="block h-[2rem] w-[2rem] bg-[#FF9B15]"></span>
               <h1 className="font-semibold">MOST DISPENSED MEDICINE</h1>
             </div>
             <ResponsiveContainer width="100%" height={350}>
@@ -139,13 +136,13 @@ const Dashboard = () => {
                   axisLine={false}
                   tickFormatter={(value: string) => `${value}`}
                 />
-                <Bar dataKey="total" fill="white" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="total" fill="#FF9B15" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="grid h-[70%] w-[60%] place-content-center rounded-3xl bg-white p-2">
+        <div className="grid h-[70%] w-[60%] place-content-center rounded-3xl bg-[#D4D5D6] p-2">
           <h1 className="text-2xl">FREQUENT HEALTH ISSUES ENCOUNTERED</h1>
           <PieChart
             series={[

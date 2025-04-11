@@ -96,8 +96,7 @@ const router = Router();
         console.error('SQL Error:', err);
         return res.status(500).json({ error: 'Database update failed' });
       }
-      
-      if (data.affectedRows === 0) {
+      if ((data as any).affectedRows === 0) {
         return res.status(404).json({ message: "Volunteer not found" });
       }
 

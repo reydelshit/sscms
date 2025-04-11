@@ -140,21 +140,14 @@ const Volunteers = () => {
   };
 
   return (
-    <div
-      className="min-h-screen w-full bg-cover bg-center p-8"
-      style={{ backgroundImage: `url(${BGPage})` }}
-    >
-      <div className="mt-[2rem] h-[80%] rounded-3xl bg-[#193F56] bg-opacity-75 p-4 text-[#FDF3C0]">
+    <div className="min-h-screen w-full bg-cover bg-center p-8">
+      <div className="mt-[2rem] h-[80%] rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4 text-black">
         <div className="flex w-full justify-between gap-4">
-          <h1 className="text-[2rem] font-semibold text-[#FDF3C0]">
-            VOLUNTEERS
-          </h1>
+          <h1 className="text-[2rem] font-semibold text-black">VOLUNTEERS</h1>
           <div className="flex w-[40%] items-end justify-end gap-4">
             <Dialog>
               <DialogTrigger>
-                <Button className="rounded-3xl bg-green-500">
-                  ADD VOLUNTEEER
-                </Button>
+                <Button className="rounded-3xl">ADD VOLUNTEEER</Button>
               </DialogTrigger>
               <DialogContent className="w-[50%]">
                 <DialogHeader>
@@ -172,7 +165,7 @@ const Volunteers = () => {
 
             <Input
               placeholder="Search"
-              className="w-[250px] rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              className="w-[250px] rounded-full border-none bg-white text-[#193F56]"
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
@@ -184,7 +177,7 @@ const Volunteers = () => {
           <div className="mt-[2rem] h-full overflow-hidden rounded-3xl">
             <Table className="h-[300px] max-h-[300px]">
               <TableHeader>
-                <TableRow className="bg-[#99ACFF] !text-black">
+                <TableRow className="bg-white !text-black">
                   <TableHead className="text-black">STUDENT ID</TableHead>
                   <TableHead className="text-black">STUDENT NAME</TableHead>
                   <TableHead className="text-black">COURSE</TableHead>
@@ -198,7 +191,7 @@ const Volunteers = () => {
               <TableBody>
                 {currentItems &&
                   currentItems?.map((vol, index) => (
-                    <TableRow className="bg-[#CDD6FF] text-black" key={index}>
+                    <TableRow className="bg-white text-black" key={index}>
                       <TableCell>{vol.student_id}</TableCell>
                       <TableCell>{vol.student_name}</TableCell>
                       <TableCell>{vol.course}</TableCell>
@@ -288,11 +281,11 @@ const Volunteers = () => {
                                       </TableHead>
                                     </TableRow>
                                   </TableHeader>
-                                  <TableBody className="bg-[#99ACFF] !text-black">
+                                  <TableBody className="bg-white !text-black">
                                     {entries && entries?.length > 0 ? (
                                       DTRItems?.map((entry) => (
                                         <TableRow key={entry.dtr_id}>
-                                          <TableCell className="bg-[#FFEBCD] text-black">
+                                          <TableCell className="bg-white text-black">
                                             {entry.date}
                                           </TableCell>
                                           <TableCell className="bg-[#CDE9FF] text-black">

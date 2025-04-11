@@ -1,10 +1,12 @@
 import Logo from '@/assets/LOGO.svg';
 import ButtonShadow from '../ButtonShadow';
+
+export const handleLogout = () => {
+  localStorage.removeItem('sscms_role');
+  window.location.href = '/login';
+};
+
 const Header = () => {
-  const handleLogout = () => {
-    localStorage.removeItem('sscms_role');
-    window.location.href = '/login';
-  };
   return (
     <div className="flex h-[6rem] w-full items-center justify-between bg-[#FFA114] px-4">
       <div className="flex items-center gap-4">

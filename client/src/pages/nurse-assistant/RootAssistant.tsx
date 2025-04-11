@@ -1,10 +1,11 @@
 import ButtonShadow from '@/components/ButtonShadow';
-import Header from '@/components/structure/Header';
+import Header, { handleLogout } from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import TransactionsAssistant from './TransactionsAssistant';
 import NurseAssitant from '@/assets/assistant.png';
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 const RootAssistant = () => {
   const params = useLocation();
@@ -36,9 +37,8 @@ const RootAssistant = () => {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
-      <Header />
       <div className="relative flex h-full w-full grow">
-        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 bg-[#FED883] p-2 px-4">
+        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 bg-[#FF9B15] p-2 px-4">
           {role === 'assistant' && (
             <div className="my-4 flex items-center gap-2">
               <img
@@ -51,23 +51,33 @@ const RootAssistant = () => {
             </div>
           )}
 
-          <ButtonShadow
-            to="/assistant"
-            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/assistant' ? 'bg-[#FFA114] text-white' : ''}`}
-            outsideBG="bg-black"
-          >
-            {' '}
-            TRANSACTIONS{' '}
-          </ButtonShadow>
+          <Link to="/assistant">
+            <Button
+              className={`block w-full bg-white text-start text-black hover:bg-black hover:text-white ${
+                params.pathname.includes('transactions')
+                  ? 'bg-black text-white'
+                  : ''
+              }`}
+            >
+              TRANSACTIONS
+            </Button>
+          </Link>
+          <Link to="/assistant/inventory">
+            <Button
+              className={`block w-full bg-white text-start text-black hover:bg-black hover:text-white ${
+                params.pathname === '/inventory' ? 'bg-black text-white' : ''
+              }`}
+            >
+              INVENTORY
+            </Button>
+          </Link>
 
-          <ButtonShadow
-            to="/assistant/inventory"
-            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/assistant/inventory' ? 'bg-[#FFA114] text-white' : ''}`}
-            outsideBG="bg-black"
+          <Button
+            onClick={() => handleLogout()}
+            className="absolute bottom-4 left-5 w-[80%] bg-white text-start text-black hover:bg-black hover:text-white"
           >
-            {' '}
-            INVENTORY
-          </ButtonShadow>
+            LOGOUT
+          </Button>
         </div>
 
         <div className="w-full overflow-x-hidden">

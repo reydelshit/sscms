@@ -205,11 +205,11 @@ const MedicalReport = () => {
   };
 
   return (
-    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
+    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="transNo" className="text-yellow-100">
+            <Label htmlFor="transNo" className="text-black">
               TRANS NO.
             </Label>
             <Input
@@ -217,12 +217,12 @@ const MedicalReport = () => {
               id="transNo"
               name="transNo"
               placeholder="[Auto-Generated]"
-              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-white text-black"
               required
             />
           </div>
           <div>
-            <Label htmlFor="date" className="text-yellow-100">
+            <Label htmlFor="date" className="text-black">
               DATE:
             </Label>
             <Input
@@ -231,7 +231,7 @@ const MedicalReport = () => {
               type="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-white text-black"
               required
             />
           </div>
@@ -239,7 +239,7 @@ const MedicalReport = () => {
         <div className="mb-6 grid grid-cols-2 place-content-center gap-4">
           <div>
             <div>
-              <Label htmlFor="studentName" className="text-yellow-100">
+              <Label htmlFor="studentName" className="text-black">
                 STUDENT NAME:
               </Label>
               <Input
@@ -247,13 +247,13 @@ const MedicalReport = () => {
                 name="studentName"
                 value={studentFullname}
                 onChange={handleInputChange}
-                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-white text-black"
                 required
               />
             </div>
 
             <div className="mb-6">
-              <Label htmlFor="year" className="text-yellow-100">
+              <Label htmlFor="year" className="text-black">
                 COURSE/YEAR:
               </Label>
               <Input
@@ -261,18 +261,18 @@ const MedicalReport = () => {
                 name="year"
                 value={studentCourseYear}
                 onChange={handleInputChange}
-                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-white text-black"
                 required
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="studentId" className="text-yellow-100">
+            <Label htmlFor="studentId" className="text-black">
               STUDENT ID:
             </Label>
             <Select onValueChange={(value) => handleSelectChange(value)}>
-              <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
+              <SelectTrigger className="rounded-full border-none bg-white text-black">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
@@ -294,7 +294,7 @@ const MedicalReport = () => {
             </Select>
 
             <div className="mb-6">
-              <Label htmlFor="course" className="text-yellow-100">
+              <Label htmlFor="course" className="text-black">
                 COURSE:
               </Label>
               <Input
@@ -302,7 +302,7 @@ const MedicalReport = () => {
                 name="course"
                 value={studentDepartment}
                 onChange={handleInputChange}
-                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-white text-black"
                 required
               />
             </div>
@@ -315,19 +315,26 @@ const MedicalReport = () => {
             onChange={handleInputChange}
             name="remarks"
             value={formData.remarks}
-            className="h-full rounded-2xl border-none bg-[#FDF3C0] text-[#193F56]"
+            className="h-full rounded-2xl border-none bg-white text-black"
           />
           <Textarea
             placeholder="TREATMENT/RECOMMENDATION:"
             onChange={handleInputChange}
             name="recom"
             value={formData.recom}
-            className="h-full rounded-2xl border-none bg-[#FDF3C0] text-[#193F56]"
+            className="h-full rounded-2xl border-none bg-white text-black"
           />
         </div>
 
         <div className="flex w-full justify-between">
           <div className="flex gap-4">
+            <Button
+              type="button"
+              onClick={handleClear}
+              className="w-[8rem] rounded-full bg-[#F2700A]"
+            >
+              CLEAR
+            </Button>
             {userRole === 'volunteer' ? (
               <Dialog
                 open={open}
@@ -345,7 +352,8 @@ const MedicalReport = () => {
                   <Button
                     onClick={() => setOpen(true)}
                     type="button"
-                    className="rounded-full bg-green-500 text-white hover:bg-green-600"
+                    variant={'default'}
+                    className="w-fit rounded-full bg-black text-white"
                   >
                     CONFIRM
                   </Button>
@@ -400,7 +408,8 @@ const MedicalReport = () => {
                         }
                       }}
                       type="submit"
-                      className="w-fit rounded-full bg-green-500 text-white hover:bg-green-600"
+                      variant={'default'}
+                      className="w-fit rounded-full bg-black text-white"
                     >
                       CONFIRM
                     </Button>
@@ -414,18 +423,12 @@ const MedicalReport = () => {
             ) : (
               <Button
                 type="submit"
-                className="rounded-full bg-green-500 text-white hover:bg-green-600"
+                variant={'default'}
+                className="w-[10rem] rounded-full bg-black text-white"
               >
                 CONFIRM
               </Button>
             )}
-            <Button
-              type="button"
-              onClick={handleClear}
-              className="w-[10rem] rounded-full bg-[#F2700A]"
-            >
-              CLEAR
-            </Button>
           </div>
         </div>
       </form>

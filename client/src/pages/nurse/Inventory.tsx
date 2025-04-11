@@ -263,15 +263,10 @@ const Inventory = () => {
   };
 
   return (
-    <div
-      className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
-      style={{ backgroundImage: `url(${BGPage})` }}
-    >
-      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
+    <div className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8">
+      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-[2rem] font-semibold text-[#FDF3C0]">
-            INVENTORY
-          </h1>
+          <h1 className="text-[2rem] font-semibold text-black">INVENTORY</h1>
           <div className="flex w-[40%] gap-4">
             <Input
               onChange={(e) => setSearch(e.target.value)}
@@ -280,7 +275,7 @@ const Inventory = () => {
             />
 
             <Select onValueChange={(value) => setSelectCategory(value)}>
-              <SelectTrigger className="w-[15rem] rounded-full border-none bg-[#FFD863] text-[#193F56]">
+              <SelectTrigger className="w-[15rem] rounded-full border-none bg-black text-[#D4D5D6]">
                 <SelectValue placeholder="Filter Category" />
               </SelectTrigger>
               <SelectContent>
@@ -298,7 +293,7 @@ const Inventory = () => {
           <div className="mt-[2rem] h-full overflow-hidden rounded-3xl">
             <Table className="h-[300px] max-h-[300px]">
               <TableHeader>
-                <TableRow className="bg-[#99ACFF] !text-black">
+                <TableRow className="bg-white !text-black">
                   <TableHead className="text-black">ID</TableHead>
                   <TableHead className="text-black">NAME</TableHead>
                   <TableHead className="text-black">Description</TableHead>
@@ -315,7 +310,7 @@ const Inventory = () => {
               <TableBody>
                 {currentItems.length > 0 ? (
                   currentItems?.map((item, index) => (
-                    <TableRow className="bg-[#CDD6FF] text-black" key={index}>
+                    <TableRow className="bg-white text-black" key={index}>
                       <TableCell>{item.inventory_id}</TableCell>
                       <TableCell>{item.itemName}</TableCell>
                       <TableCell>{item.itemDescription}</TableCell>
@@ -389,13 +384,13 @@ const Inventory = () => {
           handlePageChange={handlePageChange}
         />
 
-        <h1 className="my-4 text-2xl font-bold text-[#FDF3C0]">ADD ITEM</h1>
+        <h1 className="my-4 text-2xl font-bold text-black">ADD ITEM</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex gap-4">
             <div>
               <Select onValueChange={handleChangeCategory}>
-                <SelectTrigger className="my-2 rounded-full border-none bg-[#FFD863] text-[#193F56]">
+                <SelectTrigger className="my-2 rounded-full border-none bg-black text-[#D4D5D6]">
                   <SelectValue placeholder="Choose category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -409,14 +404,14 @@ const Inventory = () => {
                 onChange={handleInputChange}
                 placeholder="ITEM NAME"
                 value={formData.itemName}
-                className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
+                className="mb-2 w-[20rem] rounded-full bg-white text-black placeholder:font-semibold placeholder:text-gray-600"
               />
               <Input
                 name="itemDescription"
                 onChange={handleInputChange}
                 placeholder="ITEM DESCRIPTION"
                 value={formData.itemDescription}
-                className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
+                className="mb-2 w-[20rem] rounded-full bg-white text-black placeholder:font-semibold placeholder:text-gray-600"
               />
               <Input
                 name="quantity"
@@ -424,7 +419,7 @@ const Inventory = () => {
                 placeholder="QUANTITY"
                 type="number"
                 value={formData.quantity}
-                className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
+                className="mb-2 w-[20rem] rounded-full bg-white text-black placeholder:font-semibold placeholder:text-gray-600"
               />
 
               <Input
@@ -432,7 +427,7 @@ const Inventory = () => {
                 onChange={handleInputChange}
                 placeholder="LOT NO."
                 value={formData.lotNo}
-                className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
+                className="mb-2 w-[20rem] rounded-full bg-white text-black placeholder:font-semibold placeholder:text-gray-600"
               />
             </div>
 
@@ -440,31 +435,31 @@ const Inventory = () => {
               <div className="w-full">
                 {selectedCategory === 'medicine' && (
                   <div>
-                    <Label className="text-[#FDF3C0]">MANUFACTURING DATE</Label>
+                    <Label className="text-black">MANUFACTURING DATE</Label>
                     <Input
                       name="manufacturingDate"
                       onChange={handleInputChange}
                       placeholder="MANUFACTURING DATE"
                       type="date"
-                      className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
+                      className="mb-2 w-[20rem] rounded-full bg-white text-black placeholder:font-semibold placeholder:text-gray-600"
                     />
 
-                    <Label className="text-[#FDF3C0]">EXPIRY DATE</Label>
+                    <Label className="text-black">EXPIRY DATE</Label>
 
                     <Input
                       name="expiryDate"
                       onChange={handleInputChange}
                       placeholder="EXPIRY DATE"
                       type="date"
-                      className="mb-2 w-[20rem] rounded-full bg-[#FDF3C0] text-black placeholder:font-semibold placeholder:text-gray-600"
+                      className="mb-2 w-[20rem] rounded-full bg-white text-black placeholder:font-semibold placeholder:text-gray-600"
                     />
 
                     <div className="w-full">
-                      <Label htmlFor="illness" className="text-yellow-100">
+                      <Label htmlFor="illness" className="text-black">
                         ILLNESS
                       </Label>
                       <Select onValueChange={handleSelectIllness}>
-                        <SelectTrigger className="w-[20rem] rounded-full border-none bg-[#FFD863] text-[#193F56]">
+                        <SelectTrigger className="w-[20rem] rounded-full border-none bg-black text-[#D4D5D6]">
                           <SelectValue placeholder="Select illness" />
                         </SelectTrigger>
                         <SelectContent>
@@ -484,7 +479,7 @@ const Inventory = () => {
                       <div className="my-4">
                         {selectedIllness.map((ill) => (
                           <p
-                            className="flex w-[80%] items-center justify-between gap-4 border-b-[1px] border-[#FDF3C0] text-[#FDF3C0]"
+                            className="flex w-[80%] items-center justify-between gap-4 border-b-[1px] border-black text-black"
                             key={ill.illness_id}
                           >
                             {ill.illness}
@@ -510,15 +505,15 @@ const Inventory = () => {
               </div>
             </div>
 
-            <div className="flex w-[40%] flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#FFD863]">
+            <div className="flex w-[40%] flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#D4D5D6]">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild className="w-full">
                   <div className="flex h-full w-full flex-col items-center justify-center">
-                    <div className="grid h-[9rem] w-[35%] cursor-pointer place-content-center rounded-full bg-[#FFA114]">
+                    <div className="grid h-[9rem] w-[35%] cursor-pointer place-content-center rounded-full">
                       <QrCode size={80} />
                     </div>
 
-                    <span className="my-2 cursor-pointer rounded-3xl bg-[#FDF3C0] p-4 font-semibold">
+                    <span className="my-2 cursor-pointer rounded-3xl p-4 font-semibold">
                       SCAN FOR QR CODE
                     </span>
                   </div>
@@ -539,7 +534,8 @@ const Inventory = () => {
           <div className="flex gap-4">
             <Button
               type="submit"
-              className="w-[10rem] rounded-full bg-green-500"
+              variant={'default'}
+              className="w-[10rem] rounded-full bg-black text-white"
             >
               ADD
             </Button>

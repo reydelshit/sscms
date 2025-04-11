@@ -288,11 +288,11 @@ const Prescription = () => {
   };
 
   return (
-    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
+    <div className="mt-[2rem] h-[70%] rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="transNo" className="text-yellow-100">
+            <Label htmlFor="transNo" className="text-black">
               TRANS NO.
             </Label>
             <Input
@@ -301,12 +301,12 @@ const Prescription = () => {
               id="transNo"
               name="transNo"
               onChange={handleInputChange}
-              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-white text-black"
               required
             />
           </div>
           <div>
-            <Label htmlFor="date" className="text-yellow-100">
+            <Label htmlFor="date" className="text-black">
               DATE:
             </Label>
             <Input
@@ -315,7 +315,7 @@ const Prescription = () => {
               type="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+              className="rounded-full border-none bg-white text-black"
               required
             />
           </div>
@@ -323,7 +323,7 @@ const Prescription = () => {
         <div className="mb-6 grid grid-cols-2 place-content-center gap-4">
           <div>
             <div>
-              <Label htmlFor="studentName" className="text-yellow-100">
+              <Label htmlFor="studentName" className="text-black">
                 STUDENT NAME:
               </Label>
               <Input
@@ -331,13 +331,13 @@ const Prescription = () => {
                 name="studentName"
                 value={studentFullname}
                 onChange={handleInputChange}
-                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-white text-black"
                 required
               />
             </div>
 
             <div className="mb-6">
-              <Label htmlFor="year" className="text-yellow-100">
+              <Label htmlFor="year" className="text-black">
                 YEAR:
               </Label>
               <Input
@@ -345,20 +345,20 @@ const Prescription = () => {
                 name="year"
                 value={studentCourseYear}
                 onChange={handleInputChange}
-                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-white text-black"
                 required
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="studentId" className="text-yellow-100">
+            <Label htmlFor="studentId" className="text-black">
               STUDENT ID:
             </Label>
             <Select
               onValueChange={(value) => handleSelectChange('studentId', value)}
             >
-              <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
+              <SelectTrigger className="rounded-full border-none bg-white text-black">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
@@ -379,7 +379,7 @@ const Prescription = () => {
               </SelectContent>
             </Select>
             <div className="mb-6">
-              <Label htmlFor="course" className="text-yellow-100">
+              <Label htmlFor="course" className="text-black">
                 COURSE:
               </Label>
               <Input
@@ -387,7 +387,7 @@ const Prescription = () => {
                 name="course"
                 value={studentDepartment}
                 onChange={handleInputChange}
-                className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                className="rounded-full border-none bg-white text-black"
                 required
               />
             </div>
@@ -398,11 +398,11 @@ const Prescription = () => {
           <div className="flex w-full gap-4">
             <div className="w-full">
               <div>
-                <Label htmlFor="illness" className="text-yellow-100">
+                <Label htmlFor="illness" className="text-black">
                   ILLNESS
                 </Label>
                 <Select onValueChange={handleSelectIllness}>
-                  <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
+                  <SelectTrigger className="rounded-full border-none bg-white text-black">
                     <SelectValue placeholder="Select illness" />
                   </SelectTrigger>
                   <SelectContent>
@@ -421,7 +421,7 @@ const Prescription = () => {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="prescription" className="text-yellow-100">
+                <Label htmlFor="prescription" className="text-black">
                   SUGGESTED PRESCRIPTION
                 </Label>
                 <Select
@@ -433,7 +433,7 @@ const Prescription = () => {
                     handleSelectPrescription(itemName);
                   }}
                 >
-                  <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
+                  <SelectTrigger className="rounded-full border-none bg-white text-black">
                     <SelectValue placeholder="Select prescription" />
                   </SelectTrigger>
                   <SelectContent>
@@ -458,7 +458,7 @@ const Prescription = () => {
 
             <div className="w-full">
               <div className="w-full">
-                <Label htmlFor="quantity" className="text-yellow-100">
+                <Label htmlFor="quantity" className="text-black">
                   QUANTITY:
                 </Label>
                 <Input
@@ -467,12 +467,12 @@ const Prescription = () => {
                   name="quantity"
                   value={formData.quantity}
                   onChange={handleInputChange}
-                  className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                  className="rounded-full border-none bg-white text-black"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="sig" className="text-yellow-100">
+                <Label htmlFor="sig" className="text-black">
                   SIG
                 </Label>
                 <Input
@@ -480,7 +480,7 @@ const Prescription = () => {
                   name="sig"
                   value={formData.sig}
                   onChange={handleInputChange}
-                  className="rounded-full border-none bg-[#FDF3C0] text-[#193F56]"
+                  className="rounded-full border-none bg-white text-black"
                   required
                 />
               </div>
@@ -506,7 +506,8 @@ const Prescription = () => {
                 <Button
                   onClick={() => setOpen(true)}
                   type="button"
-                  className="rounded-full bg-green-500 text-white hover:bg-green-600"
+                  variant={'default'}
+                  className="rounded-full bg-black text-white"
                 >
                   CONFIRM & PRINT
                 </Button>
@@ -560,7 +561,8 @@ const Prescription = () => {
                       }
                     }}
                     type="submit"
-                    className="w-fit rounded-full bg-green-500 text-white hover:bg-green-600"
+                    variant={'default'}
+                    className="rounded-full bg-black text-white"
                   >
                     CONFIRM & PRINT
                   </Button>
@@ -574,7 +576,8 @@ const Prescription = () => {
           ) : (
             <Button
               type="submit"
-              className="rounded-full bg-green-500 text-white hover:bg-green-600"
+              variant={'default'}
+              className="rounded-full bg-black text-white"
             >
               CONFIRM & PRINTS
             </Button>

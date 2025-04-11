@@ -28,7 +28,7 @@ function ExportToPDF<T extends object>({
   };
 
   return (
-    <Button className="rounded-full bg-green-500" onClick={handleExport}>
+    <Button className="rounded-full" onClick={handleExport}>
       GENERATE PDF
     </Button>
   );

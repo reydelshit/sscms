@@ -193,11 +193,11 @@ const MedCert = () => {
   };
 
   return (
-    <div className="mt-[2rem] h-fit rounded-3xl bg-[#193F56] bg-opacity-75 p-4">
+    <div className="mt-[2rem] h-fit rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-3 gap-4">
           <div className="col-span-2">
-            <Label htmlFor="transNo" className="text-yellow-100">
+            <Label htmlFor="transNo" className="text-black">
               TRANS NO.
             </Label>
             <Input
@@ -205,12 +205,12 @@ const MedCert = () => {
               name="transNo"
               disabled
               placeholder="[Auto-Generated]"
-              className="rounded-full border-none bg-yellow-100"
+              className="rounded-full border-none bg-white"
               required
             />
           </div>
           <div>
-            <Label htmlFor="date" className="text-yellow-100">
+            <Label htmlFor="date" className="text-black">
               DATE:
             </Label>
             <Input
@@ -219,14 +219,14 @@ const MedCert = () => {
               type="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="rounded-full border-none bg-yellow-100"
+              className="rounded-full border-none bg-white"
               required
             />
           </div>
         </div>
         <div className="mb-6 grid grid-cols-3 gap-4">
           <div className="col-span-2">
-            <Label htmlFor="studentName" className="text-yellow-100">
+            <Label htmlFor="studentName" className="text-black">
               STUDENT NAME:
             </Label>
             <Input
@@ -234,18 +234,18 @@ const MedCert = () => {
               name="studentName"
               value={studentFullname}
               onChange={handleInputChange}
-              className="rounded-full border-none bg-yellow-100"
+              className="rounded-full border-none bg-white"
               required
             />
           </div>
           <div>
-            <Label htmlFor="studentId" className="text-yellow-100">
+            <Label htmlFor="studentId" className="text-black">
               STUDENT ID:
             </Label>
             <Select
               onValueChange={(value) => handleSelectChange('studentId', value)}
             >
-              <SelectTrigger className="rounded-full border-none bg-[#FFD863] text-[#193F56]">
+              <SelectTrigger className="rounded-full border-none bg-white text-black">
                 <SelectValue placeholder="Select ID" />
               </SelectTrigger>
               <SelectContent>
@@ -269,7 +269,7 @@ const MedCert = () => {
         </div>
         <div className="mb-6 grid grid-cols-3 gap-4">
           <div className="col-span-1">
-            <Label htmlFor="address" className="text-yellow-100">
+            <Label htmlFor="address" className="text-black">
               ADDRESS:
             </Label>
             <Input
@@ -277,12 +277,12 @@ const MedCert = () => {
               name="address"
               value={formData.address}
               onChange={handleInputChange}
-              className="rounded-full border-none bg-yellow-100"
+              className="rounded-full border-none bg-white"
               required
             />
           </div>
           <div>
-            <Label htmlFor="age" className="text-yellow-100">
+            <Label htmlFor="age" className="text-black">
               AGE:
             </Label>
             <Input
@@ -290,12 +290,12 @@ const MedCert = () => {
               name="age"
               value={formData.age}
               onChange={handleInputChange}
-              className="rounded-full border-none bg-yellow-100"
+              className="rounded-full border-none bg-white"
               required
             />
           </div>
           <div className="mb-6">
-            <Label className="text-yellow-100">GENDER:</Label>
+            <Label className="text-black">GENDER:</Label>
             <div className="flex space-x-4">
               <div className="flex items-center">
                 <Checkbox
@@ -303,7 +303,7 @@ const MedCert = () => {
                   checked={formData.gender === 'M'}
                   onCheckedChange={() => handleCheckboxChange('M')}
                 />
-                <label htmlFor="male" className="ml-2 text-yellow-100">
+                <label htmlFor="male" className="ml-2 text-black">
                   M
                 </label>
               </div>
@@ -313,7 +313,7 @@ const MedCert = () => {
                   checked={formData.gender === 'F'}
                   onCheckedChange={() => handleCheckboxChange('F')}
                 />
-                <label htmlFor="female" className="ml-2 text-yellow-100">
+                <label htmlFor="female" className="ml-2 text-black">
                   F
                 </label>
               </div>
@@ -323,7 +323,7 @@ const MedCert = () => {
 
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="diagnosis" className="text-yellow-100">
+            <Label htmlFor="diagnosis" className="text-black">
               DIAGNOSIS:
             </Label>
             <Textarea
@@ -331,12 +331,12 @@ const MedCert = () => {
               name="diagnosis"
               value={formData.diagnosis}
               onChange={handleInputChange}
-              className="h-32 rounded-2xl border-none bg-yellow-100"
+              className="h-32 rounded-2xl border-none bg-white"
               required
             />
           </div>
           <div>
-            <Label htmlFor="	ref_reason" className="text-yellow-100">
+            <Label htmlFor="	ref_reason" className="text-black">
               REFERENCE REASON:
             </Label>
             <Textarea
@@ -344,13 +344,13 @@ const MedCert = () => {
               name="ref_reason"
               value={formData.ref_reason}
               onChange={handleInputChange}
-              className="h-32 rounded-2xl border-none bg-yellow-100"
+              className="h-32 rounded-2xl border-none bg-white"
               required
             />
           </div>
         </div>
         <div className="mb-6">
-          <Label htmlFor="referenceClassification" className="text-yellow-100">
+          <Label htmlFor="referenceClassification" className="text-black">
             REFERENCE CLASSIFICATION (RISK LEVEL):
           </Label>
           <Textarea
@@ -358,13 +358,13 @@ const MedCert = () => {
             name="referenceClassification"
             value={formData.referenceClassification}
             onChange={handleInputChange}
-            className="h-24 rounded-2xl border-none bg-yellow-100"
+            className="h-24 rounded-2xl border-none bg-white"
             required
           />
         </div>
         <div className="my-4 flex w-full items-center justify-between">
           <div className="w-[40%]">
-            <Label htmlFor="reffered" className="text-yellow-100">
+            <Label htmlFor="reffered" className="text-black">
               REFFERED TO:
             </Label>
             <Input
@@ -372,7 +372,7 @@ const MedCert = () => {
               name="reffered"
               value={formData.reffered}
               onChange={handleInputChange}
-              className="rounded-full border-none bg-yellow-100"
+              className="rounded-full border-none bg-white"
               required
             />
           </div>
@@ -380,17 +380,18 @@ const MedCert = () => {
         <div className="flex items-center justify-between">
           <div className="space-x-4">
             <Button
-              type="submit"
-              className="rounded-full bg-green-500 text-white hover:bg-green-600"
-            >
-              CONFIRM & PRINT
-            </Button>
-            <Button
               type="button"
               onClick={handleClear}
-              className="rounded-full bg-yellow-500 text-white hover:bg-yellow-600"
+              className="w-[8rem] rounded-full bg-[#F2700A]"
             >
               CLEAR
+            </Button>
+            <Button
+              type="submit"
+              variant={'default'}
+              className="w-fit rounded-full bg-black text-white"
+            >
+              CONFIRM & PRINT
             </Button>
           </div>
         </div>

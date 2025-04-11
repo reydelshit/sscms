@@ -93,18 +93,15 @@ const CaseReport = () => {
     });
 
   return (
-    <div
-      className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8"
-      style={{ backgroundImage: `url(${BGPage})` }}
-    >
-      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#193F56] bg-opacity-75 p-4 text-center">
-        <h1 className="text-2xl font-semibold text-[#FFD863]">
+    <div className="h-full min-h-screen w-full overflow-y-hidden bg-white bg-cover bg-center p-8">
+      <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4 text-center">
+        <h1 className="text-2xl font-semibold text-black">
           MONTHLY CASE REPORT
         </h1>
 
         <div className="my-4 flex gap-4">
           <Select onValueChange={(value) => setSelectedMonth(value)}>
-            <SelectTrigger className="w-full rounded-full border-none bg-[#FFD863] text-[#193F56]">
+            <SelectTrigger className="w-full rounded-full border-none bg-black text-white">
               <SelectValue placeholder="Month" />
             </SelectTrigger>
             <SelectContent>
@@ -124,7 +121,7 @@ const CaseReport = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={(value) => setSelectedYear(value)}>
-            <SelectTrigger className="w-full rounded-full border-none bg-[#FFD863] text-[#193F56]">
+            <SelectTrigger className="w-full rounded-full border-none bg-black text-white">
               <SelectValue placeholder="Select Year" />
             </SelectTrigger>
             <SelectContent>
@@ -145,7 +142,7 @@ const CaseReport = () => {
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
-            className="w-full rounded-full border-none text-[#193F56]"
+            className="w-full rounded-full border-none text-white"
           />
 
           <ExportToPDF
@@ -171,7 +168,7 @@ const CaseReport = () => {
         </div>
 
         <div>
-          <h1 className="w-full text-start text-2xl font-semibold text-[#FFD863]">
+          <h1 className="w-full text-start text-2xl font-semibold text-black">
             CASE REPORT
           </h1>
 
@@ -181,7 +178,7 @@ const CaseReport = () => {
             <div className="mt-[2rem] overflow-hidden rounded-3xl">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-[#FFD699] !text-black">
+                  <TableRow className="bg-white !text-black">
                     <TableHead className="text-center text-black">
                       DATE
                     </TableHead>
@@ -244,19 +241,19 @@ const CaseReport = () => {
                           className="h-[1rem] bg-white text-sm text-black"
                           key={index}
                         >
-                          <TableCell className="bg-[#FFEBCD]">
+                          <TableCell className="bg-white">
                             <Moment time={vol.date} />
                           </TableCell>
-                          <TableCell className="bg-[#FFEBCD]">
+                          <TableCell className="bg-white">
                             {vol.studentName}
                           </TableCell>
-                          <TableCell className="bg-[#FFEBCD]">
+                          <TableCell className="bg-white">
                             {vol.course} {vol.year}
                           </TableCell>
-                          <TableCell className="bg-[#FFF4E3]">
+                          <TableCell className="bg-white">
                             {vol.remarks}
                           </TableCell>
-                          <TableCell className="bg-[#FFF4E3]">
+                          <TableCell className="bg-white">
                             {vol.recom}
                           </TableCell>
                         </TableRow>
