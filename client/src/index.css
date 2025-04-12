@@ -104,3 +104,7 @@
   scrollbar-color: white black;
   border-radius: 8px;
 }
+
+body {
+  user-select: none;
+}
