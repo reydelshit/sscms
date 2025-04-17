@@ -3,7 +3,7 @@ import { handleLogout } from '@/components/structure/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/toaster';
-import { useSystemSecurity } from '@/hooks/useSystemSecurit';
+import { useSystemSecurity } from '@/hooks/useSystemSecurity';
 import Dashboard from '@/pages/nurse/Dashboard';
 import { useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ const Root = () => {
     handleUnlock,
     attemptsLeft,
   } = useSystemSecurity({
-    password: '1234', // Replace with actual user password or auth check
+    password: '1234', // ilisdi lang ni
     onLogout: () => {
       localStorage.clear();
       navigate('/login');

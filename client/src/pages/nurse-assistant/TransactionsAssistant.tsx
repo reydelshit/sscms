@@ -6,10 +6,7 @@ import Prescription from '@/pages/nurse/transactions/Prescription';
 const TransactionsAssistant = () => {
   const path = useLocation().pathname;
   return (
-    <div
-      className="min-h-screen w-full bg-cover bg-center p-8"
-      style={{ backgroundImage: `url(${BGPage})` }}
-    >
+    <div className="min-h-screen w-full bg-cover bg-center p-8">
       <div className="flex w-full justify-between gap-4 rounded-full bg-[#D4D5D6] bg-opacity-75 p-4">
         <Link className="w-full" to="/assistant">
           <Button

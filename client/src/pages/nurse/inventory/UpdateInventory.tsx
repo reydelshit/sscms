@@ -193,6 +193,11 @@ const UpdateInventory = ({ inventoryID }: { inventoryID: string }) => {
 
   return (
     <div className="flex w-full flex-col items-center gap-[1rem] p-2">
+      <div className="w-full">
+        <h1 className="text-start text-lg font-semibold">
+          Update Inventory Item: {inventoryItem?.itemName}
+        </h1>
+      </div>
       <form className="w-full px-4 text-start" onSubmit={handleSubmitUpdate}>
         <div>
           <Label> Item Name</Label>
@@ -237,7 +242,7 @@ const UpdateInventory = ({ inventoryID }: { inventoryID: string }) => {
           Current category: <span>{inventoryItem?.category}</span>
         </Label>
         <Select onValueChange={handleChangeCategory}>
-          <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
+          <SelectTrigger>
             <SelectValue placeholder="Choose category" />
           </SelectTrigger>
           <SelectContent>
@@ -269,7 +274,7 @@ const UpdateInventory = ({ inventoryID }: { inventoryID: string }) => {
             <div>
               <Label htmlFor="illness">ILLNESS</Label>
               <Select onValueChange={handleSelectIllness}>
-                <SelectTrigger className="border-none bg-[#FFD863] text-[#193F56]">
+                <SelectTrigger>
                   <SelectValue placeholder="Select illness" />
                 </SelectTrigger>
                 <SelectContent>

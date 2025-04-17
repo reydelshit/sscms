@@ -583,11 +583,7 @@ const Prescription = () => {
             </Button>
           )}
 
-          <Button
-            type="button"
-            onClick={handleClear}
-            className="w-[8rem] rounded-full bg-[#F2700A]"
-          >
+          <Button variant={'secondary'} type="button" onClick={handleClear}>
             CLEAR
           </Button>
         </div>

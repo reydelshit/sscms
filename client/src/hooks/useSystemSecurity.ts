@@ -19,15 +19,15 @@ export function useSystemSecurity({
     if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
     if (modalTimer.current) clearTimeout(modalTimer.current);
 
-    // inactivityTimer.current = setTimeout(() => setLocked(true), 5 * 60 * 1000); // 5 mins
-    inactivityTimer.current = setTimeout(() => setLocked(true), 10 * 1000); // 10 seconds
+    inactivityTimer.current = setTimeout(() => setLocked(true), 5 * 60 * 1000); // 5 mins
+    // inactivityTimer.current = setTimeout(() => setLocked(true), 10 * 1000); // 10 seconds
 
     modalTimer.current = setTimeout(
       () => {
         if (locked) onLogout(); // 15 mins locked = auto logout
       },
-      //   15 * 60 * 1000, //15 mins
-      20 * 1000, // 10 seconds
+      15 * 60 * 1000, //15 mins
+      // 20 * 1000, // 20 seconds
     );
   };
 

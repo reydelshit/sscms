@@ -379,11 +379,7 @@ const MedCert = () => {
         </div>
         <div className="flex items-center justify-between">
           <div className="space-x-4">
-            <Button
-              type="button"
-              onClick={handleClear}
-              className="w-[8rem] rounded-full bg-[#F2700A]"
-            >
+            <Button variant={'secondary'} type="button" onClick={handleClear}>
               CLEAR
             </Button>
             <Button

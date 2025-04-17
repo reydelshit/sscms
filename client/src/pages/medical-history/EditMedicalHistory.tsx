@@ -166,7 +166,7 @@ const EditMedicalHistory = ({
         </div>
 
         <div className="my-4 flex gap-2">
-          <Button type="submit" className="w-[10rem] bg-green-500">
+          <Button type="submit" className="w-[10rem]">
             Save
           </Button>
           <DialogClose>

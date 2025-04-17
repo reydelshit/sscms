@@ -205,8 +205,8 @@ const Volunteers = () => {
                       <TableCell>
                         <div className="flex gap-2">
                           <Dialog>
-                            <DialogTrigger className="w-full rounded-full bg-[#FFA114] p-2 font-semibold text-white">
-                              Update
+                            <DialogTrigger>
+                              <Button variant={'outline'}>Edit</Button>
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
@@ -227,9 +227,7 @@ const Volunteers = () => {
                           <DeleteMakeSure
                             deleteAction={() => handleDelete(vol.volunteer_id)}
                           >
-                            <Button className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white">
-                              DELETE
-                            </Button>
+                            <Button variant={'destructive'}>Edit</Button>
                           </DeleteMakeSure>
 
                           <Dialog>
@@ -238,17 +236,14 @@ const Volunteers = () => {
                                 setUserID(vol.volunteer_id);
                                 console.log(vol.volunteer_id);
                               }}
-                              className="w-full rounded-full bg-[#536C70] p-2 font-semibold text-white"
                             >
-                              View DTR
+                              <Button variant={'outline'}>View DTR</Button>
                             </DialogTrigger>
-                            <DialogContent className="min-h-[40%] w-[60%] bg-[#536C70]">
+                            <DialogContent className="min-h-[40%] w-[60%]">
                               <DialogHeader>
                                 <div>
-                                  <DialogTitle className="text-white">
-                                    {vol.student_name}
-                                  </DialogTitle>
-                                  <DialogDescription className="text-white">
+                                  <DialogTitle>{vol.student_name}</DialogTitle>
+                                  <DialogDescription>
                                     View {vol.student_name}'s daily time record
                                   </DialogDescription>
                                 </div>

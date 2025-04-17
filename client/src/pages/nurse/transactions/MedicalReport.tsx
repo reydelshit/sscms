@@ -328,11 +328,7 @@ const MedicalReport = () => {
 
         <div className="flex w-full justify-between">
           <div className="flex gap-4">
-            <Button
-              type="button"
-              onClick={handleClear}
-              className="w-[8rem] rounded-full bg-[#F2700A]"
-            >
+            <Button variant={'secondary'} type="button" onClick={handleClear}>
               CLEAR
             </Button>
             {userRole === 'volunteer' ? (

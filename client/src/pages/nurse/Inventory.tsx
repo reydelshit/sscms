@@ -262,6 +262,20 @@ const Inventory = () => {
     }
   };
 
+  const handleClear = () => {
+    setFormData({
+      itemName: '',
+      itemDescription: '',
+      quantity: 0,
+      manufacturingDate: '',
+      expiryDate: '',
+      lotNo: '',
+    });
+    setSelectedIllness([]);
+    setSelectedCategory('medicine');
+    setSelectCategory('All');
+  };
+
   return (
     <div className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center p-8">
       <div className="mt-[1rem] h-fit w-full rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4">
@@ -275,7 +289,7 @@ const Inventory = () => {
             />
 
             <Select onValueChange={(value) => setSelectCategory(value)}>
-              <SelectTrigger className="w-[15rem] rounded-full border-none bg-black text-[#D4D5D6]">
+              <SelectTrigger className="w-[15rem]">
                 <SelectValue placeholder="Filter Category" />
               </SelectTrigger>
               <SelectContent>
@@ -334,10 +348,10 @@ const Inventory = () => {
                       <TableCell>
                         <div className="flex flex-col gap-2">
                           <Dialog>
-                            <DialogTrigger className="w-full rounded-full bg-[#FFA114] p-2 font-semibold text-white">
-                              Update
+                            <DialogTrigger>
+                              <Button variant={'outline'}>Edit</Button>
                             </DialogTrigger>
-                            <DialogContent>
+                            <DialogContent className="w-[60%]">
                               <DialogHeader>
                                 <div className="hidden">
                                   <DialogTitle>
@@ -358,9 +372,7 @@ const Inventory = () => {
                           <DeleteMakeSure
                             deleteAction={() => handleDelete(item.inventory_id)}
                           >
-                            <Button className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white">
-                              DELETE
-                            </Button>
+                            <Button variant={'destructive'}>Edit</Button>
                           </DeleteMakeSure>
                         </div>
                       </TableCell>
@@ -390,7 +402,7 @@ const Inventory = () => {
           <div className="flex gap-4">
             <div>
               <Select onValueChange={handleChangeCategory}>
-                <SelectTrigger className="my-2 rounded-full border-none bg-black text-[#D4D5D6]">
+                <SelectTrigger className="my-2 rounded-full">
                   <SelectValue placeholder="Choose category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -459,7 +471,7 @@ const Inventory = () => {
                         ILLNESS
                       </Label>
                       <Select onValueChange={handleSelectIllness}>
-                        <SelectTrigger className="w-[20rem] rounded-full border-none bg-black text-[#D4D5D6]">
+                        <SelectTrigger className="w-[20rem] rounded-full">
                           <SelectValue placeholder="Select illness" />
                         </SelectTrigger>
                         <SelectContent>
@@ -532,14 +544,10 @@ const Inventory = () => {
             </div>
           </div>
           <div className="flex gap-4">
-            <Button
-              type="submit"
-              variant={'default'}
-              className="w-[10rem] rounded-full bg-black text-white"
-            >
+            <Button type="submit" variant={'default'} className="w-[10rem]">
               ADD
             </Button>
-            <Button className="w-[10rem] rounded-full bg-[#FFA114]">
+            <Button variant={'secondary'} type="button" onClick={handleClear}>
               CLEAR
             </Button>
           </div>

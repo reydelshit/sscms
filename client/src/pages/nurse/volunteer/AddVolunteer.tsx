@@ -187,7 +187,7 @@ const AddVolunteer = () => {
           <Select
             onValueChange={(value) => handleSelectChange('student_id', value)}
           >
-            <SelectTrigger className="border-none bg-black text-white">
+            <SelectTrigger>
               <SelectValue placeholder="Select ID" />
             </SelectTrigger>
             <SelectContent>
@@ -268,23 +268,13 @@ const AddVolunteer = () => {
         </div>
 
         <div className="my-4 flex gap-4">
-          <Button
-            type="submit"
-            variant={'default'}
-            className="w-[10rem] rounded-full bg-black text-white"
-          >
+          <Button type="submit" variant={'default'} className="w-[10rem]">
             {' '}
             ADD{' '}
           </Button>
 
           <DialogClose asChild>
-            <Button
-              variant={'default'}
-              className="w-[10rem] rounded-full bg-red-500 text-white"
-            >
-              {' '}
-              CANCEL{' '}
-            </Button>
+            <Button variant={'outline'}> CANCEL </Button>
           </DialogClose>
         </div>
       </form>

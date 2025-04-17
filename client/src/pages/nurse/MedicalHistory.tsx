@@ -224,8 +224,8 @@ const MedicalHistory = () => {
                         <TableCell className="bg-white">
                           <div className="flex flex-col gap-2">
                             <Dialog>
-                              <DialogTrigger className="w-full rounded-full bg-[#FFA114] p-2 font-semibold text-white">
-                                Update
+                              <DialogTrigger>
+                                <Button variant={'outline'}>Edit</Button>
                               </DialogTrigger>
                               <DialogContent className="w-[60%]">
                                 <DialogHeader>
@@ -248,9 +248,7 @@ const MedicalHistory = () => {
                             <DeleteMakeSure
                               deleteAction={() => handleDelete(vol.med_rep_id)}
                             >
-                              <Button className="w-full cursor-pointer rounded-full bg-red-500 p-2 font-semibold text-white">
-                                DELETE
-                              </Button>
+                              <Button variant={'destructive'}>Delete</Button>
                             </DeleteMakeSure>
                           </div>
                         </TableCell>

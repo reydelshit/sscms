@@ -17,14 +17,14 @@ const Transactions = () => {
 
         <Link className="w-full" to="/transactions/medical-report">
           <Button
-            className={`rounded2xl ml-1 block h-[3rem] w-full border-none bg-white text-start uppercase text-black hover:text-[#D4D5D6] ${path === '/transactions/medical-report' ? 'bg-black text-white' : ''}`}
+            className={`ml-1 block h-[3rem] w-full rounded-2xl border-none bg-white text-start uppercase text-black hover:text-[#D4D5D6] ${path === '/transactions/medical-report' ? 'bg-black text-white' : ''}`}
           >
             Medical Report
           </Button>
         </Link>
         <Link className="w-full" to="/transactions/med-cert">
           <Button
-            className={`rounded2xl ml-1 block h-[3rem] w-full border-none bg-white text-start uppercase text-black hover:text-[#D4D5D6] ${path === '/transactions/med-cert' ? 'bg-black text-white' : ''}`}
+            className={`ml-1 block h-[3rem] w-full rounded-2xl border-none bg-white text-start uppercase text-black hover:text-[#D4D5D6] ${path === '/transactions/med-cert' ? 'bg-black text-white' : ''}`}
           >
             med cert / referral
           </Button>

@@ -101,7 +101,7 @@ const CaseReport = () => {
 
         <div className="my-4 flex gap-4">
           <Select onValueChange={(value) => setSelectedMonth(value)}>
-            <SelectTrigger className="w-full rounded-full border-none bg-black text-white">
+            <SelectTrigger className="w-full rounded-full border-none">
               <SelectValue placeholder="Month" />
             </SelectTrigger>
             <SelectContent>
@@ -121,7 +121,7 @@ const CaseReport = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={(value) => setSelectedYear(value)}>
-            <SelectTrigger className="w-full rounded-full border-none bg-black text-white">
+            <SelectTrigger className="w-full rounded-full border-none">
               <SelectValue placeholder="Select Year" />
             </SelectTrigger>
             <SelectContent>

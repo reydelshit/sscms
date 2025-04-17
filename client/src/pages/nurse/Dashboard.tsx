@@ -32,6 +32,8 @@ interface VisitsData {
   CurrentYear: number;
 }
 
+const topColors = ['#FFA114', '#FDF3C0', '#FFD863'];
+
 const useFetchPieChartData = () => {
   return useQuery<PieChartData[]>({
     queryKey: ['PieChartData'],
@@ -75,6 +77,11 @@ const Dashboard = () => {
   const { data: pieChartData = [] } = useFetchPieChartData();
   const { data: dispensedData = [] } = useFetchDispensedData();
   const { data: visitsData = [] } = useFetchVisitsData();
+
+  const pieChartDataWithColors = pieChartData.map((item, index) => ({
+    ...item,
+    color: topColors[index],
+  }));
 
   return (
     <div className="h-full min-h-screen w-full overflow-y-hidden bg-cover bg-center px-4">
@@ -148,7 +155,7 @@ const Dashboard = () => {
             series={[
               {
                 arcLabel: (item) => `${item.value}`,
-                data: pieChartData,
+                data: pieChartDataWithColors,
                 innerRadius: 30,
                 outerRadius: 100,
                 paddingAngle: 5,
