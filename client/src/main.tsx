@@ -17,9 +17,10 @@ import Root from './pages/Root.tsx';
 import DailyTimeRecord from './pages/volunteer/DailyTimeRecord.tsx';
 import RootVolunteer from './pages/volunteer/RootVolunteer.tsx';
 import TransactionsVol from './pages/volunteer/TransactionsVol.tsx';
+import App from './App.tsx';
 
 const queryClient = new QueryClient();
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
@@ -110,7 +111,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <App />
     </QueryClientProvider>
   </StrictMode>,
 );

@@ -20,6 +20,7 @@ const Root = () => {
     inputPassword,
     setInputPassword,
     handleUnlock,
+    blackoutOverlay,
     attemptsLeft,
   } = useSystemSecurity({
     password: '1234', // ilisdi lang ni

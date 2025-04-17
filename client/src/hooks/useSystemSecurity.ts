@@ -14,6 +14,7 @@ export function useSystemSecurity({
 
   const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
   const modalTimer = useRef<NodeJS.Timeout | null>(null);
+  const blackoutOverlay = useRef<HTMLDivElement | null>(null);
 
   const resetInactivityTimer = () => {
     if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
@@ -131,7 +132,7 @@ export function useSystemSecurity({
     // };
 
     const interval = setInterval(() => {
-      detectDevTools();
+      // detectDevTools();
       //   checkRecordingDevices();
     }, 3000);
 
@@ -168,11 +169,32 @@ export function useSystemSecurity({
     };
   }, [locked]);
 
+  // Right-click block
+  useEffect(() => {
+    const handleRightClick = (e: MouseEvent) => {
+      e.preventDefault(); // Prevent the context menu from showing
+      toast({
+        title: 'Right-click is disabled',
+        description: 'You cannot use right-click on this page.',
+        variant: 'destructive',
+      });
+    };
+
+    document.addEventListener('contextmenu', handleRightClick);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleRightClick);
+    };
+  }, []);
+
+  // // PrintScreen block
+
   return {
     locked,
     inputPassword,
     setInputPassword,
     handleUnlock,
+    blackoutOverlay,
     attemptsLeft: 3 - attempts,
   };
 }
