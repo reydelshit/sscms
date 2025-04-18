@@ -1,92 +1,31 @@
+import { useEffect, useRef, useState } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useDevToolsStatus } from './hooks/useDevToolsStatus';
 import './index.css'; // Tailwind included here
 import { router } from './main';
 
 export default function App() {
   const blackoutRef = useRef<HTMLDivElement>(null);
+  const isDevToolsOpen = useDevToolsStatus();
 
-  useEffect(() => {
-    const handleScreenshotAttempt = () => {
-      console.log('Screenshot detected!');
-
-      // Show overlay
-      if (blackoutRef.current) {
-        blackoutRef.current.style.display = 'block';
-        requestAnimationFrame(() => {
-          if (blackoutRef.current) {
-            blackoutRef.current.style.opacity = '1';
-          }
-        });
-      }
-
-      // Prepare security message
-      const securityMessage = `Taking screenshots is not allowed on this website`;
-
-      // Override clipboard with security message
-      navigator.clipboard
-        .writeText(securityMessage)
-        .then(() => {
-          console.log('Security message copied to clipboard');
-        })
-        .catch((err) => {
-          console.error('Failed to copy security message:', err);
-        });
-
-      // Hide overlay after delay
-      setTimeout(() => {
-        if (blackoutRef.current) {
-          blackoutRef.current.style.opacity = '0';
-          setTimeout(() => {
-            if (blackoutRef.current) {
-              blackoutRef.current.style.display = 'none';
-            }
-          }, 1000);
-        }
-      }, 3000);
-    };
-
-    const handleKeyEvent = (e: KeyboardEvent) => {
-      if (
-        e.key === 'PrintScreen' ||
-        e.code === 'PrintScreen' ||
-        e.keyCode === 44
-      ) {
-        e.preventDefault();
-        handleScreenshotAttempt();
-      }
-    };
-
-    // Detect Windows Snipping Tool (Win+Shift+S)
-    const handleWindowsCombo = (e: KeyboardEvent) => {
-      if (e.key === 'S' && e.shiftKey && (e.ctrlKey || e.metaKey)) {
-        handleScreenshotAttempt();
-      }
-    };
-
-    // Detect Mac screenshot shortcuts
-    const handleMacCombo = (e: KeyboardEvent) => {
-      if ((e.key === '3' || e.key === '4') && e.shiftKey && e.metaKey) {
-        handleScreenshotAttempt();
-      }
-    };
-
-    // Set up all event listeners
-    document.addEventListener('keydown', handleKeyEvent, true);
-    document.addEventListener('keyup', handleKeyEvent, true);
-    document.addEventListener('keydown', handleWindowsCombo);
-    document.addEventListener('keydown', handleMacCombo);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyEvent, true);
-      document.removeEventListener('keyup', handleKeyEvent, true);
-      document.removeEventListener('keydown', handleWindowsCombo);
-      document.removeEventListener('keydown', handleMacCombo);
-    };
-  }, []);
+  const SecurityLockModal: React.FC = () => {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+        <div className="max-w-md rounded-lg bg-white p-6 text-center shadow-xl">
+          <h2 className="text-xl font-semibold text-red-600">
+            ⚠ Security Alert
+          </h2>
+          <p className="mt-4">
+            Please close the developer tools to continue using the application.
+          </p>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
+      {isDevToolsOpen && <SecurityLockModal />}
       <div
         ref={blackoutRef}
         style={{
