@@ -65,8 +65,75 @@ export function useSystemSecurity({
       }
     };
 
+    // const checkRecordingDevices = () => {
+    //   navigator.mediaDevices?.enumerateDevices().then((devices) => {
+    //     console.log(devices);
+    //     const screenSharing = devices.some((d) =>
+    //       d.label.toLowerCase().includes('screen'),
+    //     );
+    //     if (screenSharing) {
+    //       toast({
+    //         title: 'Warning',
+    //         description: 'Screen recording device detected!',
+    //         variant: 'destructive',
+    //       });
+    //     }
+    //   });
+    // };
+
+    const checkRecordingDevices = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+        });
+
+        toast({
+          title: 'Warning',
+          description: 'Screen sharing started!',
+          variant: 'destructive',
+        });
+
+        stream.getTracks().forEach((track) => {
+          track.onended = () => {
+            toast({
+              title: 'Notice',
+              description: 'Screen sharing stopped.',
+            });
+          };
+        });
+      } catch (err) {
+        console.log('Screen sharing not allowed or cancelled:', err);
+      }
+    };
+
+    // const checkRecordingDevices = () => {
+    //   navigator.mediaDevices
+    //     .getDisplayMedia({ video: true })
+    //     .then((stream) => {
+    //       toast({
+    //         title: 'Warning',
+    //         description: 'Screen recording started!',
+    //         variant: 'destructive',
+    //       });
+
+    //       // Optional: track when sharing ends
+    //       stream.getTracks().forEach((track) => {
+    //         track.onended = () => {
+    //           toast({
+    //             title: 'Stopped',
+    //             description: 'Screen sharing ended.',
+    //           });
+    //         };
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       console.log('User denied screen share or error:', err);
+    //     });
+    // };
+
     const interval = setInterval(() => {
       // detectDevTools();
+      //   checkRecordingDevices();
     }, 3000);
 
     return () => clearInterval(interval);
@@ -103,22 +170,24 @@ export function useSystemSecurity({
   }, [locked]);
 
   // Right-click block
-  // useEffect(() => {
-  //   const handleRightClick = (e: MouseEvent) => {
-  //     e.preventDefault(); // Prevent the context menu from showing
-  //     toast({
-  //       title: 'Right-click is disabled',
-  //       description: 'You cannot use right-click on this page.',
-  //       variant: 'destructive',
-  //     });
-  //   };
+  useEffect(() => {
+    const handleRightClick = (e: MouseEvent) => {
+      e.preventDefault(); // Prevent the context menu from showing
+      toast({
+        title: 'Right-click is disabled',
+        description: 'You cannot use right-click on this page.',
+        variant: 'destructive',
+      });
+    };
 
-  //   document.addEventListener('contextmenu', handleRightClick);
+    document.addEventListener('contextmenu', handleRightClick);
 
-  //   return () => {
-  //     document.removeEventListener('contextmenu', handleRightClick);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener('contextmenu', handleRightClick);
+    };
+  }, []);
+
+  // // PrintScreen block
 
   return {
     locked,
