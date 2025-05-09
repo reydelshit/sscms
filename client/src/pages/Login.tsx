@@ -1,12 +1,12 @@
 import Logo from '@/assets/LOGO.svg';
-import BGImage from '@/assets/SSCMS v2.0.png';
-import InputShadow from '@/components/InputShadow';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
+
+import DOMPurify from 'dompurify';
 
 interface VolunteerItem {
   student_id: string;
@@ -40,10 +40,16 @@ const useFetchCredentials = (username: string, password: string) => {
 };
 
 const Login = () => {
+  // xss payload
+  // <img src='nevermind' onerror="alert('HACKED USING XSS');" />
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { data, refetch } = useFetchCredentials(username, password);
+
+  // sanitize dom input
+  const sanitizeUsername = DOMPurify.sanitize(username);
 
   const isNurse = username.includes('nurse');
   const isAssistant = username.includes('assistant');
@@ -126,6 +132,9 @@ const Login = () => {
             name="username"
             onChange={(e) => setUsername(e.target.value)}
           />
+
+          <div dangerouslySetInnerHTML={{ __html: username }} />
+
           <Input
             className="mb-4 h-[3rem] w-full rounded-full border-none p-4 text-black"
             placeholder="Enter password"
