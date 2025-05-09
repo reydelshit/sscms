@@ -1,10 +1,11 @@
 import ButtonShadow from '@/components/ButtonShadow';
 import Header from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import TransactionsVol from './TransactionsVol';
 import DefaultProfile from '@/assets/default.webp';
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 const RootVolunteer = () => {
   const params = useLocation();
@@ -37,9 +38,9 @@ const RootVolunteer = () => {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
-      <Header />
+      {/* <Header /> */}
       <div className="relative flex h-full w-full grow">
-        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 bg-[#FED883] p-2 px-4">
+        <div className="sticky left-0 top-0 z-10 flex h-screen w-[280px] flex-col gap-2 bg-[#FF9B15] p-2 px-4">
           {role === 'volunteer' && (
             <div className="my-4 flex items-center gap-2">
               <img
@@ -55,23 +56,29 @@ const RootVolunteer = () => {
             </div>
           )}
 
-          <ButtonShadow
-            to="/volunteer"
-            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/volunteer' ? 'bg-[#FFA114] text-white' : ''}`}
-            outsideBG="bg-black"
-          >
-            {' '}
-            TRANSACTIONS{' '}
-          </ButtonShadow>
+          <Link to="/volunteer">
+            <Button
+              className={`block w-full bg-white text-start text-black hover:bg-black hover:text-white ${
+                params.pathname.includes('transactions')
+                  ? 'bg-black text-white'
+                  : ''
+              }`}
+            >
+              TRANSACTIONS
+            </Button>
+          </Link>
 
-          <ButtonShadow
-            to="/volunteer/daily-time-record"
-            className={`w-full bg-[#193F56] text-[#FDF3C0] hover:bg-[#FDF3C0] hover:text-[#193F56] ${params.pathname === '/volunteer/daily-time-record' ? 'bg-[#FFA114] text-white' : ''}`}
-            outsideBG="bg-black"
-          >
-            {' '}
-            DAILY TIME RECORD
-          </ButtonShadow>
+          <Link to="/volunteer/daily-time-record">
+            <Button
+              className={`block w-full bg-white text-start text-black hover:bg-black hover:text-white ${
+                params.pathname.includes('transactions')
+                  ? 'bg-black text-white'
+                  : ''
+              }`}
+            >
+              DAILY TIME RECORD
+            </Button>
+          </Link>
         </div>
 
         <div className="w-full overflow-x-hidden">

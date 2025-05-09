@@ -178,19 +178,16 @@ export default function DailyTimeRecord() {
   if (isError) return <div>Error loading DTR entries</div>;
 
   return (
-    <div
-      className="min-h-screen w-full bg-cover bg-center p-8"
-      style={{ backgroundImage: `url(${BGPage})` }}
-    >
-      <div className="mt-[2rem] rounded-3xl bg-[#193F56] bg-opacity-75 p-4 text-[#FDF3C0]">
+    <div className="min-h-screen w-full bg-cover bg-center p-8">
+      <div className="mt-[2rem] rounded-3xl bg-[#D4D5D6] bg-opacity-75 p-4">
         <div className="mb-4 rounded-lg p-4">
-          <div className="inline-flex h-[8rem] w-full items-center rounded-3xl bg-[#FDF3C0]">
+          <div className="inline-flex h-[8rem] w-full items-center rounded-3xl bg-white">
             <h2 className="mb-2 p-4 text-2xl font-semibold text-black">
               Date: {currentDate}
             </h2>
           </div>
 
-          <div className="mt-2 inline-flex h-[8rem] w-full items-center rounded-3xl bg-[#FDF3C0]">
+          <div className="mt-2 inline-flex h-[8rem] w-full items-center rounded-3xl bg-white">
             <h2 className="mb-2 p-4 text-2xl font-semibold text-black">
               Time: {currentTime}
             </h2>
@@ -201,7 +198,7 @@ export default function DailyTimeRecord() {
               <DialogTrigger asChild>
                 <Button
                   onClick={handleTimeClick}
-                  className="mr-2 h-[3rem] w-[10rem] rounded-full bg-[#FFA114] text-xl"
+                  className="mr-2 h-[3rem] w-[10rem] bg-black text-xl"
                   disabled={isLogTimeDisabled}
                 >
                   Log Time
@@ -235,21 +232,17 @@ export default function DailyTimeRecord() {
             </Button> */}
           </div>
         </div>
-        <div className="w-full overflow-hidden rounded-3xl bg-[#CDD6FF] text-black">
+        <div className="w-full overflow-hidden rounded-3xl bg-white text-black">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="bg-[#FFD699] text-black">Date</TableHead>
-                <TableHead className="bg-[#95CCD5] text-black">
-                  Time In (Morning)
-                </TableHead>
-                <TableHead className="bg-[#95CCD5] text-black">
-                  Time Out (Morning)
-                </TableHead>
-                <TableHead className="bg-[#FFD863] text-black">
+                <TableHead className="text-black">Date</TableHead>
+                <TableHead className="text-black">Time In (Morning)</TableHead>
+                <TableHead className="text-black">Time Out (Morning)</TableHead>
+                <TableHead className="text-black">
                   Time In (Afternoon)
                 </TableHead>
-                <TableHead className="bg-[#FFD863] text-black">
+                <TableHead className="text-black">
                   Time Out (Afternoon)
                 </TableHead>
               </TableRow>
@@ -257,19 +250,17 @@ export default function DailyTimeRecord() {
             <TableBody>
               {entries?.map((entry) => (
                 <TableRow key={entry.dtr_id}>
-                  <TableCell className="bg-[#FFEBCD] text-black">
-                    {entry.date}
-                  </TableCell>
-                  <TableCell className="bg-[#CDE9FF] text-black">
+                  <TableCell className="text-black">{entry.date}</TableCell>
+                  <TableCell className="text-black">
                     {entry.timeInMorning}
                   </TableCell>
-                  <TableCell className="bg-[#CDE9FF] text-black">
+                  <TableCell className="text-black">
                     {entry.timeOutMorning}
                   </TableCell>
-                  <TableCell className="bg-[#FEF7E5] text-black">
+                  <TableCell className="text-black">
                     {entry.timeInAfternoon}
                   </TableCell>
-                  <TableCell className="bg-[#FEF7E5] text-black">
+                  <TableCell className="text-black">
                     {entry.timeOutAfternoon}
                   </TableCell>
                 </TableRow>

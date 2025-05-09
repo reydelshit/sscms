@@ -1,7 +1,6 @@
-import BGPage from '@/assets/bg-page.png';
 import { Button } from '@/components/ui/button';
-import { Link, Outlet, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/nurse/transactions/Prescription';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const TransactionsAssistant = () => {
   const path = useLocation().pathname;
