@@ -1,5 +1,5 @@
 import ButtonShadow from '@/components/ButtonShadow';
-import Header from '@/components/structure/Header';
+import Header, { handleLogout } from '@/components/structure/Header';
 import { Toaster } from '@/components/ui/toaster';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import TransactionsVol from './TransactionsVol';
@@ -79,6 +79,13 @@ const RootVolunteer = () => {
               DAILY TIME RECORD
             </Button>
           </Link>
+
+          <Button
+            onClick={() => handleLogout()}
+            className="absolute bottom-4 left-5 w-[80%] bg-white text-start text-black hover:bg-black hover:text-white"
+          >
+            LOGOUT
+          </Button>
         </div>
 
         <div className="w-full overflow-x-hidden">
