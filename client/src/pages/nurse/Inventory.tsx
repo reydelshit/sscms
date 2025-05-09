@@ -1,4 +1,3 @@
-import BGPage from '@/assets/bg-page.png';
 import {
   Dialog,
   DialogContent,
@@ -37,8 +36,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { IBoundingBox, IPoint, Scanner } from '@yudiel/react-qr-scanner';
 import axios from 'axios';
 import { QrCode, X } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import UpdateInventory from './inventory/UpdateInventory';
+
+import { toPng } from 'html-to-image';
+import { QRCodeCanvas } from 'qrcode.react';
 
 interface IDetectedBarcode {
   boundingBox: IBoundingBox;
@@ -171,6 +173,28 @@ const Inventory = () => {
   const deleteMutation = useDeleteInventory();
   const { data, isLoading, error, isError } = useFetchInventory();
   const [open, setOpen] = useState(false);
+  const [openGenerate, setOpenGenerate] = useState(false);
+
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const qrRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = () => {
+    if (qrRef.current === null) return;
+
+    toPng(qrRef.current)
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = `${name || 'qr-code'}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.error('Error generating image:', err);
+      });
+  };
+
+  const qrData = `Item Name: ${name}\nItem Description: ${description}`;
 
   const handleSelectIllness = (value: string) => {
     setSelectedIllness((prevState) => [...prevState, JSON.parse(value)]);
@@ -517,30 +541,87 @@ const Inventory = () => {
               </div>
             </div>
 
-            <div className="flex w-[40%] flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#D4D5D6]">
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild className="w-full">
-                  <div className="flex h-full w-full flex-col items-center justify-center">
-                    <div className="grid h-[9rem] w-[35%] cursor-pointer place-content-center rounded-full">
-                      <QrCode size={80} />
+            <div className="flex w-full flex-col items-center justify-center gap-4">
+              <div className="flex w-[80%] flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#D4D5D6]">
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger asChild className="w-full">
+                    <div className="flex h-full w-full flex-col items-center justify-center">
+                      <div className="grid h-[9rem] w-[35%] cursor-pointer place-content-center rounded-full">
+                        <QrCode size={80} />
+                      </div>
+
+                      <span className="my-2 cursor-pointer rounded-3xl p-4 font-semibold">
+                        SCAN FOR QR CODE
+                      </span>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="w-[40%]">
+                    <DialogHeader>
+                      <DialogTitle>Scan now</DialogTitle>
+                      <DialogDescription>
+                        Place the QR code in front of the camera to scan.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <Scanner allowMultiple={false} onScan={handleScan} />
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              <div className="flex flex-col items-center justify-center overflow-hidden rounded-3xl p-4">
+                <Dialog open={openGenerate} onOpenChange={setOpenGenerate}>
+                  <DialogTrigger asChild className="w-full">
+                    <Button className="rounded-md">GENERATE QR CODE</Button>
+                  </DialogTrigger>
+                  <DialogContent className="w-[40%]">
+                    <DialogHeader>
+                      <DialogTitle>QR CODE GENERATOR</DialogTitle>
+                      <DialogDescription>
+                        Generate a QR code for the item you want to add to the
+                        inventory.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="flex flex-col gap-2 py-4">
+                      <Input
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
                     </div>
 
-                    <span className="my-2 cursor-pointer rounded-3xl p-4 font-semibold">
-                      SCAN FOR QR CODE
-                    </span>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="w-[40%]">
-                  <DialogHeader>
-                    <DialogTitle>Scan now</DialogTitle>
-                    <DialogDescription>
-                      Place the QR code in front of the camera to scan.
-                    </DialogDescription>
-                  </DialogHeader>
+                    {name && description ? (
+                      <>
+                        <div
+                          ref={qrRef}
+                          className="mx-auto rounded bg-white p-4"
+                        >
+                          <QRCodeCanvas value={qrData} size={200} />
+                        </div>
+                        <Button
+                          onClick={handleDownload}
+                          className="mt-4 w-full"
+                        >
+                          Download as Image
+                        </Button>
+                      </>
+                    ) : (
+                      <div className="flex w-full flex-col items-center justify-center gap-4">
+                        <QrCode size={120} />
 
-                  <Scanner allowMultiple={false} onScan={handleScan} />
-                </DialogContent>
-              </Dialog>
+                        <span className="my-2 cursor-pointer rounded-3xl p-4 font-semibold">
+                          Please fill in the details to generate a QR code.
+                        </span>
+                      </div>
+                    )}
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
           </div>
           <div className="flex gap-4">
